@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<selector  
+    xmlns:android="http://schemas.android.com/apk/res/android">  
+    <item android:state_pressed="true" >  
+        <shape>  
+            <solid android:color="@color/main_color_blue"/> 
+            <padding  
+                android:left="@dimen/item_bg_board"  
+                android:top="@dimen/item_bg_board"  
+                android:right="@dimen/item_bg_board"  
+                android:bottom="@dimen/item_bg_board" /> 
+        </shape>  
+    </item>  
+    <item android:state_focused="true" >  
+        <shape>   
+            <solid android:color="@color/main_color_blue"/> 
+            <padding  
+                android:left="@dimen/item_bg_board"  
+                android:top="@dimen/item_bg_board"  
+                android:right="@dimen/item_bg_board"  
+                android:bottom="@dimen/item_bg_board" />   
+        </shape>  
+    </item>  
+    <item>        
+        <shape>  
+            <padding  
+                android:left="@dimen/item_bg_board"  
+                android:top="@dimen/item_bg_board"  
+                android:right="@dimen/item_bg_board"  
+                android:bottom="@dimen/item_bg_board" />    
+        </shape>  
+    </item>  
+</selector>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <color name="main_color_orange">#ee4424</color>
+    <color name="main_color_orange_light">#33ee4424</color>
+    <color name="main_color_blue">#0275bd</color>
+    <color name="background">#101018</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#959595</color>
+    <color name="black">#000000</color>
+    <color name="transparent100">#00000000</color>
+    <color name="transparent80">#33000000</color>
+    <color name="transparent50">#88000000</color>
+    <color name="transparent30">#cc000000</color>  
+        
+    <!-- feature -->
+    <color name="feature_normal">#222222</color>
+    <color name="feature_press">#090909</color>
+    
+    <!-- Top Bar -->
+    <color name="topbar_background">#070707</color>
+    
+    <!-- Share -->
+    <color name="share_text">#0275bd</color>
+    <color name="share_ib_normal">#101018</color>
+    <color name="share_ib_press">#ee4423</color>
+    
+    <!-- Picture -->
+    <color name="share_picture_seperate">#d4d4d4</color>
+    <color name="share_picture_bg">#efefef</color>
+    <color name="share_picture_normal">#efefef</color>
+    <color name="share_picture_press">#d1d1d1</color>
+    
+</resources>

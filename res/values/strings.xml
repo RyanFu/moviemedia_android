@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="app_name">電影媒體</string>
+    
+    <string name="title">標題</string>
+    <string name="editor_choice">編輯精選</string>
+
+    <!-- listview news content -->
+    <string name="news_lv_source">來源</string>
+    <string name="news_lv_date">張貼日期</string>
+    <string name="news_lv_comment">內容</string>
+    
+    <!-- listview photo -->
+    <string name="news_lv_source">來源</string>
+    
+    <!-- Share -->
+    <string name="share">分享</string>
+    
+    <!-- listview news content -->
+    <string name="news_content_source">來源</string>
+    <string name="news_content_date">張貼日期</string>
+    <string name="news_content_comment">內容</string>
+    
+    <!-- facebook -->
+    <string name="applicationId">399748073422920</string>
+    
+</resources>

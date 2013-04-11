@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res/com.jumplife.movienews"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="@color/background" >
+    <include android:id="@+id/topbar" layout="@layout/topbar"
+        android:layout_alignParentTop="true" />
+    <View android:id="@+id/seperate_line"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/seperate"
+        android:layout_below="@+id/topbar"
+        android:background="@color/main_color_orange" />
+    <com.handmark.pulltorefresh.library.PullToRefreshListView 
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/lv_news"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/seperate_line"
+        android:layout_marginLeft="@dimen/news_lv_board"
+        android:layout_marginRight="@dimen/news_lv_board"
+        android:background="@color/background"
+        android:divider="@color/transparent100"
+        android:dividerHeight="@dimen/news_lv_divider"
+        ptr:ptrMode="both" />
+    <ImageButton android:id="@+id/refresh"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/seperate_line"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:background="@drawable/button_background"
+        android:src="@drawable/renew"/>
+    </RelativeLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.jumplife.movienews"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="@color/background" >
+    <include android:id="@+id/topbar" layout="@layout/topbar"
+        android:layout_alignParentTop="true" />
+    <com.jumplife.adapter.CustomScrollView         
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/topbar" >
+        <LinearLayout android:id="@+id/ll_feature"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/background"
+            android:orientation="vertical" >
+            <RelativeLayout
+                android:layout_height="fill_parent"
+                android:layout_width="wrap_content" >
+                <TextView android:id="@+id/tv_editor_choice"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_alignParentTop="true"
+                    android:padding="@dimen/text_board"
+                    android:background="@color/main_color_orange"
+                    android:textSize="@dimen/title"
+                    android:text="@string/editor_choice" />
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignTop="@+id/tv_editor_choice"
+                    android:layout_alignBottom="@+id/tv_editor_choice"
+                    android:layout_alignParentRight="true"
+                    android:padding="8dp"
+                    app:radius="4dp"
+                    app:fillColor="@color/main_color_blue"
+                    app:pageColor="@color/white" />
+                </RelativeLayout>
+            <RelativeLayout android:id="@+id/rl_viewpager"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent" >
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/pager"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true" />
+	            <ImageButton android:id="@+id/refresh_land"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:scaleType="fitCenter"
+	                android:visibility="gone"
+	                android:background="@drawable/button_background"
+	                android:src="@drawable/renew" />
+                 </RelativeLayout>
+            <View 
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/seperate"
+                android:background="@color/main_color_orange" />
+            <ImageButton android:id="@+id/refresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:background="@drawable/button_background"
+                android:src="@drawable/renew"/>
+            </LinearLayout>     
+        </com.jumplife.adapter.CustomScrollView>
+    </RelativeLayout>

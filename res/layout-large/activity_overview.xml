@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:baselineAligned="false"
+    android:background="@color/background"
+    android:orientation="vertical" >
+	<include android:id="@+id/topbar" layout="@layout/topbar" />
+	<LinearLayout
+	    android:layout_height="fill_parent"
+	    android:layout_width="fill_parent"
+	    android:baselineAligned="false"
+	    android:background="@color/background"
+	    android:orientation="horizontal"
+	    android:weightSum="1" >
+	    <fragment class="com.jumplife.tabletfragment.OverViewTabletFragment" 
+	        android:id="@+id/overview_tablet_fragment" 
+	        android:layout_weight="0.3"
+			android:layout_width="0dp" 
+			android:layout_height="match_parent" />
+	    <View  
+            android:layout_width="@dimen/seperate" 
+            android:layout_height="match_parent"
+            android:background="@color/main_color_blue" />
+	    <FrameLayout android:id="@+id/details" 
+	        android:layout_weight="0.7" 
+	        android:layout_width="0dp" 
+	        android:layout_height="match_parent" ></FrameLayout>
+	    </LinearLayout>
+</LinearLayout>

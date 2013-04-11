@@ -1,0 +1,59 @@
+<resources>
+
+    <dimen name="title">18dp</dimen>
+    <dimen name="text_board">5dp</dimen>
+    <dimen name="item_board">10dp</dimen>
+    <dimen name="seperate">5dp</dimen>
+    
+    <dimen name="topbar_height">45dp</dimen>
+
+    <!-- listview news content -->
+    <dimen name="news_lv_photo">120dp</dimen>
+    <dimen name="news_lv_source">13dp</dimen>
+    <dimen name="news_lv_date">13dp</dimen>
+    <dimen name="news_lv_name">18dp</dimen>
+    <dimen name="news_lv_comment">14dp</dimen>
+    <dimen name="news_lv_item_board">1dp</dimen>
+    <dimen name="news_lv_item_board_left">5dp</dimen>
+    <dimen name="news_lv_item_board_right">5dp</dimen>
+    <dimen name="news_lv_board">15dp</dimen>
+    <dimen name="news_lv_divider">15dp</dimen>
+    
+    <!-- news content -->
+    <dimen name="news_content_source">14dp</dimen>
+    <dimen name="news_content_date">14dp</dimen>
+    <dimen name="news_content_name">18dp</dimen>
+    <dimen name="news_content_comment">18dp</dimen>
+    <dimen name="news_content_seperate">2dp</dimen>
+    <dimen name="news_content_board_top">13dp</dimen>
+    <dimen name="news_content_board_bottom">8dp</dimen>
+    <dimen name="news_content_board_rl">8dp</dimen>
+    <dimen name="news_content_handler_size">35dp</dimen>
+    <dimen name="news_content_handler_board_rl">12dp</dimen>
+    <dimen name="news_content_handler_board_tb">8dp</dimen>
+    <dimen name="news_content_video_board">8dp</dimen>
+    <dimen name="news_content_video_poster_board">30dp</dimen>
+    <dimen name="news_content_Indicator_radius">4dp</dimen>
+    <dimen name="news_content_Indicator_board">4dp</dimen>
+    
+    <!-- listview pictures -->
+    <dimen name="pictures_lv_seperate">3dp</dimen>
+    <dimen name="pictures_lv_board">15dp</dimen>
+    <dimen name="pictures_lv_itemboard_rl">25dp</dimen>
+    <dimen name="pictures_lv_itemboard_tb">10dp</dimen>
+    <dimen name="pictures_lv_name">18dp</dimen>
+    <dimen name="pictures_lv_comment">18dp</dimen>
+    <dimen name="pictures_lv_divider">20dp</dimen>
+    <dimen name="pictures_lv_itemboard">8dp</dimen>
+    
+    <!-- Share -->
+    <dimen name="share_text">18dp</dimen>
+    
+	<!-- Pull to Refresh -->
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">24dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
+
+</resources>
