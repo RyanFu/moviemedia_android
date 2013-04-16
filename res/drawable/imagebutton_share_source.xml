@@ -2,12 +2,12 @@
 <selector  
     xmlns:android="http://schemas.android.com/apk/res/android">  
     <item android:state_pressed="true"
-        android:drawable="@drawable/share_white" >
+        android:drawable="@drawable/share_press" >
     </item>  
     <item android:state_focused="true"
-        android:drawable="@drawable/share_orange" > 
+        android:drawable="@drawable/share_press" > 
     </item>  
     <item
-        android:drawable="@drawable/share_orange" >  
+        android:drawable="@drawable/share_normal" >  
     </item>  
 </selector> 

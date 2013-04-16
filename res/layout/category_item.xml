@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rl_overview_category" >   
+    <ImageView android:id="@+id/pager_poster"
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:background="@drawable/overview_category_item_poster_background" />    
+	<TextView android:id="@+id/pager_context"
+	    android:layout_height="wrap_content"
+	    android:layout_width="fill_parent"
+	    android:layout_alignTop="@+id/pager_poster"
+	    android:textIsSelectable="true"
+	    android:background="@drawable/overview_category_item_name_background"
+	    android:textColor="@color/white"
+	    android:textSize="@dimen/feature_comment" />
+</RelativeLayout>

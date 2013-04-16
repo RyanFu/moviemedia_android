@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:background="@color/background" >
+    <com.jumplife.adapter.CustomScrollView         
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+        <LinearLayout android:id="@+id/ll_feature"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background"
+            android:orientation="vertical" >
+            
+            <ImageButton android:id="@+id/refresh"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:background="@drawable/button_background"
+                android:src="@drawable/renew"/>
+            </LinearLayout>     
+        </com.jumplife.adapter.CustomScrollView>
+    </RelativeLayout>

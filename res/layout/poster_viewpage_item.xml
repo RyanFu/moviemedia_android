@@ -4,7 +4,8 @@
     android:layout_height="wrap_content" >
     <ImageView android:id="@+id/pager_poster"
         android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" />    
+        android:layout_height="wrap_content"
+        android:background="@drawable/overview_category_item_poster_background" />    
 	<TextView android:id="@+id/pager_context"
 	    android:layout_height="wrap_content"
 	    android:layout_width="fill_parent"
@@ -12,7 +13,7 @@
 	    android:textIsSelectable="true"
 	    android:background="@color/transparent50"
 	    android:textColor="@color/white"
-	    android:textSize="@dimen/title" />
+	    android:textSize="@dimen/feature_comment" />
 	<TextView android:id="@+id/pager_type"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
@@ -21,5 +22,5 @@
         android:textIsSelectable="true"
         android:background="@color/main_color_blue"
         android:textColor="@color/white"
-        android:textSize="@dimen/feature_name" />
+        android:textSize="@dimen/feature_type" />
 </RelativeLayout>

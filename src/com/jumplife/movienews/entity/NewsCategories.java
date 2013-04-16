@@ -4,16 +4,18 @@ public class NewsCategories {
 	private int id;
 	private String name;
 	private String posterUrl;
+	private String iconUrl;
 	private int typeId;
 	
 	public NewsCategories() {
-		this(-1, "", "", -1);
+		this(-1, "", "", "", -1);
 	}
 	
-	public NewsCategories(int id, String name, String posterUrl, int typeId) {
+	public NewsCategories(int id, String name, String posterUrl, String iconUrl, int typeId) {
 		this.id = id;
 		this.name = name;
 		this.posterUrl = posterUrl;
+		this.iconUrl = iconUrl;
 		this.typeId = typeId;
 	}
 	
@@ -34,6 +36,12 @@ public class NewsCategories {
 	}
 	public void setPosterUrl(String posterUrl) {
 		this.posterUrl = posterUrl;
+	}
+	public String getIconUrl() {
+		return iconUrl;
+	}
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
 	}
 	public int getTypeId() {
 		return typeId;

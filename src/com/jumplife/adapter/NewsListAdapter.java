@@ -6,8 +6,7 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsContent;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
-
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -27,14 +26,6 @@ public class NewsListAdapter extends BaseAdapter {
 	public NewsListAdapter(Activity mActivity,  ArrayList<NewsContent> newsContents){
 		this.newsContents = newsContents;
 		this.mActivity = mActivity;
-		options = new DisplayImageOptions.Builder()
-		.showStubImage(R.drawable.img_status_loading)
-		.showImageForEmptyUri(R.drawable.img_status_nopicture)
-		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
-		.cacheOnDisc()
-		.displayer(new SimpleBitmapDisplayer())
-		.build();
 	}
 
 	public int getCount() {
@@ -53,6 +44,15 @@ public class NewsListAdapter extends BaseAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
+		options = new DisplayImageOptions.Builder()
+		.showStubImage(R.drawable.img_status_loading)
+		.showImageForEmptyUri(R.drawable.img_status_nopicture)
+		.showImageOnFail(R.drawable.img_status_error)
+		.cacheInMemory()
+		.cacheOnDisc()
+		.displayer(new RoundedBitmapDisplayer
+				((int)mActivity.getResources().getDimensionPixelSize(R.dimen.news_lv_item_radius)))
+		.build();
 		
 		LayoutInflater myInflater = LayoutInflater.from(mActivity);
 		View converView = myInflater.inflate(R.layout.listview_news, null);

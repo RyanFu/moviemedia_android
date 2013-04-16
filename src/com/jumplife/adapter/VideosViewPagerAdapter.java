@@ -98,7 +98,7 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
         
         textViewContext.setText(videos.get(pos).getName());
         textViewContext.setGravity(Gravity.CENTER);
-		textViewContext.setTextColor(mActivty.getResources().getColor(R.color.main_color_blue));
+		textViewContext.setTextColor(mActivty.getResources().getColor(R.color.video_description));
 		textViewContext.setBackgroundResource(mActivty.getResources().getColor(R.color.transparent100));
 		RelativeLayout.LayoutParams tvrlParams = new RelativeLayout.LayoutParams
 				(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);

@@ -2,23 +2,21 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
-import com.jumplife.movienews.NewsPhoneActivity;
-import com.jumplife.movienews.PicturesPhoneActivity;
+import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,14 +37,14 @@ public class FeatureTabletFragment extends Fragment {
 	private ArrayList<Picture> pictures;
 	private LoadPictureTask loadPictureTask;
 	
-	Context mContext;
+	private FragmentActivity mFragmentActivity;
 
     @Override
     public void onAttach(Activity activity) {
-        mContext = getActivity();
+    	mFragmentActivity = getActivity();
         super.onAttach(activity);
     }
-    
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -94,7 +92,7 @@ public class FeatureTabletFragment extends Fragment {
 	
 	@SuppressWarnings("deprecation")
 	private void setPictureView() {
-		LayoutInflater myInflater = LayoutInflater.from(mContext);
+		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.showStubImage(R.drawable.img_status_loading)
@@ -102,7 +100,7 @@ public class FeatureTabletFragment extends Fragment {
 		.showImageOnFail(R.drawable.img_status_error)
 		.cacheInMemory()
 		.cacheOnDisc()
-		.displayer(new RoundedBitmapDisplayer(20))
+		.displayer(new SimpleBitmapDisplayer())
 		.build();
 		
 		if(pictures.size() > 0) {
@@ -112,10 +110,10 @@ public class FeatureTabletFragment extends Fragment {
 			ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);
 				
 			DisplayMetrics displayMetrics = new DisplayMetrics();
-			((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-	        int screenWidth = displayMetrics.widthPixels;
+			((Activity) mFragmentActivity).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+	        int screenWidth = displayMetrics.widthPixels * 3 / 4;
 	        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-	        iv.getLayoutParams().height = (int)(screenWidth * 4 / 5);
+	        iv.getLayoutParams().height = (int)(screenWidth / 2);
 	        iv.getLayoutParams().width = screenWidth;
 		        
 				
@@ -123,47 +121,46 @@ public class FeatureTabletFragment extends Fragment {
 			RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 					(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			tv.setPadding(mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.text_board));
+			tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 			tv.setLayoutParams(rlParams);
 			imageLoader.displayImage(pictures.get(0).getPicUrl(), iv, options);
 			converView.setId(0);
-			converView.setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View arg0) {
-					Intent newAct = new Intent();
-					int index = arg0.getId();
-					Log.d("", "index : " + index + " type id : " + pictures.get(index).getTypeId());
-					if(pictures.get(index).getTypeId() == 1)
-						newAct.setClass(mContext, NewsPhoneActivity.class );
-					else
-						newAct.setClass(mContext, PicturesPhoneActivity.class );
-		            Bundle bundle = new Bundle();
-		            bundle.putInt("featureId", pictures.get(index).getId());
-		            bundle.putString("featureName", pictures.get(index).getSource());
-		            newAct.putExtras(bundle);
-		            startActivity(newAct);
-				}						
-			});
+			if(pictures.get(0).getTypeId() == 1) {
+				converView.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View arg0) {
+						Intent newAct = new Intent();
+						int index = arg0.getId();
+						newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
+					
+			            Bundle bundle = new Bundle();
+			            bundle.putInt("featureId", pictures.get(index).getId());
+			            bundle.putString("featureName", pictures.get(index).getSource());
+			            newAct.putExtras(bundle);
+			            startActivity(newAct);
+					}						
+				});
+			} else {
+				converView.setClickable(false);
+			}
 			
 			TableRow.LayoutParams Params = new TableRow.LayoutParams
-					(screenWidth, screenWidth * 3 / 4, 1.0f);
-			Params.setMargins(mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mContext.getResources().getDimensionPixelSize(R.dimen.item_board));
+					(screenWidth, screenWidth / 2, 1.0f);
+			Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
+
+			converView.setBackgroundResource(R.drawable.item_background);
 			converView.setLayoutParams(Params);
-			/*Schedule_row.addView(converView);
-			
-			Schedule_row.setLayoutParams(new LayoutParams
-					(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));*/
 			llFeature.addView(converView);
 		}
 			
 		for(int i=1; i<pictures.size(); i+=2){
-			TableRow Schedule_row = new TableRow(mContext);
+			TableRow Schedule_row = new TableRow(mFragmentActivity);
 			for(int j=0; j<2; j++){
 				int index = i + j;
 				View converView = myInflater.inflate(R.layout.poster_viewpage_item, null);
@@ -172,10 +169,10 @@ public class FeatureTabletFragment extends Fragment {
 				ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);
 				
 				DisplayMetrics displayMetrics = new DisplayMetrics();
-				((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-		        int screenWidth = displayMetrics.widthPixels;
+				((Activity) mFragmentActivity).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+				int screenWidth = displayMetrics.widthPixels * 3 / 8;
 		        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		        iv.getLayoutParams().height = (int)(screenWidth * 4 / 5);
+		        iv.getLayoutParams().height = (int)(screenWidth / 2);
 		        iv.getLayoutParams().width = screenWidth;
 		        
 				if(index < pictures.size()) {
@@ -183,39 +180,49 @@ public class FeatureTabletFragment extends Fragment {
 					RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 							(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 					rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-					tv.setPadding(mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-							mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-							mContext.getResources().getDimensionPixelSize(R.dimen.text_board), 
-							mContext.getResources().getDimensionPixelSize(R.dimen.text_board));
+					tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 					tv.setLayoutParams(rlParams);
 					imageLoader.displayImage(pictures.get(index).getPicUrl(), iv, options);
 					converView.setId(index);
-					converView.setOnClickListener(new OnClickListener(){
-						@Override
-						public void onClick(View arg0) {
-							Intent newAct = new Intent();
-							int index = arg0.getId();
-							Log.d("", "index : " + index + " type id : " + pictures.get(index).getTypeId());
-							if(pictures.get(index).getTypeId() == 1)
-								newAct.setClass(mContext, NewsPhoneActivity.class );
-							else
-								newAct.setClass(mContext, PicturesPhoneActivity.class );
-				            Bundle bundle = new Bundle();
-				            bundle.putInt("featureId", pictures.get(index).getId());
-				            bundle.putString("featureName", pictures.get(index).getSource());
-				            newAct.putExtras(bundle);
-				            startActivity(newAct);
-						}						
-					});
+					if(pictures.get(index).getTypeId() == 1) {
+						converView.setOnClickListener(new OnClickListener(){
+							@Override
+							public void onClick(View arg0) {
+								Intent newAct = new Intent();
+								int index = arg0.getId();
+								newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
+							
+					            Bundle bundle = new Bundle();
+					            bundle.putInt("featureId", pictures.get(index).getId());
+					            bundle.putString("featureName", pictures.get(index).getSource());
+					            newAct.putExtras(bundle);
+					            startActivity(newAct);
+							}						
+						});
+					} else {
+						converView.setClickable(false);
+					}
+				} else {
+					tv.setVisibility(View.INVISIBLE);
 				}
 				
 				TableRow.LayoutParams Params = new TableRow.LayoutParams
-						(screenWidth / 2, screenWidth * 3 / 8, 0.5f);
-				Params.setMargins(mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-						mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-						mContext.getResources().getDimensionPixelSize(R.dimen.item_board), 
-						mContext.getResources().getDimensionPixelSize(R.dimen.item_board));
+						(screenWidth, screenWidth / 2, 0.5f);
+				if(index%2 != 0)
+					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
+				else
+					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
 				converView.setLayoutParams(Params);
+				converView.setBackgroundResource(R.drawable.item_background);
 				Schedule_row.addView(converView);
 			}
 			Schedule_row.setLayoutParams(new LayoutParams

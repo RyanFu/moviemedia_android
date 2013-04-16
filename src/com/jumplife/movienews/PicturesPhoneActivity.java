@@ -37,7 +37,7 @@ public class PicturesPhoneActivity extends FragmentActivity{
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commit();
         
-        if(getResources().getBoolean(R.bool.landscape)){
+        if(getResources().getBoolean(R.bool.tablet)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }

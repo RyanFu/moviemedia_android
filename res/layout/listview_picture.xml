@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/listview_item_picture_background"
+    android:padding="@dimen/pictures_lv_item_padding"
     android:orientation="vertical" >
     <ImageView android:id="@+id/news_poster"
         android:layout_width="fill_parent" 
@@ -12,17 +13,17 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/pictures_lv_itemboard_rl"
-        android:paddingRight="@dimen/pictures_lv_itemboard_rl"
-        android:paddingTop="@dimen/pictures_lv_itemboard_tb"
-        android:paddingBottom="@dimen/pictures_lv_itemboard_tb"
+        android:paddingLeft="@dimen/pictures_lv_item_ll_board_rl"
+        android:paddingRight="@dimen/pictures_lv_item_ll_board_rl"
+        android:paddingTop="@dimen/pictures_lv_item_ll_board_tb"
+        android:paddingBottom="@dimen/pictures_lv_item_ll_board_tb"
         android:orientation="vertical"
         android:gravity="center" >    
 	    <TextView android:id="@+id/news_name" 
 	        android:layout_width="fill_parent" 
 	        android:layout_height="wrap_content"
 	        android:gravity="center"
-	        android:textSize="@dimen/pictures_lv_name"
+	        android:textSize="@dimen/pictures_lv_item_name"
 	        android:textColor="@color/black"
 	        android:text="@string/title" />
 	    <TextView android:id="@+id/news_comment" 
@@ -30,12 +31,12 @@
 	        android:layout_height="wrap_content"
 	        android:gravity="right"
 	        android:lines="1"
-	        android:textSize="@dimen/pictures_lv_comment"
+	        android:textSize="@dimen/pictures_lv_item_comment"
 	        android:textColor="@color/grey"
 	        android:text="@string/news_lv_comment" />
 	    </LinearLayout>    
     <View android:layout_width="fill_parent" 
-        android:layout_height="@dimen/pictures_lv_seperate"
+        android:layout_height="@dimen/pictures_lv_item_seperate"
         android:background="@color/share_picture_seperate" />
     <LinearLayout android:id="@+id/ll_share"
 	    android:layout_width="fill_parent"
@@ -43,17 +44,26 @@
 	    android:background="@drawable/button_share_background"
 	    android:orientation="horizontal"
 	    android:gravity="center" >
-        <ImageView android:id="@+id/iv_share"
-            android:layout_width="@dimen/share_text" 
-            android:layout_height="@dimen/share_text"
-            android:src="@drawable/share_blue"
-            android:scaleType="fitCenter" />
-	    <TextView android:id="@+id/tv_share" 
-	        android:layout_width="wrap_content" 
+
+        <ImageView
+            android:id="@+id/iv_share"
+            android:layout_width="@dimen/pictures_lv_item_share_text"
+            android:layout_height="@dimen/pictures_lv_item_share_text"
+            android:layout_marginRight="@dimen/pictures_lv_item_padding"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:src="@drawable/share" />
+
+	    <TextView
+	        android:id="@+id/tv_share"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="@dimen/pictures_lv_item_padding"
+	        android:layout_gravity="center_vertical"
 	        android:lines="1"
-	        android:textSize="@dimen/share_text"
+	        android:text="@string/share"
 	        android:textColor="@color/share_text"
-	        android:text="@string/share" />
+	        android:textSize="@dimen/pictures_lv_item_share_text" />
+
 	    </LinearLayout>
 </LinearLayout>

@@ -6,22 +6,25 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsCategories;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,11 +37,11 @@ public class OverViewTabletFragment extends Fragment {
 	private ArrayList<View> viewFeatures;
 	private LoadCategoryTask loadCategoryTask;
 	
-	private Context mContext;
+	private FragmentActivity mFragmentActivity;
 
     @Override
     public void onAttach(Activity activity) {
-        mContext = getActivity();
+    	mFragmentActivity = getActivity();
         super.onAttach(activity);
     }
     
@@ -79,9 +82,12 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private ArrayList<NewsCategories> fakeDataCategories() {
-		NewsCategories tmp0 = new NewsCategories(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", 0);
-		NewsCategories tmp1 = new NewsCategories(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", 1);
-		NewsCategories tmp2 = new NewsCategories(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	", 2);
+		NewsCategories tmp0 = new NewsCategories(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg",
+				"http://pic.pimg.tw/jumplives/1365507641-1602607809.gif", 0);
+		NewsCategories tmp1 = new NewsCategories(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg",
+				"http://pic.pimg.tw/jumplives/1365507641-365405581.gif", 1);
+		NewsCategories tmp2 = new NewsCategories(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	",
+				"http://pic.pimg.tw/jumplives/1365507641-3366255340.gif", 2);
 		ArrayList<NewsCategories> tmps = new ArrayList<NewsCategories>();
 		tmps.add(tmp0);
 		tmps.add(tmp1);
@@ -115,17 +121,47 @@ public class OverViewTabletFragment extends Fragment {
 		.showImageOnFail(R.drawable.img_status_error)
 		.cacheInMemory()
 		.cacheOnDisc()
-		.displayer(new RoundedBitmapDisplayer(20))
+		.displayer(new SimpleBitmapDisplayer())
 		.build();
 		
-		LayoutInflater myInflater = LayoutInflater.from(mContext);
+		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
 		for(int i=0; i<newsCategories.size(); i+=1){
 			View converView = myInflater.inflate(R.layout.item_feature, null);
+			View seperate = (View)converView.findViewById(R.id.feature_seperate);
 			TextView tv = (TextView)converView.findViewById(R.id.feature_name);
 			ImageView iv = (ImageView)converView.findViewById(R.id.feature_pic);
+	        
+			RelativeLayout.LayoutParams vParams = new RelativeLayout.LayoutParams
+						(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.seperate),
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_name) +
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb) +
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+			vParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			seperate.setLayoutParams(vParams);
 			
-	        tv.setText(newsCategories.get(i).getName());					
-			imageLoader.displayImage(newsCategories.get(i).getPosterUrl(), iv, options);
+	        RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams
+					((int) (mFragmentActivity.getResources().getDimension(R.dimen.feature_name)),
+							(int) (mFragmentActivity.getResources().getDimension(R.dimen.feature_name)));
+	        ivParams.addRule(RelativeLayout.RIGHT_OF, seperate.getId());
+	        ivParams.addRule(RelativeLayout.CENTER_VERTICAL);
+	        ivParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb), 
+					0, 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+	        iv.setLayoutParams(ivParams);
+	        iv.setScaleType(ScaleType.FIT_CENTER);
+			imageLoader.displayImage(newsCategories.get(i).getIconUrl(), iv, options);
+			
+			RelativeLayout.LayoutParams tvParams = new RelativeLayout.LayoutParams
+					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			tvParams.addRule(RelativeLayout.RIGHT_OF, iv.getId());
+			tvParams.addRule(RelativeLayout.CENTER_VERTICAL);
+			tvParams.setMargins((mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl) / 4), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+	        tv.setLayoutParams(tvParams);
+	        tv.setText(newsCategories.get(i).getName());		
 			
 			converView.setId(i);
 			converView.setOnClickListener(new OnClickListener(){
@@ -166,23 +202,14 @@ public class OverViewTabletFragment extends Fragment {
 	                    ft.replace(R.id.details, pics);//将得到的fragment 替换当前的viewGroup内容，add则不替换会依次累加
 	                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);//设置动画效果
 	                    ft.commit();//提交
-		                
-
 					}
 				}
 			});
+			
 			viewFeatures.add(converView);
 			llFeature.addView(converView);
 		}
 		setViewPress(0);
-		
-		FeatureTabletFragment features = new FeatureTabletFragment(); 
-
-        FragmentTransaction ft = getFragmentManager()
-                .beginTransaction();
-        ft.add(R.id.details, features);//将得到的fragment 替换当前的viewGroup内容，add则不替换会依次累加
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);//设置动画效果
-        ft.commit();//提交
 	}
 	
 	class LoadCategoryTask extends AsyncTask<Integer, Integer, String>{  

@@ -8,15 +8,18 @@ import com.facebook.UiLifecycleHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.jumplife.adapter.PictureAdapter;
+import com.jumplife.adapter.PictureListAdapter;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.Picture;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class PicturesPhoneFragment extends Fragment {	
@@ -33,21 +37,31 @@ public class PicturesPhoneFragment extends Fragment {
 	private View fragmentView;
 	private TextView topbar_text;
 	private ImageButton imageButtonRefresh;
+	private ImageButton imageButtonAbourUs;
 	private PullToRefreshListView picturesListView;
-	private PictureAdapter pictureListAdapter;
+	private PictureListAdapter pictureListAdapter;
+	private ProgressBar pbInit;
 	
 	private ArrayList<Picture> pictures;
 	
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
-	
-	private UiLifecycleHelper uiHelper;
+    
+    private FragmentActivity mFragmentActivity;
+
+    private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         public void call(final Session session, final SessionState state, final Exception exception) {
             onSessionStateChange(session, state, exception);
         }
     };
+    
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
     
 	public static PicturesPhoneFragment NewInstance(int featureId, String featureName) {
 		PicturesPhoneFragment fragment = new PicturesPhoneFragment();
@@ -73,13 +87,11 @@ public class PicturesPhoneFragment extends Fragment {
 	    
 		return fragmentView;
 	}
-	
-
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
         uiHelper.onCreate(savedInstanceState);
     }
 
@@ -121,8 +133,10 @@ public class PicturesPhoneFragment extends Fragment {
     }
     
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_picture);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		picturesListView = (PullToRefreshListView)fragmentView.findViewById(R.id.listview_pictures);
 		
 		topbar_text.setText(getArguments().getString("featureName"));
@@ -134,6 +148,14 @@ public class PicturesPhoneFragment extends Fragment {
                 	loadtask.execute();
                 else
                 	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
             }
         });
 		
@@ -168,7 +190,7 @@ public class PicturesPhoneFragment extends Fragment {
 		picturesListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				 picturesListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 picturesListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -180,7 +202,7 @@ public class PicturesPhoneFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				picturesListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				picturesListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -193,7 +215,7 @@ public class PicturesPhoneFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		pictureListAdapter = new PictureAdapter(getActivity(), pictures);
+		pictureListAdapter = new PictureListAdapter(mFragmentActivity, pictures);
 		picturesListView.setAdapter(pictureListAdapter);
 	}
 	
@@ -201,6 +223,9 @@ public class PicturesPhoneFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		picturesListView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -217,13 +242,17 @@ public class PicturesPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(pictures != null && pictures.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
+            	picturesListView.setVisibility(View.VISIBLE);
             	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+    		} else {
+            	picturesListView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -233,6 +262,8 @@ public class PicturesPhoneFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			picturesListView.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -246,14 +277,17 @@ public class PicturesPhoneFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+			pbInit.setVisibility(View.GONE);
         	if(pictures != null && pictures.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-            	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+            	picturesListView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+            	picturesListView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 			picturesListView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

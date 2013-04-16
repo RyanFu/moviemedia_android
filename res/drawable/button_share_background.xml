@@ -5,33 +5,42 @@
         <shape>
             <solid
                 android:color="@color/share_picture_press" />
+            <corners
+                android:bottomLeftRadius="@dimen/pictures_lv_item_radius"
+                android:bottomRightRadius="@dimen/pictures_lv_item_radius" />
             <padding  
-                android:left="@dimen/pictures_lv_itemboard"  
-                android:top="@dimen/pictures_lv_itemboard"  
-                android:right="@dimen/pictures_lv_itemboard"  
-                android:bottom="@dimen/pictures_lv_itemboard" /> 
+                android:left="@dimen/pictures_lv_item_share_board"  
+                android:top="@dimen/pictures_lv_item_share_board"  
+                android:right="@dimen/pictures_lv_item_share_board"  
+                android:bottom="@dimen/pictures_lv_item_share_board" /> 
         </shape>  
     </item>  
     <item android:state_focused="true" >  
         <shape>
             <solid
                 android:color="@color/share_picture_press" />   
+            <corners
+                android:bottomLeftRadius="@dimen/pictures_lv_item_radius"
+                android:bottomRightRadius="@dimen/pictures_lv_item_radius" />
             <padding  
-                android:left="@dimen/pictures_lv_itemboard"  
-                android:top="@dimen/pictures_lv_itemboard"  
-                android:right="@dimen/pictures_lv_itemboard"  
-                android:bottom="@dimen/pictures_lv_itemboard" />   
+                android:left="@dimen/pictures_lv_item_share_board"  
+                android:top="@dimen/pictures_lv_item_share_board"  
+                android:right="@dimen/pictures_lv_item_share_board"  
+                android:bottom="@dimen/pictures_lv_item_share_board" />   
         </shape>  
     </item>  
     <item >        
         <shape>  
             <solid
                 android:color="@color/share_picture_normal" />
+            <corners
+                android:bottomLeftRadius="@dimen/pictures_lv_item_radius"
+                android:bottomRightRadius="@dimen/pictures_lv_item_radius" />
             <padding  
-                android:left="@dimen/pictures_lv_itemboard"  
-                android:top="@dimen/pictures_lv_itemboard"  
-                android:right="@dimen/pictures_lv_itemboard"  
-                android:bottom="@dimen/pictures_lv_itemboard" />    
+                android:left="@dimen/pictures_lv_item_share_board"  
+                android:top="@dimen/pictures_lv_item_share_board"  
+                android:right="@dimen/pictures_lv_item_share_board"  
+                android:bottom="@dimen/pictures_lv_item_share_board" />    
         </shape>  
     </item>  
 </selector> 

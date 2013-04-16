@@ -9,22 +9,18 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
-import com.jumplife.adapter.VideosViewPagerAdapter;
-import com.jumplife.adapter.WrapSlidingDrawer;
+import com.jumplife.adapter.VideoListAdapter;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsContent;
 import com.jumplife.movienews.entity.Video;
-import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.PageIndicator;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,18 +28,13 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SlidingDrawer.OnDrawerCloseListener;
-import android.widget.SlidingDrawer.OnDrawerOpenListener;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.TextView;
 
-@SuppressWarnings("deprecation")
 public class NewsContentTabletFragment extends Fragment {	
 	
 	private View fragmentView;
-	private View overheadView;
 	private TextView topbar_text;
 	private TextView textviewTitle;
 	private TextView textviewSource;
@@ -51,14 +42,20 @@ public class NewsContentTabletFragment extends Fragment {
 	private WebView webview;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonShare;
-	private VideosViewPagerAdapter mAdapter;
-	private ViewPager mPager;
-	private PageIndicator mIndicator;
-	private WrapSlidingDrawer slidingDrawer;
+	private ListView lvVideo;
+	private VideoListAdapter videoListAdapter;
 	
 	private NewsContent newsContent;
 	
 	private LoadDataTask loadtask;
+    
+    private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -95,7 +92,7 @@ public class NewsContentTabletFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
         uiHelper.onCreate(savedInstanceState);
     }
 
@@ -144,16 +141,15 @@ public class NewsContentTabletFragment extends Fragment {
 		textviewReleaseDate = (TextView)fragmentView.findViewById(R.id.tv_date);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
-		slidingDrawer = (WrapSlidingDrawer)fragmentView.findViewById(R.id.sd_video);
 		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
-		overheadView = (View)fragmentView.findViewById(R.id.view_overhead);
+		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
 		topbar_text.setText(getArguments().getString("featureName"));
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
-		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);
+		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);  
 		webview.setInitialScale(200);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
@@ -182,7 +178,7 @@ public class NewsContentTabletFragment extends Fragment {
 		tmpVideos.add(tmpVideo);
 		NewsContent tmp1 = new NewsContent(33, getArguments().getInt("featureId"), 
 				"第四屆「金掃帚獎」日前揭曉", "康熙來囉～～", 
-				"成為影史票房第二高的中國片 <br /><img src='http://m.udn.com/xhtml/image/7802699-3036999.jpg' alt='' id='test'>" +
+				"成為影史票房第二高的中國片 <br />" +
 				"今年票房破億的電影數量增長不多，具體票房數字卻明顯「豪華」了很多。截至目前，已經有五部電影票房突破2億人民幣大關，" +
 				"八部電影衝破1億5000萬人民幣大關。12部過億電影的總票房達到33億7700萬元人民幣，" +
 				"這個數字比去年同期八部破億影片累計20億3200萬元人民幣和2011年同期11部破億電影累計17億5500萬元人民幣高了不少 <br />" +
@@ -199,48 +195,18 @@ public class NewsContentTabletFragment extends Fragment {
 		textviewReleaseDate.setText(newsContent.getReleaseDate());
 		
 		final String mimeType = "text/html";
-        final String encoding = "UTF-8";
-		webview.loadDataWithBaseURL("", newsContent.getContent(), mimeType, encoding, "");
+        final String encoding = "UTF-8";        
+        webview.loadDataWithBaseURL("", newsContent.getContent(), mimeType, encoding, "");
 		
-		RelativeLayout rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
-		
-		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
-		
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-        LinearLayout.LayoutParams rlLayout = new LinearLayout.LayoutParams(screenWidth, 
-        		screenWidth / 2 + getActivity().getResources().getDimensionPixelSize(R.dimen.title) * 3);
-        
-        rlViewpager.setLayoutParams(rlLayout);
-        
-        mAdapter = new VideosViewPagerAdapter(getActivity(), newsContent.getVideos());
-		mPager.setAdapter(mAdapter);
-        
-		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
-        
-        slidingDrawer.getLayoutParams().height = displayMetrics.heightPixels / 2;
-        slidingDrawer.setVisibility(View.VISIBLE);
-        slidingDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
-			@Override
-			public void onDrawerOpened() {
-				overheadView.setVisibility(View.VISIBLE);
-			}        	
-        });
-        slidingDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
-			@Override
-			public void onDrawerClosed() {
-				overheadView.setVisibility(View.INVISIBLE);
-			}        	
-        });
-        
-        imageButtonShare.setOnClickListener(new OnClickListener(){
+		imageButtonShare.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				publishFeedDialog();
 			}        	
         });
+		
+		videoListAdapter = new VideoListAdapter(mFragmentActivity, newsContent.getVideos());
+		lvVideo.setAdapter(videoListAdapter);
 	}
 	
 	private void publishFeedDialog() {
@@ -255,7 +221,7 @@ public class NewsContentTabletFragment extends Fragment {
 	        params.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 	        
 	        // Invoke the dialog
-	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(getActivity(), session, params))
+	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(mFragmentActivity, session, params))
 				.setOnCompleteListener(new OnCompleteListener() {
 		
 					@Override
@@ -266,23 +232,23 @@ public class NewsContentTabletFragment extends Fragment {
 			                // and the post Id.
 							final String postId = values.getString("post_id");
 							if (postId != null) {
-								Toast.makeText(getActivity(),
+								Toast.makeText(mFragmentActivity,
 										"Posted story, id: "+postId,
 										Toast.LENGTH_SHORT).show();
 							} else {
 								// User clicked the Cancel button
-								Toast.makeText(getActivity().getApplicationContext(), 
+								Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                                "Publish cancelled", 
 		                                Toast.LENGTH_SHORT).show();
 							}
 						} else if (error instanceof FacebookOperationCanceledException) {
 							// User clicked the "x" button
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Publish cancelled", 
 		                            Toast.LENGTH_SHORT).show();
 						} else {
 							// Generic, ex: network error
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Error posting story", 
 		                            Toast.LENGTH_SHORT).show();
 						}
@@ -293,7 +259,7 @@ public class NewsContentTabletFragment extends Fragment {
 	    	feedDialog.show();
 	    } else {
 	    	LoginFragment splashFragment = new LoginFragment();
-	    	splashFragment.show(getActivity().getSupportFragmentManager(), "dialog"); 
+	    	splashFragment.show(mFragmentActivity.getSupportFragmentManager(), "dialog"); 
 	    }
     }
 	

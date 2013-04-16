@@ -7,27 +7,40 @@
     android:orientation="vertical" >
     <include android:id="@+id/topbar" layout="@layout/topbar"
         android:layout_alignParentTop="true" />
-
+    
     <ImageButton
-        android:id="@+id/ib_share"
+        android:id="@+id/ib_about_us"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/topbar"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/topbar"
-        android:background="@drawable/imagebutton_share_background"
+        android:padding="@dimen/item_board"
+        android:background="@drawable/imagebutton_topbar_background"
+        android:scaleType="fitCenter"
+        android:src="@drawable/imagebutton_about_us" />
+    
+    <ImageButton
+        android:id="@+id/ib_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/topbar"
+        android:layout_toLeftOf="@+id/ib_about_us"
+        android:layout_alignTop="@+id/topbar"
+        android:padding="@dimen/item_board"
+        android:background="@drawable/imagebutton_topbar_background"
         android:scaleType="fitCenter"
         android:src="@drawable/imagebutton_share_source" />
-"
-    <View android:id="@+id/seperate_line"
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/seperate"
-        android:layout_below="@+id/topbar"
-        android:background="@color/main_color_orange" />
+
+    <ProgressBar android:id="@+id/pb_news_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+    
     <ScrollView 
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/seperate_line"
+        android:layout_below="@+id/topbar"
         android:paddingRight="@dimen/news_content_board_rl"
         android:paddingLeft="@dimen/news_content_board_rl" >
         <LinearLayout android:id="@+id/ll_newscontent" 
@@ -58,20 +71,20 @@
 	                android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
 	                android:textSize="@dimen/news_content_source"
-	                android:textColor="@color/grey"
+	                android:textColor="@color/news_content_source_date_color"
 	                android:text="@string/news_content_source" />
                 <TextView android:id="@+id/tv_date"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_alignParentRight="true"
 	                android:textSize="@dimen/news_content_date"
-	                android:textColor="@color/grey"
+	                android:textColor="@color/news_content_source_date_color"
 	                android:text="@string/news_content_date" />
             </RelativeLayout>
             <View 
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/news_content_seperate"
-                android:background="@color/share_picture_seperate"
+                android:background="@color/news_content_source_date_color"
                 android:layout_marginLeft="@dimen/news_content_board_rl"
                 android:layout_marginRight="@dimen/news_content_board_rl" /> 
             <WebView
@@ -84,7 +97,7 @@
     <View android:id="@+id/view_overhead"        
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/seperate_line"
+        android:layout_below="@+id/topbar"
         android:background="@color/transparent30"
         android:visibility="invisible"/>
     <com.jumplife.adapter.WrapSlidingDrawer 
@@ -103,19 +116,20 @@
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
                 android:layout_alignBottom="@+id/iv_handle"
-                android:background="@color/main_color_blue"/>
+                android:layout_marginBottom="3dp"
+                android:background="@color/main_color_orange" />
+            <View 
+                android:layout_width="fill_parent"
+                android:layout_height="3dp"
+                android:layout_alignBottom="@+id/iv_handle"
+                android:background="@color/background" />
 	        <ImageView android:id="@+id/iv_handle"
 	            android:layout_width="wrap_content"
 	            android:layout_height="@dimen/news_content_handler_size"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/news_content_handler_board_rl"
-	            android:paddingRight="@dimen/news_content_handler_board_rl"
-	            android:paddingLeft="@dimen/news_content_handler_board_rl"
-	            android:paddingTop="@dimen/news_content_handler_board_tb"
-	            android:paddingBottom="@dimen/news_content_handler_board_tb"
-	            android:src="@drawable/ads_play"
-	            android:scaleType="fitCenter"
-	            android:background="@drawable/handle_background" />
+                android:layout_alignBottom="@+id/iv_handle"
+                android:layout_centerHorizontal="true"
+	            android:src="@drawable/handler_up"
+	            android:scaleType="fitCenter" />
         </RelativeLayout>
         <RelativeLayout android:id="@+id/content"
             android:layout_width="fill_parent"
@@ -137,8 +151,8 @@
 	                   android:layout_width="fill_parent"
 	                   android:padding="@dimen/news_content_Indicator_board"
 	                   app:radius="@dimen/news_content_Indicator_radius"
-	                   app:fillColor="@color/main_color_blue"
-	                   app:strokeColor="@color/grey"
+	                   app:strokeWidth="0dp"
+                       app:fillColor="@color/main_color_orange"
 	                   app:pageColor="@color/grey" />
 	               </RelativeLayout>
 	           <RelativeLayout android:id="@+id/rl_viewpager"
@@ -155,7 +169,7 @@
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/seperate_line"
+        android:layout_below="@+id/topbar"
         android:scaleType="fitCenter"
         android:visibility="gone"
         android:background="@drawable/button_background"

@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="17" />
 
     <application
@@ -23,12 +23,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity>        
+        <activity android:name="AboutUsActivity"
+            android:screenOrientation="portrait"></activity>
         <activity android:name="NewsPhoneActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name="PicturesPhoneActivity"
             android:screenOrientation="portrait"></activity>
         <activity android:name="NewsContentPhoneActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="NewsContentTabletActivity"
             android:screenOrientation="portrait"></activity>
         
         <!-- facebook -->

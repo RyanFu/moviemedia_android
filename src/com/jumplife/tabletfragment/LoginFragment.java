@@ -23,6 +23,8 @@ import com.facebook.widget.LoginButton;
 import com.jumplife.movienews.R;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -42,6 +44,7 @@ public class LoginFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login, container, false);
         getDialog().requestWindowFeature(STYLE_NO_TITLE);        
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         
         LoginButton authButton = (LoginButton) view.findViewById(R.id.login_button);
         authButton.setFragment(this);

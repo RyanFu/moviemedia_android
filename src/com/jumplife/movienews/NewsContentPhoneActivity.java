@@ -11,7 +11,6 @@ public class NewsContentPhoneActivity extends FragmentActivity{
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.main);
         
         Bundle bundle = this.getIntent().getExtras();
         int newsId = bundle.getInt("newsId", 0);

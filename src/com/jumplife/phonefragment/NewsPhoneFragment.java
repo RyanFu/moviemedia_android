@@ -6,6 +6,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.jumplife.adapter.NewsListAdapter;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsContent;
@@ -26,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class NewsPhoneFragment extends Fragment {	
@@ -33,8 +35,10 @@ public class NewsPhoneFragment extends Fragment {
 	private View fragmentView;
 	private TextView topbar_text;
 	private ImageButton imageButtonRefresh;
+	private ImageButton imageButtonAbourUs;
 	private PullToRefreshListView newsListView;
 	private NewsListAdapter newsContentListAdapter;
+	private ProgressBar pbInit;
 	
 	private ArrayList<NewsContent> newsContents;
 	
@@ -68,11 +72,21 @@ public class NewsPhoneFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		newsListView = (PullToRefreshListView)fragmentView.findViewById(R.id.lv_news);
 		
 		topbar_text.setText(getArguments().getString("featureName"));
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
+            }
+        });
 	}
 	
 	private String fetchData() {
@@ -100,9 +114,6 @@ public class NewsPhoneFragment extends Fragment {
 		tmps.add(tmp1);
 		
 		return tmps;
-	}
-	
-	private void setView() {
 	}
 	
 	private void setListener() {
@@ -166,6 +177,9 @@ public class NewsPhoneFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		newsListView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -182,12 +196,17 @@ public class NewsPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	setView();		
+        	pbInit.setVisibility(View.GONE);
 			if(newsContents != null && newsContents.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsListView.setVisibility(View.VISIBLE);
+            	imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsListView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -197,6 +216,9 @@ public class NewsPhoneFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			newsListView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -210,13 +232,17 @@ public class NewsPhoneFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	setView();		
+			pbInit.setVisibility(View.GONE);
 			if(newsContents != null && newsContents.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsListView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsListView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 			newsListView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

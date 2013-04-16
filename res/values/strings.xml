@@ -1,9 +1,10 @@
 <resources>
 
-    <string name="app_name">電影媒體</string>
+    <string name="app_name">電影窩</string>
     
     <string name="title">標題</string>
     <string name="editor_choice">編輯精選</string>
+    <string name="topic">精選主題</string>
 
     <!-- listview news content -->
     <string name="news_lv_source">來源</string>
@@ -22,6 +23,15 @@
     <string name="news_content_comment">內容</string>
     
     <!-- facebook -->
-    <string name="applicationId">399748073422920</string>
+    <string name="fb_login_description">請登入Facebook分享內容</string>
+    <string name="fb_login">Facebook 登入</string>
+    <string name="applicationId">144757872370903</string>
+    
+    <!-- about us -->
+    <string name="about_us">關於我們</string>
+    <string name="advice_and_feedback">建議回饋</string>
+    <string name="facebook">FB粉絲團</string>
+    <string name="liability_disclaimer">免責聲明</string>
+    <string name="confirm">確定</string>
     
 </resources>

@@ -5,17 +5,19 @@ import java.util.ArrayList;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.jumplife.adapter.NewsListAdapter;
-import com.jumplife.movienews.NewsContentPhoneActivity;
+import com.jumplife.adapter.NewsGridAdapter;
+import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsContent;
 import com.jumplife.movienews.entity.Video;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,20 +28,27 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 public class NewsTabletFragment extends Fragment {	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
 	private PullToRefreshGridView newsGridView;
-	private NewsListAdapter newsGridAdapter;
+	private NewsGridAdapter newsGridAdapter;
 	
 	private ArrayList<NewsContent> newsContents;
 	
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
+    
+    private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	public static NewsTabletFragment NewInstance(int featureId, String featureName) {
 		NewsTabletFragment fragment = new NewsTabletFragment();
@@ -117,9 +126,9 @@ public class NewsTabletFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(null, "click item : " + position);
 				Intent newAct = new Intent();
-				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
+				newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 				Bundle bundle = new Bundle();
-	            bundle.putInt("newsId", newsContents.get(position - 1).getId());
+	            bundle.putInt("newsId", newsContents.get(position).getId());
 	            bundle.putString("featureName", getArguments().getString("featureName"));
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
@@ -129,7 +138,7 @@ public class NewsTabletFragment extends Fragment {
 		newsGridView.setOnRefreshListener(new OnRefreshListener2<GridView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-				 newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -141,7 +150,7 @@ public class NewsTabletFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-				newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -154,7 +163,7 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		newsGridAdapter = new NewsListAdapter(getActivity(), newsContents);
+		newsGridAdapter = new NewsGridAdapter(mFragmentActivity, newsContents);
 		newsGridView.setAdapter(newsGridAdapter);
 	}
 	
