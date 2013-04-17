@@ -263,6 +263,7 @@ public class PicturesPhoneFragment extends Fragment {
 		@Override  
         protected void onPreExecute() {
 			picturesListView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
 			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  

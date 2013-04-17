@@ -1,14 +1,15 @@
 <resources>
 
-    <dimen name="title">18dp</dimen>
+    <dimen name="title">20dp</dimen>
     <dimen name="text_board">5dp</dimen>
     <dimen name="item_board">10dp</dimen>
     <dimen name="item_bg_board">4dp</dimen>
     <dimen name="seperate">5dp</dimen>
+    <dimen name="seperate_shadow">8dp</dimen>
     
     <!-- topbar -->
-    <dimen name="topbar_title_title">20dp</dimen>
-    <dimen name="topbar_title_padding">8dp</dimen>
+    <dimen name="topbar_title_title">24dp</dimen>
+    <dimen name="topbar_title_padding">6dp</dimen>
     <dimen name="topbar_title_seperate">2dp</dimen>
     <dimen name="topbar_ivb_seperate">1dp</dimen>
     
@@ -24,37 +25,49 @@
     <dimen name="indicator_padding">2dp</dimen>
     
     <!-- category item -->
-    <dimen name="overview_category_interval_width">7dp</dimen>
+    <dimen name="overview_category_interval_width">10dp</dimen>
     <dimen name="overview_category_item_bg_radius">4dp</dimen>
     <dimen name="overview_category_item_bg_padding">3dp</dimen>
     <dimen name="overview_category_item_bg_board_and_paddijng">4dp</dimen>
     
     <!-- feature name -->
-    <dimen name="feature_type">12dp</dimen>
-    <dimen name="feature_comment">16dp</dimen>
+    <dimen name="feature_type">15dp</dimen>
+    <dimen name="feature_comment">28dp</dimen>
+    <dimen name="feature_comment_small">20dp</dimen>
     <dimen name="feature_name">12dp</dimen>
-    <dimen name="feature_view">1dp</dimen>
-    <dimen name="feature_seperate">2dp</dimen>
     <dimen name="feature_padding">2dp</dimen>
     <dimen name="feature_margin">2dp</dimen>
     <dimen name="feature_board_rl">30dp</dimen>
     <dimen name="feature_board_tb">25dp</dimen>
     
+    <!-- tablet category -->
+    <dimen name="overview_editor_choice_tablet">21dp</dimen>
+    <dimen name="overview_item_feature_margin_left_tablet">6dp</dimen>
+    <dimen name="overview_item_feature_margin_right_tablet">6dp</dimen>
+    <dimen name="overview_item_feature_tv_name_tablet">20dp</dimen>
+    <dimen name="overview_item_feature_iv_icon_tablet">22dp</dimen>
+    <dimen name="overview_item_feature_seperate_tablet">1dp</dimen>
+    <dimen name="overview_item_feature_view_press_tablet">5dp</dimen>
+    
+    <!-- poster -->    
+    <dimen name="overview_category_item_tv_padding_rl">20dp</dimen>    
+    <dimen name="overview_category_item_tv_padding_rl_small">13dp</dimen>
+    
     
     
     <!-- listview news fragment -->
     <!-- listview layout -->       
-    <dimen name="news_lv_board">8dp</dimen>
+    <dimen name="news_lv_board">10dp</dimen>
     <dimen name="news_lv_divider">8dp</dimen>
     
     <!-- photo -->
     <dimen name="news_lv_photo">120dp</dimen>
     
     <!-- text -->
-    <dimen name="news_lv_source">13dp</dimen>
-    <dimen name="news_lv_date">13dp</dimen>
-    <dimen name="news_lv_name">16dp</dimen>
-    <dimen name="news_lv_comment">14dp</dimen>
+    <dimen name="news_lv_source">15dp</dimen>
+    <dimen name="news_lv_date">15dp</dimen>
+    <dimen name="news_lv_name">19dp</dimen>
+    <dimen name="news_lv_comment">17dp</dimen>
     <dimen name="news_lv_tv_board_left">6dp</dimen>
     <dimen name="news_lv_tv_board_right">6dp</dimen>
     
@@ -71,38 +84,40 @@
     <!-- listview pictures fragment-->
     <!-- listview layout -->
     <dimen name="pictures_lv_divider">16dp</dimen>
-    <dimen name="pictures_lv_board">15dp</dimen>
+    <dimen name="pictures_lv_board">10dp</dimen>
     
     <!-- item -->
     <dimen name="pictures_lv_item_seperate">1dp</dimen>
     <dimen name="pictures_lv_item_ll_board_rl">24dp</dimen>
-    <dimen name="pictures_lv_item_ll_board_tb">12dp</dimen>
-    <dimen name="pictures_lv_item_name">16dp</dimen>
-    <dimen name="pictures_lv_item_comment">16dp</dimen>
+    <dimen name="pictures_lv_item_ll_board_tb">10dp</dimen>
+    <dimen name="pictures_lv_item_name">18dp</dimen>
+    <dimen name="pictures_lv_item_comment">18dp</dimen>
     <dimen name="pictures_lv_item_padding">1dp</dimen>   
     <dimen name="pictures_lv_item_radius">4dp</dimen>
     
     <!-- Share -->
-    <dimen name="pictures_lv_item_share_text">16dp</dimen>
-    <dimen name="pictures_lv_item_share_board">4dp</dimen>
+    <dimen name="pictures_lv_item_share_text">18dp</dimen>
+    <dimen name="pictures_lv_item_share_board">8dp</dimen>
     
     
     
     <!-- news content fragment -->
     <!-- news content -->
-    <dimen name="news_content_source">14dp</dimen>
-    <dimen name="news_content_date">14dp</dimen>
-    <dimen name="news_content_name">18dp</dimen>
-    <dimen name="news_content_comment">18dp</dimen>
+    <dimen name="news_content_source">16dp</dimen>
+    <dimen name="news_content_date">16dp</dimen>
+    <dimen name="news_content_name">24dp</dimen>
+    <dimen name="news_content_comment">20dp</dimen>
     <dimen name="news_content_seperate">2dp</dimen>
     
-    <dimen name="news_content_board_top">13dp</dimen>
+    <dimen name="news_content_board_top">22dp</dimen>
     <dimen name="news_content_board_bottom">8dp</dimen>
     <dimen name="news_content_board_rl">8dp</dimen>
     <dimen name="news_content_handler_size">35dp</dimen>
     
     <!-- video -->
-    <dimen name="news_content_video_tv_descrption">16dp</dimen>
+    <dimen name="news_content_video_title">20dp</dimen>
+    <dimen name="news_content_video_title_margin">14dp</dimen>
+    <dimen name="news_content_video_tv_descrption">18dp</dimen>
     <dimen name="news_content_video_board">8dp</dimen>
     <dimen name="news_content_video_poster_board">30dp</dimen>
     <dimen name="news_content_video_play_board">10dp</dimen>
@@ -120,14 +135,14 @@
     
     <!-- fb login fragment -->
     <dimen name="app_icon_margin">10dp</dimen>
-    <dimen name="fb_login_text_size">16dp</dimen>  
+    <dimen name="fb_login_text_size">20dp</dimen>  
     <dimen name="fb_login_background_board">2dp</dimen>    
     <dimen name="fb_login_background_radius">10dp</dimen>
     
     
     
     <!-- about us fragment -->
-    <dimen name="about_us_title">20dp</dimen>
-    <dimen name="about_us_margin">8dp</dimen>
+    <dimen name="about_us_title">28dp</dimen>
+    <dimen name="about_us_margin">28dp</dimen>
     <dimen name="about_us_seperate">2dp</dimen>
 </resources>

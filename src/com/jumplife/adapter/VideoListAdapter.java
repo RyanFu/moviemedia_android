@@ -114,7 +114,7 @@ public class VideoListAdapter extends BaseAdapter {
         
         textViewContext.setText(videos.get(position).getName());
         textViewContext.setGravity(Gravity.CENTER);
-		textViewContext.setTextColor(mActivity.getResources().getColor(R.color.main_color_blue));
+		textViewContext.setTextColor(mActivity.getResources().getColor(R.color.video_description));
 		textViewContext.setBackgroundResource(mActivity.getResources().getColor(R.color.transparent100));
 		RelativeLayout.LayoutParams tvrlParams = new RelativeLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

@@ -23,6 +23,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ public class OverViewTabletFragment extends Fragment {
 	private ArrayList<NewsCategories> newsCategories;
 	private ArrayList<View> viewFeatures;
 	private LoadCategoryTask loadCategoryTask;
+	private ProgressBar pbInit;
 	
 	private FragmentActivity mFragmentActivity;
 
@@ -62,6 +64,7 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_overview);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
         
@@ -101,11 +104,14 @@ public class OverViewTabletFragment extends Fragment {
 		for(int i=0; i<viewFeatures.size(); i++) {
 			View tmp = viewFeatures.get(i);
 			View seperate = (View)tmp.findViewById(R.id.feature_seperate);
+			TextView tv  = (TextView)tmp.findViewById(R.id.feature_name);
 			if(i == pos) {
 				seperate.setVisibility(View.VISIBLE);
+				tv.setTextColor(mFragmentActivity.getResources().getColor(R.color.feature_tv_press));
 				tmp.setBackgroundResource(R.color.feature_press);
 			} else {
 				seperate.setVisibility(View.INVISIBLE);
+				tv.setTextColor(mFragmentActivity.getResources().getColor(R.color.feature_tv_normal));
 				tmp.setBackgroundResource(R.color.feature_normal);
 			}
 		}
@@ -116,9 +122,6 @@ public class OverViewTabletFragment extends Fragment {
 		
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.showStubImage(R.drawable.img_status_loading)
-		.showImageForEmptyUri(R.drawable.img_status_nopicture)
-		.showImageOnFail(R.drawable.img_status_error)
 		.cacheInMemory()
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
@@ -126,7 +129,7 @@ public class OverViewTabletFragment extends Fragment {
 		
 		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
 		for(int i=0; i<newsCategories.size(); i+=1){
-			View converView = myInflater.inflate(R.layout.item_feature, null);
+			View converView = myInflater.inflate(R.layout.item_categorye, null);
 			View seperate = (View)converView.findViewById(R.id.feature_seperate);
 			TextView tv = (TextView)converView.findViewById(R.id.feature_name);
 			ImageView iv = (ImageView)converView.findViewById(R.id.feature_pic);
@@ -140,8 +143,8 @@ public class OverViewTabletFragment extends Fragment {
 			seperate.setLayoutParams(vParams);
 			
 	        RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams
-					((int) (mFragmentActivity.getResources().getDimension(R.dimen.feature_name)),
-							(int) (mFragmentActivity.getResources().getDimension(R.dimen.feature_name)));
+					((int) (mFragmentActivity.getResources().getDimension(R.dimen.overview_item_feature_iv_icon_tablet)),
+							(int) (mFragmentActivity.getResources().getDimension(R.dimen.overview_item_feature_iv_icon_tablet)));
 	        ivParams.addRule(RelativeLayout.RIGHT_OF, seperate.getId());
 	        ivParams.addRule(RelativeLayout.CENTER_VERTICAL);
 	        ivParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
@@ -156,7 +159,7 @@ public class OverViewTabletFragment extends Fragment {
 					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			tvParams.addRule(RelativeLayout.RIGHT_OF, iv.getId());
 			tvParams.addRule(RelativeLayout.CENTER_VERTICAL);
-			tvParams.setMargins((mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl) / 4), 
+			tvParams.setMargins((mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl) / 3), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
@@ -216,6 +219,8 @@ public class OverViewTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           
@@ -233,6 +238,7 @@ public class OverViewTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(newsCategories != null && newsCategories.size() > 0){
         		setCategory();
         		imageButtonRefresh.setVisibility(View.GONE);		

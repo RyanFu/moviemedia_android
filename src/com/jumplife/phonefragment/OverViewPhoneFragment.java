@@ -156,7 +156,7 @@ public class OverViewPhoneFragment extends Fragment {
 			TableRow Schedule_row = new TableRow(getActivity());
 			for(int j=0; j<2; j++){
 				int index = i + j;
-				View converView = myInflater.inflate(R.layout.category_item, null);
+				View converView = myInflater.inflate(R.layout.item_category, null);
 				
 				TextView tv = (TextView)converView.findViewById(R.id.pager_context);
 				ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);

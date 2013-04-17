@@ -2,13 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
-    android:background="@color/background" >
-    <include android:id="@+id/topbar" layout="@layout/topbar"
-        android:layout_alignParentTop="true" />
+    android:background="@color/feature_normal" >
+    <TextView android:id="@+id/topbar_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:padding="@dimen/topbar_title_padding"
+        android:background="@color/main_color_orange"
+        android:textSize="@dimen/overview_editor_choice_tablet"
+        android:textColor="@color/white"
+        android:text="@string/topic"
+        />
+    
+    <ProgressBar android:id="@+id/pb_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+    
     <com.jumplife.adapter.CustomScrollView         
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/topbar" >
+        android:layout_below="@+id/topbar_text" >
         <LinearLayout android:id="@+id/ll_feature"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -20,12 +34,18 @@
 		        android:background="@color/grey" />                   
             </LinearLayout>     
         </com.jumplife.adapter.CustomScrollView>
-        <ImageButton android:id="@+id/refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/topbar"
-            android:scaleType="fitCenter"
-            android:visibility="gone"
-            android:background="@drawable/button_background"
-            android:src="@drawable/renew"/>
+    
+    <View 
+        android:layout_width="@dimen/seperate_shadow"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/seperate_shadow_inverse" />
+	<ImageButton android:id="@+id/refresh"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/topbar_text"
+	    android:scaleType="fitCenter"
+	    android:visibility="gone"
+	    android:background="@drawable/button_background"
+	    android:src="@drawable/renew"/>
     </RelativeLayout>

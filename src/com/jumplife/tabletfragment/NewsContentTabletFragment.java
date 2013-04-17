@@ -10,6 +10,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.jumplife.adapter.VideoListAdapter;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.NewsContent;
 import com.jumplife.movienews.entity.Video;
@@ -29,6 +30,7 @@ import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -42,8 +44,10 @@ public class NewsContentTabletFragment extends Fragment {
 	private WebView webview;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonShare;
+	private ImageButton imageButtonAbourUs;
 	private ListView lvVideo;
 	private VideoListAdapter videoListAdapter;
+	private ProgressBar pbInit;
 	
 	private NewsContent newsContent;
 	
@@ -135,12 +139,14 @@ public class NewsContentTabletFragment extends Fragment {
     
 	@SuppressLint("SetJavaScriptEnabled")
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news_content);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		textviewTitle = (TextView)fragmentView.findViewById(R.id.tv_title);
 		textviewSource = (TextView)fragmentView.findViewById(R.id.tv_source);
 		textviewReleaseDate = (TextView)fragmentView.findViewById(R.id.tv_date);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
 		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
@@ -150,7 +156,7 @@ public class NewsContentTabletFragment extends Fragment {
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
 		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);  
-		webview.setInitialScale(200);
+		webview.setInitialScale(150);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -159,6 +165,14 @@ public class NewsContentTabletFragment extends Fragment {
                 	loadtask.execute();
                 else
                 	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
             }
         });
 	}
@@ -267,6 +281,8 @@ public class NewsContentTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           
@@ -283,6 +299,7 @@ public class NewsContentTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(newsContent != null){
         		setView();
         		imageButtonRefresh.setVisibility(View.GONE);		

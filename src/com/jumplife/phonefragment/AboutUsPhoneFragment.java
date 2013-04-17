@@ -97,6 +97,7 @@ public class AboutUsPhoneFragment extends Fragment {
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvFeed.setText(getActivity().getResources().getString(R.string.advice_and_feedback));
+		tvFeed.setTextSize(getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvFeed.setTextColor(getActivity().getResources().getColor(R.color.about_us_tv));
 		rlFeed.addView(tvFeed, rlTvFeedParams);		
 		
@@ -138,6 +139,7 @@ public class AboutUsPhoneFragment extends Fragment {
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvDeclare.setText(getActivity().getResources().getString(R.string.liability_disclaimer));
+		tvDeclare.setTextSize(getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvDeclare.setTextColor(getActivity().getResources().getColor(R.color.about_us_tv));
 		rlDeclare.addView(tvDeclare, rlTvDeclareParams);		
 		
@@ -188,6 +190,7 @@ public class AboutUsPhoneFragment extends Fragment {
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvFacebook.setText(getActivity().getResources().getString(R.string.facebook));
+		tvFacebook.setTextSize(getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvFacebook.setTextColor(getActivity().getResources().getColor(R.color.about_us_tv));
 		rlFacebook.addView(tvFacebook, rlTvFacebookParams);		
 		
@@ -261,6 +264,7 @@ public class AboutUsPhoneFragment extends Fragment {
 							getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 					tv.setText(appProject.get(index).getName());
+					tv.setTextSize(getActivity().getResources().getDimensionPixelSize(R.dimen.about_us_title));
 					tv.setTextColor(getActivity().getResources().getColor(R.color.about_us_tv));
 					rl.addView(tv, rlTvParams);
 				} else

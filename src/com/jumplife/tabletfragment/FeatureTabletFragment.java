@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class FeatureTabletFragment extends Fragment {
 	private LinearLayout llFeature;
 	private ArrayList<Picture> pictures;
 	private LoadPictureTask loadPictureTask;
+	private ProgressBar pbInit;
 	
 	private FragmentActivity mFragmentActivity;
 
@@ -62,6 +64,7 @@ public class FeatureTabletFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_feature);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
 		
@@ -111,7 +114,8 @@ public class FeatureTabletFragment extends Fragment {
 				
 			DisplayMetrics displayMetrics = new DisplayMetrics();
 			((Activity) mFragmentActivity).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-	        int screenWidth = displayMetrics.widthPixels * 3 / 4;
+	        int screenWidth = displayMetrics.widthPixels * 3 / 4 - 
+	        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width) * 2;
 	        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 	        iv.getLayoutParams().height = (int)(screenWidth / 2);
 	        iv.getLayoutParams().width = screenWidth;
@@ -121,9 +125,9 @@ public class FeatureTabletFragment extends Fragment {
 			RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 					(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-			tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+			tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
-					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 			tv.setLayoutParams(rlParams);
 			imageLoader.displayImage(pictures.get(0).getPicUrl(), iv, options);
@@ -149,10 +153,10 @@ public class FeatureTabletFragment extends Fragment {
 			
 			TableRow.LayoutParams Params = new TableRow.LayoutParams
 					(screenWidth, screenWidth / 2, 1.0f);
-			Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
+			Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+					0);
 
 			converView.setBackgroundResource(R.drawable.item_background);
 			converView.setLayoutParams(Params);
@@ -177,12 +181,13 @@ public class FeatureTabletFragment extends Fragment {
 		        
 				if(index < pictures.size()) {
 					tv.setText(pictures.get(index).getContent());
+					tv.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_comment_small));
 					RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 							(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 					rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-					tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+					tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl_small), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl_small), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 					tv.setLayoutParams(rlParams);
 					imageLoader.displayImage(pictures.get(index).getPicUrl(), iv, options);
@@ -212,15 +217,15 @@ public class FeatureTabletFragment extends Fragment {
 				TableRow.LayoutParams Params = new TableRow.LayoutParams
 						(screenWidth, screenWidth / 2, 0.5f);
 				if(index%2 != 0)
-					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
+					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2, 
+							0);
 				else
-					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board), 
-							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.item_board));
+					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2, 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+							0);
 				converView.setLayoutParams(Params);
 				converView.setBackgroundResource(R.drawable.item_background);
 				Schedule_row.addView(converView);
@@ -235,6 +240,8 @@ public class FeatureTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           
@@ -252,6 +259,7 @@ public class FeatureTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(pictures != null && pictures.size() > 0){
         		setPictureView();                
         		imageButtonRefresh.setVisibility(View.GONE);

@@ -34,12 +34,16 @@
     <dimen name="feature_comment">16dp</dimen>
     <dimen name="feature_name">12dp</dimen>
     <dimen name="feature_view">1dp</dimen>
-    <dimen name="feature_seperate">2dp</dimen>
     <dimen name="feature_padding">2dp</dimen>
     <dimen name="feature_margin">2dp</dimen>
     <dimen name="feature_board_rl">30dp</dimen>
     <dimen name="feature_board_tb">25dp</dimen>
     
+    <!-- tablet -->
+    <dimen name="overview_editor_choice">16dp</dimen>
+    <dimen name="overview_item_feature_margin_left">6dp</dimen>
+    <dimen name="overview_item_feature_margin_right">6dp</dimen>
+    <dimen name="feature_seperate">1dp</dimen>
     
     
     <!-- listview news fragment -->
@@ -127,7 +131,7 @@
     
     
     <!-- about us fragment -->
-    <dimen name="about_us_title">20dp</dimen>
+    <dimen name="about_us_title">8dp</dimen>
     <dimen name="about_us_margin">8dp</dimen>
     <dimen name="about_us_seperate">2dp</dimen>
 </resources>

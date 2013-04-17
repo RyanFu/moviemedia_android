@@ -19,31 +19,31 @@
         android:paddingBottom="@dimen/pictures_lv_item_ll_board_tb"
         android:orientation="vertical"
         android:gravity="center" >    
-	    <TextView android:id="@+id/news_name" 
-	        android:layout_width="fill_parent" 
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        android:textSize="@dimen/pictures_lv_item_name"
-	        android:textColor="@color/black"
-	        android:text="@string/title" />
-	    <TextView android:id="@+id/news_comment" 
-	        android:layout_width="fill_parent" 
-	        android:layout_height="wrap_content"
-	        android:gravity="right"
-	        android:lines="1"
-	        android:textSize="@dimen/pictures_lv_item_comment"
-	        android:textColor="@color/grey"
-	        android:text="@string/news_lv_comment" />
-	    </LinearLayout>    
+        <TextView android:id="@+id/news_name" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="@dimen/pictures_lv_item_name"
+            android:textColor="@color/black"
+            android:text="@string/title" />
+        <TextView android:id="@+id/news_comment" 
+            android:layout_width="fill_parent" 
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:lines="1"
+            android:textSize="@dimen/pictures_lv_item_comment"
+            android:textColor="@color/grey"
+            android:text="@string/news_lv_comment" />
+        </LinearLayout>    
     <View android:layout_width="fill_parent" 
         android:layout_height="@dimen/pictures_lv_item_seperate"
         android:background="@color/share_picture_seperate" />
     <LinearLayout android:id="@+id/ll_share"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:background="@drawable/button_share_background"
-	    android:orientation="horizontal"
-	    android:gravity="center" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_share_background"
+        android:orientation="horizontal"
+        android:gravity="center" >
 
         <ImageView
             android:id="@+id/iv_share"
@@ -54,16 +54,16 @@
             android:scaleType="fitCenter"
             android:src="@drawable/share" />
 
-	    <TextView
-	        android:id="@+id/tv_share"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginLeft="@dimen/pictures_lv_item_padding"
-	        android:layout_gravity="center_vertical"
-	        android:lines="1"
-	        android:text="@string/share"
-	        android:textColor="@color/share_text"
-	        android:textSize="@dimen/pictures_lv_item_share_text" />
+        <TextView
+            android:id="@+id/tv_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pictures_lv_item_padding"
+            android:layout_gravity="center_vertical"
+            android:lines="1"
+            android:text="@string/share"
+            android:textColor="@color/share_text"
+            android:textSize="@dimen/pictures_lv_item_share_text" />
 
-	    </LinearLayout>
+        </LinearLayout>
 </LinearLayout>

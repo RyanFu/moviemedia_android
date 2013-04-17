@@ -17,7 +17,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
@@ -29,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 public class PicturesTabletFragment extends Fragment {	
 	
@@ -36,6 +36,7 @@ public class PicturesTabletFragment extends Fragment {
 	private ImageButton imageButtonRefresh;
 	private PullToRefreshGridView picturesGridView;
 	private PictureGridAdapter pictureGridAdapter;
+	private ProgressBar pbInit;
 	
 	private ArrayList<Picture> pictures;
 	
@@ -128,6 +129,7 @@ public class PicturesTabletFragment extends Fragment {
     }
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_picture);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		picturesGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_pictures);
 		
@@ -205,6 +207,9 @@ public class PicturesTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		picturesGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -221,13 +226,17 @@ public class PicturesTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(pictures != null && pictures.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
+            	picturesGridView.setVisibility(View.VISIBLE);
             	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+    		} else {
+    			picturesGridView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -237,6 +246,9 @@ public class PicturesTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			picturesGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -250,14 +262,17 @@ public class PicturesTabletFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+			pbInit.setVisibility(View.GONE);
         	if(pictures != null && pictures.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-            	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+            	picturesGridView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			picturesGridView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
         	picturesGridView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

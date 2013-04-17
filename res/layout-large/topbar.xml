@@ -9,7 +9,7 @@
 	<TextView android:id="@+id/topbar_text"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_gravity="left"
+	    android:layout_gravity="center"
 	    android:padding="@dimen/topbar_title_padding"
 	    android:textSize="@dimen/topbar_title_title"
 	    android:textStyle="bold"

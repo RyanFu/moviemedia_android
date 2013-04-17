@@ -177,7 +177,7 @@ public class NewsContentPhoneFragment extends Fragment {
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
 		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);
-		webview.setInitialScale(200);
+		webview.setInitialScale(150);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {

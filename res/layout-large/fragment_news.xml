@@ -4,17 +4,19 @@
     android:layout_height="fill_parent"
     android:layout_width="fill_parent"
     android:background="@color/background" >
+    <ProgressBar android:id="@+id/pb_news"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
     <com.handmark.pulltorefresh.library.PullToRefreshGridView 
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/gv_news"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/news_lv_board"
-        android:layout_marginRight="@dimen/news_lv_board"
         android:background="@color/background"
         android:numColumns="2"
-        android:verticalSpacing="10sp"
-        android:horizontalSpacing="10sp"
+        android:verticalSpacing="@dimen/news_lv_board"
+        android:horizontalSpacing="@dimen/news_lv_board"
         ptr:ptrMode="both" />
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"

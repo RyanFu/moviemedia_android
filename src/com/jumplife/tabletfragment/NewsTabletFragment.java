@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 public class NewsTabletFragment extends Fragment {	
 	
@@ -35,6 +36,7 @@ public class NewsTabletFragment extends Fragment {
 	private ImageButton imageButtonRefresh;
 	private PullToRefreshGridView newsGridView;
 	private NewsGridAdapter newsGridAdapter;
+	private ProgressBar pbInit;
 	
 	private ArrayList<NewsContent> newsContents;
 	
@@ -76,6 +78,7 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		newsGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_news);
 	}
@@ -105,9 +108,6 @@ public class NewsTabletFragment extends Fragment {
 		tmps.add(tmp1);
 		
 		return tmps;
-	}
-	
-	private void setView() {
 	}
 	
 	private void setListener() {
@@ -171,6 +171,9 @@ public class NewsTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		newsGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -187,12 +190,17 @@ public class NewsTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	setView();		
+        	pbInit.setVisibility(View.GONE);
 			if(newsContents != null && newsContents.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsGridView.setVisibility(View.VISIBLE);
+            	imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsGridView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -202,6 +210,9 @@ public class NewsTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			newsGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -215,13 +226,17 @@ public class NewsTabletFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	setView();		
+			pbInit.setVisibility(View.GONE);
 			if(newsContents != null && newsContents.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsGridView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsGridView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 			newsGridView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

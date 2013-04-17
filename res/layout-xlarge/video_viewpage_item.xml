@@ -11,8 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_below="@+id/pager_poster"
         android:textIsSelectable="true"
-        android:textColor="@color/main_color_blue"
-        android:textSize="@dimen/title" />
+        android:textColor="@color/video_description"
+        android:textSize="@dimen/news_content_video_tv_descrption" />
     <ImageView android:id="@+id/pager_play"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
