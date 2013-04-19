@@ -30,9 +30,16 @@
     
     <!-- about us -->
     <string name="about_us">關於我們</string>
+    <string name="reader_submit">作家投稿</string>
     <string name="advice_and_feedback">建議回饋</string>
     <string name="facebook">FB粉絲團</string>
     <string name="liability_disclaimer">免責聲明</string>
     <string name="confirm">確定</string>
+    
+    
+    <!-- tablet -->
+    <string name="aboutapp">關於電影窩</string>
+    <string name="aboutus_other_func">建議回饋與爆料</string>
+    <string name="aboutus_other_productor">其他產品</string>
     
 </resources>

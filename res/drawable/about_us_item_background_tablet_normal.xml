@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+        <item >
+        <shape>
+            <solid android:color="@color/about_us_board_tablet" />
+            <corners android:radius="@dimen/about_us_corner_radius" />
+        </shape>
+    </item>
+    <item 
+        android:bottom="@dimen/about_us_seperate"  
+        android:right="@dimen/about_us_seperate"
+        android:top="@dimen/about_us_seperate"  
+        android:left="@dimen/about_us_seperate" >        
+        <shape>
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/about_us_corner_radius" />
+        </shape>
+    </item>
+</layer-list>

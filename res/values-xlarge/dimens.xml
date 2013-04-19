@@ -47,7 +47,7 @@
     <dimen name="overview_item_feature_tv_name_tablet">20dp</dimen>
     <dimen name="overview_item_feature_iv_icon_tablet">22dp</dimen>
     <dimen name="overview_item_feature_seperate_tablet">1dp</dimen>
-    <dimen name="overview_item_feature_view_press_tablet">5dp</dimen>
+    <dimen name="overview_item_feature_view_press_tablet">15dp</dimen>
     
     <!-- poster -->    
     <dimen name="overview_category_item_tv_padding_rl">20dp</dimen>    
@@ -142,7 +142,14 @@
     
     
     <!-- about us fragment -->
-    <dimen name="about_us_title">28dp</dimen>
-    <dimen name="about_us_margin">28dp</dimen>
+    <dimen name="about_us_title">20dp</dimen>
+    <dimen name="about_us_margin">25dp</dimen>
     <dimen name="about_us_seperate">2dp</dimen>
+    
+    <!-- tablet -->
+    <dimen name="about_us_tv">20dp</dimen>
+    <dimen name="about_us_tv_padding">6dp</dimen>
+    <dimen name="about_us_aboutapp_margin">20dp</dimen>
+    <dimen name="about_us_corner_radius">8dp</dimen>
+    
 </resources>

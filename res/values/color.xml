@@ -59,4 +59,8 @@
     <color name="about_us_bg_press">#696969</color>
     <color name="about_us_tv">#2f2f2f</color>
     
+    <!-- tablet -->
+    <color name="about_us_board_tablet">#959595</color>
+    <color name="about_us_board_bg_press">#d0d0d0</color>
+    
 </resources>
