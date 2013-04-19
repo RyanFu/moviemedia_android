@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,7 +37,10 @@ public class FeatureTabletFragment extends Fragment {
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
 	private LinearLayout llFeature;
-	private ArrayList<Picture> pictures;
+	
+	//private ArrayList<Picture> pictures;
+	private ArrayList<News> news;
+	
 	private LoadPictureTask loadPictureTask;
 	private ProgressBar pbInit;
 	
@@ -80,19 +85,10 @@ public class FeatureTabletFragment extends Fragment {
 	}	
 	
 	private void fetchPictureData() {
-		pictures = new ArrayList<Picture>();
-		pictures = fakePictures();
+		NewsAPI api = new NewsAPI();
+		news = api.getEditorSelectedList();
 	}
-	
-	private ArrayList<Picture> fakePictures() {
-		Picture tmp1 = new Picture(11, 1, "手工彩繪Star wars 所有人物", "http://pic.pimg.tw/jumplives/1364382592-2675134844.jpg?v=1364382593", "");
-		Picture tmp2 = new Picture(22, 2, "阿凡達幕後", "http://pic.pimg.tw/jumplives/1364382592-3648714962.jpg?v=1364382593", "");
-		ArrayList<Picture> tmps = new ArrayList<Picture>();
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		return tmps;
-	}
-	
+
 	@SuppressWarnings("deprecation")
 	private void setPictureView() {
 		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
@@ -106,7 +102,7 @@ public class FeatureTabletFragment extends Fragment {
 		.displayer(new SimpleBitmapDisplayer())
 		.build();
 		
-		if(pictures.size() > 0) {
+		if(news.size() > 0) {
 			//TableRow Schedule_row = new TableRow(getActivity());
 			View converView = myInflater.inflate(R.layout.poster_viewpage_item, null);
 			TextView tv = (TextView)converView.findViewById(R.id.pager_context);
@@ -121,7 +117,7 @@ public class FeatureTabletFragment extends Fragment {
 	        iv.getLayoutParams().width = screenWidth;
 		        
 				
-			tv.setText(pictures.get(0).getContent());
+			tv.setText(news.get(0).getName());
 			RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 					(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 			rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -130,9 +126,10 @@ public class FeatureTabletFragment extends Fragment {
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl), 
 					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 			tv.setLayoutParams(rlParams);
-			imageLoader.displayImage(pictures.get(0).getPicUrl(), iv, options);
+			imageLoader.displayImage(news.get(0).getPosterUrl(), iv, options);
 			converView.setId(0);
-			if(pictures.get(0).getTypeId() == 1) {
+
+			if(news.get(0).getCategory().getTypeId() == 1) {
 				converView.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {
@@ -141,8 +138,13 @@ public class FeatureTabletFragment extends Fragment {
 						newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 					
 			            Bundle bundle = new Bundle();
-			            bundle.putInt("featureId", pictures.get(index).getId());
-			            bundle.putString("featureName", pictures.get(index).getSource());
+
+			            bundle.putInt("newsId", news.get(index).getId());
+			            bundle.putString("categoryName", news.get(index).getCategory().getName());
+			            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(index).getReleaseDate()));
+			            bundle.putString("origin", news.get(index).getOrigin());
+			            bundle.putString("name", news.get(index).getName());
+			            
 			            newAct.putExtras(bundle);
 			            startActivity(newAct);
 					}						
@@ -163,7 +165,8 @@ public class FeatureTabletFragment extends Fragment {
 			llFeature.addView(converView);
 		}
 			
-		for(int i=1; i<pictures.size(); i+=2){
+
+		for(int i=1; i<news.size(); i+=2){
 			TableRow Schedule_row = new TableRow(mFragmentActivity);
 			for(int j=0; j<2; j++){
 				int index = i + j;
@@ -179,9 +182,11 @@ public class FeatureTabletFragment extends Fragment {
 		        iv.getLayoutParams().height = (int)(screenWidth / 2);
 		        iv.getLayoutParams().width = screenWidth;
 		        
-				if(index < pictures.size()) {
-					tv.setText(pictures.get(index).getContent());
+
+				if(index < news.size()) {
+					tv.setText(news.get(index).getName());
 					tv.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_comment_small));
+
 					RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 							(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 					rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -190,9 +195,10 @@ public class FeatureTabletFragment extends Fragment {
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_tv_padding_rl_small), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 					tv.setLayoutParams(rlParams);
-					imageLoader.displayImage(pictures.get(index).getPicUrl(), iv, options);
+					imageLoader.displayImage(news.get(index).getPosterUrl(), iv, options);
 					converView.setId(index);
-					if(pictures.get(index).getTypeId() == 1) {
+
+					if(news.get(index).getCategory().getTypeId() == 1) {
 						converView.setOnClickListener(new OnClickListener(){
 							@Override
 							public void onClick(View arg0) {
@@ -200,9 +206,11 @@ public class FeatureTabletFragment extends Fragment {
 								int index = arg0.getId();
 								newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 							
-					            Bundle bundle = new Bundle();
-					            bundle.putInt("featureId", pictures.get(index).getId());
-					            bundle.putString("featureName", pictures.get(index).getSource());
+								Bundle bundle = new Bundle();
+						        bundle.putInt("categoryId", news.get(index).getCategory().getId());
+						        bundle.putString("categoryName", news.get(index).getCategory().getName());
+						        bundle.putInt("typeId", news.get(index).getCategory().getTypeId());
+						        newAct.putExtras(bundle);
 					            newAct.putExtras(bundle);
 					            startActivity(newAct);
 							}						
@@ -260,7 +268,8 @@ public class FeatureTabletFragment extends Fragment {
         @Override  
         protected void onPostExecute(String result) {
         	pbInit.setVisibility(View.GONE);
-        	if(pictures != null && pictures.size() > 0){
+        	if(news != null && news.size() > 0){
+
         		setPictureView();                
         		imageButtonRefresh.setVisibility(View.GONE);
         	} else {         

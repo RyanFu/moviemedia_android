@@ -7,8 +7,11 @@ import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsPhoneActivity;
 import com.jumplife.movienews.PicturesPhoneActivity;
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsCategories;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
+import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.Picture;
+import com.jumplife.movienews.entity.TextNews;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -47,8 +50,11 @@ public class OverViewPhoneFragment extends Fragment {
 	private LinearLayout llFeature;
 	private ViewPager mPager;
 	private PageIndicator mIndicator;
-	private ArrayList<NewsCategories> newsCategories;
-	private ArrayList<Picture> pictures;
+	private ArrayList<NewsCategory> newsCategories;
+	//private ArrayList<Picture> pictures;
+	
+	private ArrayList<News> editorSelectedNewsList;
+	
 	private PosterViewPagerAdapter mAdapter;
 	private LoadCategoryTask loadCategoryTask;
 	private LoadPictureTask loadPictureTask;
@@ -119,25 +125,12 @@ public class OverViewPhoneFragment extends Fragment {
 	}
 	
 	private void fetchCategoryData() {
-		newsCategories = new ArrayList<NewsCategories>();
-		newsCategories = fakeDataCategories();
+		NewsAPI api = new NewsAPI();
+		newsCategories = api.getCategoryList();
+		if (newsCategories == null) {
+			//error handling
+		}
 	}
-	
-	private ArrayList<NewsCategories> fakeDataCategories() {
-		NewsCategories tmp0 = new NewsCategories(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg",
-				"http://pic.pimg.tw/jumplives/1365507641-1602607809.gif", 0);
-		NewsCategories tmp1 = new NewsCategories(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg",
-				"http://www.facebook.com/l.php?u=http%3A%2F%2Fpic.pimg.tw%2Fjumplives%2F1365507641-365405581.gif", 1);
-		NewsCategories tmp2 = new NewsCategories(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	",
-				"http://www.facebook.com/l.php?u=http%3A%2F%2Fpic.pimg.tw%2Fjumplives%2F1365507641-3366255340.gif", 2);
-		ArrayList<NewsCategories> tmps = new ArrayList<NewsCategories>();
-		tmps.add(tmp0);
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-			
-		return tmps;
-	}
-	
 	@SuppressWarnings("deprecation")
 	private void setCategory() {
 		LayoutInflater myInflater = LayoutInflater.from(getActivity());
@@ -193,8 +186,9 @@ public class OverViewPhoneFragment extends Fragment {
 							else
 								newAct.setClass(getActivity(), PicturesPhoneActivity.class );
 				            Bundle bundle = new Bundle();
-				            bundle.putInt("featureId", newsCategories.get(index).getId());
-				            bundle.putString("featureName", newsCategories.get(index).getName());
+				            bundle.putInt("categoryId", newsCategories.get(index).getId());
+				            bundle.putString("categoryName", newsCategories.get(index).getName());
+				            bundle.putInt("typeId", newsCategories.get(index).getTypeId());
 				            newAct.putExtras(bundle);
 				            startActivity(newAct);
 						}						
@@ -268,21 +262,22 @@ public class OverViewPhoneFragment extends Fragment {
 	
 	
 	private void fetchPictureData() {
-		pictures = new ArrayList<Picture>();
-		pictures = fakePictures();
+		NewsAPI api = new NewsAPI();
+		Log.d("Ben", "call editor select api");
+		editorSelectedNewsList = api.getEditorSelectedList();
+		if (editorSelectedNewsList == null) {
+			Log.d("Ben", "editor select null");
+		}
+		else {
+			for (int i = 0; i < editorSelectedNewsList.size(); i++) {
+				Log.d("Ben", editorSelectedNewsList.get(i).getName());
+			}
+		}
 	}
 	
-	private ArrayList<Picture> fakePictures() {
-		Picture tmp1 = new Picture(11, 1, "手工彩繪Star wars 所有人物", "http://pic.pimg.tw/jumplives/1364382592-2675134844.jpg?v=1364382593", "電影新星聞");
-		Picture tmp2 = new Picture(22, 2, "阿凡達幕後", "http://pic.pimg.tw/jumplives/1364382592-3648714962.jpg?v=1364382593", "電影名言");
-		ArrayList<Picture> tmps = new ArrayList<Picture>();
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		return tmps;
-	}
-	
+
 	private void setPictureView() {
-		mAdapter = new PosterViewPagerAdapter(getActivity(), pictures);
+		mAdapter = new PosterViewPagerAdapter(getActivity(), editorSelectedNewsList);
 
         mPager.setAdapter(mAdapter);
         mPager.setVisibility(View.VISIBLE);
@@ -301,6 +296,7 @@ public class OverViewPhoneFragment extends Fragment {
 		DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
+        
         LayoutParams rlLayout = new LayoutParams(screenWidth, screenWidth / 2);
         
         rlViewpager.setLayoutParams(rlLayout);
@@ -329,7 +325,7 @@ public class OverViewPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	if(pictures != null && pictures.size() > 0){
+        	if(editorSelectedNewsList != null && editorSelectedNewsList.size() > 0){
         		setPictureView();                
                 imageButtonRefreshLand.setVisibility(View.GONE);
         	} else {

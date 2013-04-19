@@ -1,6 +1,7 @@
 package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -9,7 +10,9 @@ import com.jumplife.adapter.NewsListAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsContent;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
+import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.movienews.entity.Video;
 
 import android.content.Intent;
@@ -40,17 +43,19 @@ public class NewsPhoneFragment extends Fragment {
 	private NewsListAdapter newsContentListAdapter;
 	private ProgressBar pbInit;
 	
-	private ArrayList<NewsContent> newsContents;
+	//private ArrayList<TextNews> newsContents;
+	private ArrayList<News> news;
 	
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
 	
-	public static NewsPhoneFragment NewInstance(int featureId, String featureName) {
+	public static NewsPhoneFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		NewsPhoneFragment fragment = new NewsPhoneFragment();
 	    Bundle args = new Bundle();
-	    args.putInt("featureId", featureId);
-	    args.putString("featureName", featureName);
+	    args.putInt("categoryId", categoryId);
+	    args.putString("categoryName", categoryName);
+	    args.putInt("typeId", typeId);
 	    fragment.setArguments(args);
 		return fragment;
 	}
@@ -78,8 +83,8 @@ public class NewsPhoneFragment extends Fragment {
 		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		newsListView = (PullToRefreshListView)fragmentView.findViewById(R.id.lv_news);
 		
-		topbar_text.setText(getArguments().getString("featureName"));
-		
+		topbar_text.setText(getArguments().getString("categoryName"));
+	
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
@@ -87,34 +92,24 @@ public class NewsPhoneFragment extends Fragment {
 	            startActivity(newAct);
             }
         });
+
 	}
 	
 	private String fetchData() {
-		newsContents = fakeData();
+		NewsAPI api = new NewsAPI();
+		
+		int categoryId = getArguments().getInt("categoryId");
+		int typeId = getArguments().getInt("typeId");
+		
+		news = api.getNewsList(categoryId, typeId, 1);
+		
 		
 		return "progress end";
 	}
-	
-	private ArrayList<NewsContent> fakeData() {
-		ArrayList<NewsContent> tmps = new ArrayList<NewsContent>();
-		ArrayList<Video> tmpVideos = new ArrayList<Video>();
-		Video tmpVideo = new Video("康熙來囉～～", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q");
-		tmpVideos.add(tmpVideo);
-		NewsContent tmp1 = new NewsContent(33, getArguments().getInt("featureId"), 
-				"第四屆「金掃帚獎」日前揭曉", "康熙來囉～～", 
-				"成為影史票房第二高的中國片 <br /><img src='http://m.udn.com/xhtml/image/7802699-3036999.jpg' alt='' id='test'>" +
-				"今年票房破億的電影數量增長不多，具體票房數字卻明顯「豪華」了很多。截至目前，已經有五部電影票房突破2億人民幣大關，" +
-				"八部電影衝破1億5000萬人民幣大關。12部過億電影的總票房達到33億7700萬元人民幣，" +
-				"這個數字比去年同期八部破億影片累計20億3200萬元人民幣和2011年同期11部破億電影累計17億5500萬元人民幣高了不少 <br />" +
-				"僅用兩天時間就突破了億元大關；最慢的是在宣傳方面毫無作為的《神隱任務》——共花了18天時間破億。從整體上看" +
-				"，12部電影平均破億時間為6.6天，也就是說單片破億用不了一周。 <br />", 
-				"http://pic.pimg.tw/jumplives/1364368222-4123437044.jpg?v=1364368282", "udn", "", tmpVideos);
-		tmps.add(tmp1);
-		
-		return tmps;
+
+	private void setView() {
 	}
+
 	
 	private void setListener() {
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
@@ -134,8 +129,15 @@ public class NewsPhoneFragment extends Fragment {
 				Intent newAct = new Intent();
 				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
 				Bundle bundle = new Bundle();
-	            bundle.putInt("newsId", newsContents.get(position - 1).getId());
-	            bundle.putString("featureName", getArguments().getString("featureName"));
+				
+	            bundle.putInt("newsId", news.get(position - 1).getId());
+	            bundle.putString("categoryName", getArguments().getString("categoryName"));
+	            
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));
+	            
+	            bundle.putString("origin", news.get(position - 1).getOrigin());
+	            bundle.putString("name", news.get(position - 1).getName());
+	            
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
 			}
@@ -169,7 +171,7 @@ public class NewsPhoneFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		newsContentListAdapter = new NewsListAdapter(getActivity(), newsContents);
+		newsContentListAdapter = new NewsListAdapter(getActivity(), news);
 		newsListView.setAdapter(newsContentListAdapter);
 	}
 	
@@ -196,8 +198,9 @@ public class NewsPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	pbInit.setVisibility(View.GONE);
-			if(newsContents != null && newsContents.size() != 0){
+        	setView();
+			pbInit.setVisibility(View.GONE);
+			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -232,8 +235,10 @@ public class NewsPhoneFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			pbInit.setVisibility(View.GONE);
-			if(newsContents != null && newsContents.size() != 0){
+			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+        	setView();
+        	pbInit.setVisibility(View.GONE);
+			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -250,7 +255,7 @@ public class NewsPhoneFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<NewsContent> tmpList;
+		private ArrayList<TextNews> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -269,7 +274,7 @@ public class NewsPhoneFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			if(tmpList != null && tmpList.size() > 0){
-				newsContents.addAll(tmpList);
+				news.addAll(tmpList);
 				newsContentListAdapter.notifyDataSetChanged();
 				page += 1;
         	}

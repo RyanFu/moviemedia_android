@@ -2,6 +2,8 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+import java.util.Date;
+
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
@@ -10,10 +12,16 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.jumplife.adapter.VideoListAdapter;
+import com.jumplife.adapter.VideosViewPagerAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsContent;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.NewsCategory;
+import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.movienews.entity.Video;
+import com.jumplife.phonefragment.NewsContentPhoneFragment;
+import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.PageIndicator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +30,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,8 +39,10 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -49,7 +61,8 @@ public class NewsContentTabletFragment extends Fragment {
 	private VideoListAdapter videoListAdapter;
 	private ProgressBar pbInit;
 	
-	private NewsContent newsContent;
+	//private TextNews newsContent;
+	private TextNews news;
 	
 	private LoadDataTask loadtask;
     
@@ -68,11 +81,15 @@ public class NewsContentTabletFragment extends Fragment {
         }
     };
     
-	public static NewsContentTabletFragment NewInstance(int newsId, String featureName) {
+	public static NewsContentTabletFragment NewInstance(int newsId, String categoryName, String releaseDateStr, String origin, String name) {
 		NewsContentTabletFragment fragment = new NewsContentTabletFragment();
 	    Bundle args = new Bundle();
 	    args.putInt("newsId", newsId);
-	    args.putString("featureName", featureName);
+	    args.putString("categoryName", categoryName);
+	    args.putString("releaseDateStr", releaseDateStr);
+	    args.putString("origin", origin);
+	    args.putString("name", name);
+	    
 	    fragment.setArguments(args);
 		return fragment;
 	}
@@ -175,42 +192,36 @@ public class NewsContentTabletFragment extends Fragment {
 	            startActivity(newAct);
             }
         });
+		
 	}
 	
 	private String fetchData() {
-		newsContent = fakeData();
+		NewsAPI api = new NewsAPI();		
+		int newsId = getArguments().getInt("newsId");
+		String origin = getArguments().getString("origin");
+		String name = getArguments().getString("name");
+		Date releaseDate = NewsAPI.stringToDate(getArguments().getString("releaseDateStr"));
+		//(int id, String name, String posterUrl, String iconUrl, int typeId)
+		NewsCategory category = new NewsCategory(-1, getArguments().getString("categoryName"), "", "", -1);
+		
+		news = api.getTextNews(newsId);
+		news.setReleaseDate(releaseDate);
+		news.setCategory(category);
+		news.setOrigin(origin);
+		news.setName(name);
+
 		return "progress end";
 	}
 	
-	private NewsContent fakeData() {
-		ArrayList<Video> tmpVideos = new ArrayList<Video>();
-		Video tmpVideo = new Video("康熙來囉～～", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q", 
-				"http://img.youtube.com/vi/jpgU6YOj-zUj1Q/0.jpg");
-		tmpVideos.add(tmpVideo);
-		tmpVideos.add(tmpVideo);
-		tmpVideos.add(tmpVideo);
-		NewsContent tmp1 = new NewsContent(33, getArguments().getInt("featureId"), 
-				"第四屆「金掃帚獎」日前揭曉", "康熙來囉～～", 
-				"成為影史票房第二高的中國片 <br />" +
-				"今年票房破億的電影數量增長不多，具體票房數字卻明顯「豪華」了很多。截至目前，已經有五部電影票房突破2億人民幣大關，" +
-				"八部電影衝破1億5000萬人民幣大關。12部過億電影的總票房達到33億7700萬元人民幣，" +
-				"這個數字比去年同期八部破億影片累計20億3200萬元人民幣和2011年同期11部破億電影累計17億5500萬元人民幣高了不少 <br />" +
-				"僅用兩天時間就突破了億元大關；最慢的是在宣傳方面毫無作為的《神隱任務》——共花了18天時間破億。從整體上看" +
-				"，12部電影平均破億時間為6.6天，也就是說單片破億用不了一周。 <br />", 
-				"http://pic.pimg.tw/jumplives/1364368222-4123437044.jpg?v=1364368282", "udn", "", tmpVideos);
-		
-		return tmp1;
-	}
 	
 	private void setView(){
-		textviewTitle.setText(newsContent.getName());
-		textviewSource.setText(newsContent.getSource());
-		textviewReleaseDate.setText(newsContent.getReleaseDate());
+		textviewTitle.setText(news.getName());
+		textviewSource.setText(news.getOrigin());
+		textviewReleaseDate.setText(NewsAPI.dateToString(news.getReleaseDate()));
 		
 		final String mimeType = "text/html";
-        final String encoding = "UTF-8";        
-        webview.loadDataWithBaseURL("", newsContent.getContent(), mimeType, encoding, "");
+        final String encoding = "UTF-8";
+        webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
 		
 		imageButtonShare.setOnClickListener(new OnClickListener(){
 			@Override
@@ -219,8 +230,16 @@ public class NewsContentTabletFragment extends Fragment {
 			}        	
         });
 		
-		videoListAdapter = new VideoListAdapter(mFragmentActivity, newsContent.getVideos());
+		videoListAdapter = new VideoListAdapter(mFragmentActivity, news.getVideoList());
 		lvVideo.setAdapter(videoListAdapter);
+        
+		
+		imageButtonShare.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				publishFeedDialog();
+			}        	
+        });
 	}
 	
 	private void publishFeedDialog() {
@@ -300,7 +319,7 @@ public class NewsContentTabletFragment extends Fragment {
         @Override  
         protected void onPostExecute(String result) {
         	pbInit.setVisibility(View.GONE);
-        	if(newsContent != null){
+        	if(news != null){
         		setView();
         		imageButtonRefresh.setVisibility(View.GONE);		
     		} else

@@ -29,10 +29,12 @@ public class PicturesPhoneActivity extends FragmentActivity{
         
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getIntent().getExtras();
-        int featureId = bundle.getInt("featureId", 0);
-        String featureName = bundle.getString("featureName");
+        int categoryId = bundle.getInt("categoryId", 0);
+        String categoryName = bundle.getString("categoryName");
+        int typeId = bundle.getInt("typeId", 0);
+        
         FragmentManager fragMgr = this.getSupportFragmentManager();
-        PicturesPhoneFragment newsFragment = PicturesPhoneFragment.NewInstance(featureId, featureName);
+        PicturesPhoneFragment newsFragment = PicturesPhoneFragment.NewInstance(categoryId, categoryName, typeId);
         FragmentTransaction fragTrans = fragMgr.beginTransaction();
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commit();

@@ -2,8 +2,10 @@ package com.jumplife.adapter;
 
 import java.util.ArrayList;
 
+
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsContent;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -18,23 +20,26 @@ import android.widget.TextView;
 
 public class NewsGridAdapter extends BaseAdapter {
 	private Activity mActivity;
-	private ArrayList<NewsContent> newsContents;
+	
+	//private ArrayList<NewsContent> newsContents;
+	private ArrayList<News> news;
+	
 	private DisplayImageOptions options;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	
-	public NewsGridAdapter(Activity mActivity,  ArrayList<NewsContent> newsContents){
-		this.newsContents = newsContents;
+	public NewsGridAdapter(Activity mActivity,  ArrayList<News> news){
+		this.news = news;
 		this.mActivity = mActivity;
 	}
 
 	public int getCount() {
 		
-		return newsContents.size();
+		return news.size();
 	}
 
 	public Object getItem(int position) {
 
-		return newsContents.get(position);
+		return news.get(position);
 	}
 
 	public long getItemId(int position) {
@@ -69,16 +74,16 @@ public class NewsGridAdapter extends BaseAdapter {
         imageviewNewsPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageviewNewsPhoto.getLayoutParams().height = screenWidth * 3 / 5;
         imageviewNewsPhoto.getLayoutParams().width = screenWidth;
-		imageLoader.displayImage(newsContents.get(position).getPosterUrl(), imageviewNewsPhoto, options);
+		imageLoader.displayImage(news.get(position).getPosterUrl(), imageviewNewsPhoto, options);
 		
-		textvieTitle.setText(newsContents.get(position).getName());
-		textViewContent.setText(newsContents.get(position).getComment());
+		textvieTitle.setText(news.get(position).getName());
+		textViewContent.setText(news.get(position).getComment());
 		
-		if(newsContents.get(position).getSource() != null) 
-			textViewSource.setText(newsContents.get(position).getSource());
+		if(news.get(position).getOrigin() != null) 
+			textViewSource.setText(news.get(position).getOrigin());
 		
-		if(newsContents.get(position).getReleaseDate() != null) 
-			textViewRealeaseDate.setText(newsContents.get(position).getReleaseDate());
+		if(news.get(position).getReleaseDate() != null) 
+			textViewRealeaseDate.setText(NewsAPI.dateToString(news.get(position).getReleaseDate()));
 		
 		return converView;
 

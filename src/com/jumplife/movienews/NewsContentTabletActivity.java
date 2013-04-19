@@ -14,10 +14,15 @@ public class NewsContentTabletActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         
         Bundle bundle = this.getIntent().getExtras();
+        
         int newsId = bundle.getInt("newsId", 0);
-        String featureName = bundle.getString("featureName");          
+        String categoryName = bundle.getString("categoryName");
+        String releaseDateStr = bundle.getString("releaseDateStr");
+        String origin = bundle.getString("origin");
+        String name = bundle.getString("name");
+        
         FragmentManager fragMgr = this.getSupportFragmentManager();
-        NewsContentTabletFragment newsFragment = NewsContentTabletFragment.NewInstance(newsId, featureName);
+        NewsContentTabletFragment newsFragment = NewsContentTabletFragment.NewInstance(newsId, categoryName, releaseDateStr, origin, name);
         FragmentTransaction fragTrans = fragMgr.beginTransaction();
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commitAllowingStateLoss();

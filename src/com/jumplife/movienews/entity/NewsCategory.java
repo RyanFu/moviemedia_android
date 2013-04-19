@@ -1,22 +1,27 @@
 package com.jumplife.movienews.entity;
 
-public class NewsCategories {
+public class NewsCategory {
 	private int id;
 	private String name;
 	private String posterUrl;
 	private String iconUrl;
 	private int typeId;
 	
-	public NewsCategories() {
+
+	public NewsCategory() {
 		this(-1, "", "", "", -1);
 	}
 	
-	public NewsCategories(int id, String name, String posterUrl, String iconUrl, int typeId) {
+	public NewsCategory(int id, String name, String posterUrl, String iconUrl, int typeId) {
 		this.id = id;
 		this.name = name;
 		this.posterUrl = posterUrl;
 		this.iconUrl = iconUrl;
 		this.typeId = typeId;
+	}
+	
+	public NewsCategory(int id, String name, int typeId) {
+		this(id, name, "", "", typeId);
 	}
 	
 	public int getId() {
@@ -48,5 +53,5 @@ public class NewsCategories {
 	}
 	public void setTypeId(int typeId) {
 		this.typeId = typeId;
-	}
+	}	
 }

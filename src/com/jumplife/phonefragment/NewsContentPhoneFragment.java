@@ -1,9 +1,13 @@
 package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
+
+import java.util.Date;
+
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
@@ -12,7 +16,10 @@ import com.jumplife.adapter.VideosViewPagerAdapter;
 import com.jumplife.adapter.WrapSlidingDrawer;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsContent;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
+import com.jumplife.movienews.entity.NewsCategory;
+import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.movienews.entity.Video;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -64,17 +71,18 @@ public class NewsContentPhoneFragment extends Fragment {
 	private ImageView slidingDrawerHandler;
 	private ProgressBar pbInit;
 	
-	private NewsContent newsContent;
+	//private TextNews newsContent;
+	private TextNews news;
 	
 	private LoadDataTask loadtask;
 	
 	private UiLifecycleHelper uiHelper;
-    private Session.StatusCallback callback = new Session.StatusCallback() {
+    private StatusCallback callback = new StatusCallback() {
         public void call(final Session session, final SessionState state, final Exception exception) {
             onSessionStateChange(session, state, exception);
         }
     };
-    
+
     private FragmentActivity mFragmentActivity;
 
     @Override
@@ -83,11 +91,16 @@ public class NewsContentPhoneFragment extends Fragment {
         super.onAttach(activity);
     }
     
-	public static NewsContentPhoneFragment NewInstance(int newsId, String featureName) {
+    public static NewsContentPhoneFragment NewInstance(int newsId, String categoryName, String releaseDateStr, String origin, String name) {
 		NewsContentPhoneFragment fragment = new NewsContentPhoneFragment();
 	    Bundle args = new Bundle();
+	    
 	    args.putInt("newsId", newsId);
-	    args.putString("featureName", featureName);
+	    args.putString("categoryName", categoryName);
+	    args.putString("releaseDateStr", releaseDateStr);
+	    args.putString("origin", origin);
+	    args.putString("name", name);
+	    
 	    fragment.setArguments(args);
 		return fragment;
 	}
@@ -165,13 +178,16 @@ public class NewsContentPhoneFragment extends Fragment {
 		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
 		overheadView = (View)fragmentView.findViewById(R.id.view_overhead);
 		
+
+		topbar_text.setText(getArguments().getString("categoryName"));
+
 		slidingDrawer = (WrapSlidingDrawer)fragmentView.findViewById(R.id.sd_video);
 		slidingDrawerHandler = (ImageView)fragmentView.findViewById(R.id.iv_handle);
 		rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);		
 		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
 		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
         
-		topbar_text.setText(getArguments().getString("featureName"));
+
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
@@ -199,40 +215,41 @@ public class NewsContentPhoneFragment extends Fragment {
 	}
 	
 	private String fetchData() {
-		newsContent = fakeData();
+		NewsAPI api = new NewsAPI();		
+		int newsId = getArguments().getInt("newsId");
+		String origin = getArguments().getString("origin");
+		String name = getArguments().getString("name");
+		Date releaseDate = NewsAPI.stringToDate(getArguments().getString("releaseDateStr"));
+		//(int id, String name, String posterUrl, String iconUrl, int typeId)
+		NewsCategory category = new NewsCategory(-1, getArguments().getString("categoryName"), "", "", -1);
+		
+		news = api.getTextNews(newsId);
+		
+		if (news == null) {
+			//error handling
+		}
+		else {
+			news.setCategory(category);
+			news.setOrigin(origin);
+			news.setName(name);
+			news.setReleaseDate(releaseDate);
+		}
 		return "progress end";
 	}
 	
-	private NewsContent fakeData() {
-		ArrayList<Video> tmpVideos = new ArrayList<Video>();
-		Video tmpVideo = new Video("康熙來囉～～", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q", 
-				"http://img.youtube.com/vi/jpgU6YOj-zUj1Q/0.jpg");
-		tmpVideos.add(tmpVideo);
-		tmpVideos.add(tmpVideo);
-		tmpVideos.add(tmpVideo);
-		NewsContent tmp1 = new NewsContent(33, getArguments().getInt("featureId"), 
-				"第四屆「金掃帚獎」日前揭曉", "康熙來囉～～", 
-				"成為影史票房第二高的中國片 <br /><img src='http://m.udn.com/xhtml/image/7802699-3036999.jpg' alt='' id='test'>" +
-				"今年票房破億的電影數量增長不多，具體票房數字卻明顯「豪華」了很多。截至目前，已經有五部電影票房突破2億人民幣大關，" +
-				"八部電影衝破1億5000萬人民幣大關。12部過億電影的總票房達到33億7700萬元人民幣，" +
-				"這個數字比去年同期八部破億影片累計20億3200萬元人民幣和2011年同期11部破億電影累計17億5500萬元人民幣高了不少 <br />" +
-				"僅用兩天時間就突破了億元大關；最慢的是在宣傳方面毫無作為的《神隱任務》——共花了18天時間破億。從整體上看" +
-				"，12部電影平均破億時間為6.6天，也就是說單片破億用不了一周。 <br />", 
-				"http://pic.pimg.tw/jumplives/1364368222-4123437044.jpg?v=1364368282", "udn", "", tmpVideos);
-		
-		return tmp1;
-	}
-	
+
 	private void setView(){
-		textviewTitle.setText(newsContent.getName());
-		textviewSource.setText(newsContent.getSource());
-		textviewReleaseDate.setText(newsContent.getReleaseDate());
+		textviewTitle.setText(news.getName());
+		textviewSource.setText(news.getOrigin());
+		textviewReleaseDate.setText(NewsAPI.dateToString(news.getReleaseDate()));
 		
 		final String mimeType = "text/html";
         final String encoding = "UTF-8";
-        webview.loadDataWithBaseURL("", newsContent.getContent(), mimeType, encoding, "");
+
+		webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
 		
+		RelativeLayout rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
+
 		
 		DisplayMetrics displayMetrics = new DisplayMetrics();
         mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -242,7 +259,8 @@ public class NewsContentPhoneFragment extends Fragment {
         
         rlViewpager.setLayoutParams(rlLayout);
         
-        mAdapter = new VideosViewPagerAdapter(mFragmentActivity, newsContent.getVideos());
+        mAdapter = new VideosViewPagerAdapter(mFragmentActivity, news.getVideoList());
+
 		mPager.setAdapter(mAdapter);
         
 		mIndicator.setViewPager(mPager);
@@ -277,9 +295,9 @@ public class NewsContentPhoneFragment extends Fragment {
 
 		if (session != null && session.isOpened()) {
 	        Bundle params = new Bundle();
-	        params.putString("name", newsContent.getName());
-	        params.putString("caption", newsContent.getComment());
-	        params.putString("link", "http://developer.android.com/guide/components/fragments.html");
+	        params.putString("name", news.getName());
+	        params.putString("caption", news.getName());
+	        params.putString("link", news.getSourceUrl());
 	        //params.putString("picture", newsContent.getPosterUrl());
 	        
 	        // Invoke the dialog
@@ -347,8 +365,8 @@ public class NewsContentPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	pbInit.setVisibility(View.GONE);
-        	if(newsContent != null){
+			pbInit.setVisibility(View.GONE);
+        	if(news != null){
         		setView();
         		imageButtonRefresh.setVisibility(View.GONE);		
     		} else

@@ -13,6 +13,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 import com.jumplife.phonefragment.LoginFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -41,27 +42,30 @@ import android.widget.Toast;
 
 public class PictureListAdapter extends BaseAdapter {
 	private FragmentActivity mActivity;
-	private ArrayList<Picture> pictures;
+	
+	//private ArrayList<Picture> pictures;
+	private ArrayList<News> news;
+	
 	private DisplayImageOptions options;
 	private PostRecordTask postRecordTask;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private Session session = Session.getActiveSession();
 	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
-	
-	public PictureListAdapter(FragmentActivity mActivity,  ArrayList<Picture> pictures){
-		this.pictures = pictures;
+
+	public PictureListAdapter(FragmentActivity mActivity,  ArrayList<News> news){
+		this.news = news;
 		this.mActivity = mActivity;
 	}
 
 	public int getCount() {
 		
-		return pictures.size();
+		return news.size();
 	}
 
 	public Object getItem(int position) {
 
-		return pictures.get(position);
+		return news.get(position);
 	}
 
 	public long getItemId(int position) {
@@ -97,12 +101,12 @@ public class PictureListAdapter extends BaseAdapter {
         imageviewNewsPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageviewNewsPhoto.getLayoutParams().height = screenWidth * 3 / 5;
         imageviewNewsPhoto.getLayoutParams().width = screenWidth;
-		imageLoader.displayImage(pictures.get(position).getPicUrl(), imageviewNewsPhoto, options);
+		imageLoader.displayImage(news.get(position).show(), imageviewNewsPhoto, options);
 		
-		textvieTitle.setText(pictures.get(position).getContent());
-		textViewContent.setText(pictures.get(position).getSource());
+		textvieTitle.setText(news.get(position).getName());
+		textViewContent.setText(news.get(position).getOrigin());
 		
-		llShare.setOnClickListener(new ItemButtonClick(position, pictures.get(position).getPicUrl()));
+		llShare.setOnClickListener(new ItemButtonClick(position, news.get(position).getShareLink()));
 		return converView;
 
 	}
@@ -226,7 +230,7 @@ public class PictureListAdapter extends BaseAdapter {
                 }
             });
             Bundle params = request.getParameters();
-			params.putString("message", pictures.get(position).getContent());
+			params.putString("message", news.get(position).getName());
 			request.executeAsync();
 			return;
         } else {

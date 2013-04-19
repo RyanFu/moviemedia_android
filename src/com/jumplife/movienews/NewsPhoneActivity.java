@@ -14,10 +14,12 @@ public class NewsPhoneActivity extends FragmentActivity{
         super.onCreate(savedInstanceState);
         
         Bundle bundle = this.getIntent().getExtras();
-        int newsId = bundle.getInt("featureId", 0);
-        String featureName = bundle.getString("featureName");        
+        int newsId = bundle.getInt("categoryId", 0);
+        int typeId = bundle.getInt("typeId", 0);
+        String featureName = bundle.getString("categoryName");
+        
         FragmentManager fragMgr = this.getSupportFragmentManager();
-        NewsPhoneFragment newsFragment = NewsPhoneFragment.NewInstance(newsId, featureName);
+        NewsPhoneFragment newsFragment = NewsPhoneFragment.NewInstance(newsId, featureName, typeId);
         FragmentTransaction fragTrans = fragMgr.beginTransaction();
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commitAllowingStateLoss();
