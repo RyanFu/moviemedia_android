@@ -7,6 +7,7 @@ public class NewsCategory {
 	private String iconUrl;
 	private int typeId;
 	
+
 	public NewsCategory() {
 		this(-1, "", "", "", -1);
 	}
@@ -41,19 +42,16 @@ public class NewsCategory {
 	public void setPosterUrl(String posterUrl) {
 		this.posterUrl = posterUrl;
 	}
+	public String getIconUrl() {
+		return iconUrl;
+	}
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
 	public int getTypeId() {
 		return typeId;
 	}
 	public void setTypeId(int typeId) {
 		this.typeId = typeId;
-	}
-
-	public String getIconUrl() {
-		return iconUrl;
-	}
-
-	public void setIconUrl(String iconUrl) {
-		this.iconUrl = iconUrl;
-	}
-	
+	}	
 }

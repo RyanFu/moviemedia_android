@@ -19,8 +19,6 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.os.StrictMode;
-
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.MemoryCacheAware;
 import com.nostra13.universalimageloader.cache.memory.impl.LRULimitedMemoryCache;
@@ -35,18 +33,14 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 public class MovieNewsAppliccation extends Application {
 	@Override
 	public void onCreate() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDialog().build());
-			StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyDeath().build());
-		}
-
+		
 		super.onCreate();
 
 		initImageLoader(getApplicationContext());
 	}
 
 	public static void initImageLoader(Context context) {
-		int memoryCacheSize = (int) (Runtime.getRuntime().maxMemory() / 8);
+		int memoryCacheSize = (int) (Runtime.getRuntime().freeMemory() / 2);
 
 		MemoryCacheAware<String, Bitmap> memoryCache;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -60,12 +54,11 @@ public class MovieNewsAppliccation extends Application {
 		//  ImageLoaderConfiguration.createDefault(this);
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-				.threadPriority(Thread.NORM_PRIORITY - 2)
+				.threadPriority(Thread.NORM_PRIORITY)
 				.memoryCache(memoryCache)
 				.denyCacheImageMultipleSizesInMemory()
 				.discCacheFileNameGenerator(new Md5FileNameGenerator())
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.enableLogging() // Not necessary in common
 				.build();
 		ImageLoader.getInstance().init(config);
 	}

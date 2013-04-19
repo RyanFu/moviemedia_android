@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <shape>
+            <solid android:color="@color/about_us_seperate_tr" />
+        </shape>
+    </item>
+    <item 
+        android:bottom="@dimen/about_us_seperate"  
+        android:right="@dimen/about_us_seperate" >        
+        <shape>
+            <solid android:color="@color/about_us_bg_press" />
+        </shape>
+    </item>
+</layer-list>

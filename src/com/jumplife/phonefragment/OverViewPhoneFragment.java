@@ -3,6 +3,7 @@ package com.jumplife.phonefragment;
 import java.util.ArrayList;
 
 import com.jumplife.adapter.PosterViewPagerAdapter;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsPhoneActivity;
 import com.jumplife.movienews.PicturesPhoneActivity;
 import com.jumplife.movienews.R;
@@ -13,7 +14,7 @@ import com.jumplife.movienews.entity.Picture;
 import com.jumplife.movienews.entity.TextNews;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
@@ -32,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -40,8 +42,10 @@ import android.widget.LinearLayout.LayoutParams;
 public class OverViewPhoneFragment extends Fragment {	
 	
 	private View fragmentView;
+	private TextView topbar_text;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonRefreshLand;
+	private ImageButton imageButtonAbourUs;
 	private RelativeLayout rlViewpager;
 	private LinearLayout llFeature;
 	private ViewPager mPager;
@@ -54,6 +58,7 @@ public class OverViewPhoneFragment extends Fragment {
 	private PosterViewPagerAdapter mAdapter;
 	private LoadCategoryTask loadCategoryTask;
 	private LoadPictureTask loadPictureTask;
+	private ProgressBar pbInit;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,13 +83,18 @@ public class OverViewPhoneFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_overview);
+		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonRefreshLand = (ImageButton)fragmentView.findViewById(R.id.refresh_land);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
 		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
 		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
         
+		topbar_text.setText(getActivity().getResources().getString(R.string.app_name));
+		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	loadCategoryTask = new LoadCategoryTask();
@@ -104,6 +114,14 @@ public class OverViewPhoneFragment extends Fragment {
                 	loadPictureTask.executeOnExecutor(LoadPictureTask.THREAD_POOL_EXECUTOR, 0);
             }
         });
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
+            }
+        });
 	}
 	
 	private void fetchCategoryData() {
@@ -113,21 +131,6 @@ public class OverViewPhoneFragment extends Fragment {
 			//error handling
 		}
 	}
-	
-	private ArrayList<NewsCategory> fakeDataCategories() {
-		NewsCategory tmp1 = new NewsCategory(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", "",  1);
-		NewsCategory tmp2 = new NewsCategory(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	", "", 2);
-		ArrayList<NewsCategory> tmps = new ArrayList<NewsCategory>();
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		
-		return tmps;
-	}
-	
 	@SuppressWarnings("deprecation")
 	private void setCategory() {
 		LayoutInflater myInflater = LayoutInflater.from(getActivity());
@@ -138,17 +141,19 @@ public class OverViewPhoneFragment extends Fragment {
 		.showImageOnFail(R.drawable.img_status_error)
 		.cacheInMemory()
 		.cacheOnDisc()
-		.displayer(new SimpleBitmapDisplayer())
+		.displayer(new RoundedBitmapDisplayer
+				((int)this.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_radius)))
 		.build();
 		
 		for(int i=0; i<newsCategories.size(); i+=2){
 			TableRow Schedule_row = new TableRow(getActivity());
 			for(int j=0; j<2; j++){
 				int index = i + j;
-				View converView = myInflater.inflate(R.layout.poster_viewpage_item, null);
+				View converView = myInflater.inflate(R.layout.item_category, null);
 				
 				TextView tv = (TextView)converView.findViewById(R.id.pager_context);
 				ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);
+				RelativeLayout rl = (RelativeLayout)converView.findViewById(R.id.rl_overview_category);
 				
 				DisplayMetrics displayMetrics = new DisplayMetrics();
 				getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -156,12 +161,13 @@ public class OverViewPhoneFragment extends Fragment {
 		        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		        iv.getLayoutParams().height = (int)(screenWidth * 4 / 5);
 		        iv.getLayoutParams().width = screenWidth;
+		        iv.setBackgroundResource(R.drawable.overview_category_item_poster_background);
 		        
 				if(index < newsCategories.size()) {
 					tv.setText(newsCategories.get(index).getName());
 					RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 							(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-					rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+					rlParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 					tv.setPadding(getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
 							getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
 							getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
@@ -187,22 +193,32 @@ public class OverViewPhoneFragment extends Fragment {
 				            startActivity(newAct);
 						}						
 					});
+				} else {
+					tv.setVisibility(View.INVISIBLE);
+					iv.setVisibility(View.INVISIBLE);
+					converView.setVisibility(View.INVISIBLE);
 				}
+				
+				rl.setBackgroundResource(R.drawable.overview_category_item_background);
 				
 				TableRow.LayoutParams Params = new TableRow.LayoutParams
 						(screenWidth / 2, screenWidth * 3 / 8, 0.5f);
 				if(index%2 != 1)
-					Params.setMargins(getActivity().getResources().getDimensionPixelSize(R.dimen.item_board), 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.item_board), 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.item_board));
+					Params.setMargins(0, 
+						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2,
+						0);
 				else
-					Params.setMargins(getActivity().getResources().getDimensionPixelSize(R.dimen.item_board)/2, 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.item_board), 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.item_board), 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.item_board));
+					Params.setMargins(getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2, 
+							getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+							0, 
+							0);
 				converView.setLayoutParams(Params);
-				converView.setBackgroundResource(R.drawable.item_background);
+				converView.setPadding(getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
+						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng), 
+						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
+						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng));
+				converView.setBackgroundResource(R.drawable.overview_category_item_background);
 				Schedule_row.addView(converView);
 			}
 			Schedule_row.setLayoutParams(new LayoutParams
@@ -215,6 +231,8 @@ public class OverViewPhoneFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -232,6 +250,7 @@ public class OverViewPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(newsCategories != null && newsCategories.size() > 0){
         		setCategory();
         		imageButtonRefresh.setVisibility(View.GONE);		
@@ -255,6 +274,7 @@ public class OverViewPhoneFragment extends Fragment {
 			}
 		}
 	}
+	
 
 	private void setPictureView() {
 		mAdapter = new PosterViewPagerAdapter(getActivity(), editorSelectedNewsList);
@@ -286,7 +306,8 @@ public class OverViewPhoneFragment extends Fragment {
 	class LoadPictureTask extends AsyncTask<Integer, Integer, String>{  
         
     	@Override  
-        protected void onPreExecute() {
+        protected void onPreExecute() {                
+            imageButtonRefreshLand.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           

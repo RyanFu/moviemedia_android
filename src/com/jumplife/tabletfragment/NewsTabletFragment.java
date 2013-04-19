@@ -6,19 +6,21 @@ import java.util.ArrayList;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.jumplife.adapter.NewsListAdapter;
-import com.jumplife.movienews.NewsContentPhoneActivity;
+import com.jumplife.adapter.NewsGridAdapter;
+import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.movienews.entity.Video;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,14 +31,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 public class NewsTabletFragment extends Fragment {	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
 	private PullToRefreshGridView newsGridView;
-	private NewsListAdapter newsGridAdapter;
+	private NewsGridAdapter newsGridAdapter;
+	private ProgressBar pbInit;
 	
 	//private ArrayList<TextNews> newsContents;
 	private ArrayList<News> news;
@@ -44,6 +47,14 @@ public class NewsTabletFragment extends Fragment {
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
+    
+    private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	public static NewsTabletFragment NewInstance(int featureId, String featureName) {
 		NewsTabletFragment fragment = new NewsTabletFragment();
@@ -71,6 +82,7 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		newsGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_news);
 	}
@@ -84,9 +96,6 @@ public class NewsTabletFragment extends Fragment {
 		news = api.getNewsList(categoryId, typeId, 1);
 		
 		return "progress end";
-	}
-	
-	private void setView() {
 	}
 	
 	private void setListener() {
@@ -105,10 +114,18 @@ public class NewsTabletFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(null, "click item : " + position);
 				Intent newAct = new Intent();
-				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
+				newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
+				
 				Bundle bundle = new Bundle();
+				
 	            bundle.putInt("newsId", news.get(position - 1).getId());
-	            bundle.putString("featureName", getArguments().getString("featureName"));
+	            bundle.putString("categoryName", getArguments().getString("categoryName"));
+	            
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));
+	            
+	            bundle.putString("origin", news.get(position - 1).getOrigin());
+	            bundle.putString("name", news.get(position - 1).getName());
+				
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
 			}
@@ -117,7 +134,7 @@ public class NewsTabletFragment extends Fragment {
 		newsGridView.setOnRefreshListener(new OnRefreshListener2<GridView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-				 newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -129,7 +146,7 @@ public class NewsTabletFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-				newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				newsGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -142,7 +159,8 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		newsGridAdapter = new NewsListAdapter(getActivity(), news);
+		newsGridAdapter = new NewsGridAdapter(mFragmentActivity, news);
+
 		newsGridView.setAdapter(newsGridAdapter);
 	}
 	
@@ -150,6 +168,9 @@ public class NewsTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		newsGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -166,12 +187,17 @@ public class NewsTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	setView();		
+        	pbInit.setVisibility(View.GONE);
 			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsGridView.setVisibility(View.VISIBLE);
+            	imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsGridView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -181,6 +207,9 @@ public class NewsTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			newsGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -195,12 +224,17 @@ public class NewsTabletFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	setView();		
+        	pbInit.setVisibility(View.GONE);
 			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-        	}
+            	newsGridView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			newsGridView.setVisibility(View.GONE);
+                imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 			newsGridView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

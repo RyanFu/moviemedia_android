@@ -3,25 +3,30 @@ package com.jumplife.tabletfragment;
 import java.util.ArrayList;
 
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,12 +38,13 @@ public class OverViewTabletFragment extends Fragment {
 	private ArrayList<NewsCategory> newsCategories;
 	private ArrayList<View> viewFeatures;
 	private LoadCategoryTask loadCategoryTask;
+	private ProgressBar pbInit;
 	
-	private Context mContext;
+	private FragmentActivity mFragmentActivity;
 
     @Override
     public void onAttach(Activity activity) {
-        mContext = getActivity();
+    	mFragmentActivity = getActivity();
         super.onAttach(activity);
     }
     
@@ -59,6 +65,7 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_overview);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
         
@@ -74,20 +81,11 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void fetchCategoryData() {
-		newsCategories = new ArrayList<NewsCategory>();
-		newsCategories = fakeDataCategories();
-	}
-	
-	private ArrayList<NewsCategory> fakeDataCategories() {
-		NewsCategory tmp0 = new NewsCategory(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", "", 0);
-		NewsCategory tmp1 = new NewsCategory(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", "", 1);
-		NewsCategory tmp2 = new NewsCategory(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	", "", 2);
-		ArrayList<NewsCategory> tmps = new ArrayList<NewsCategory>();
-		tmps.add(tmp0);
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-			
-		return tmps;
+		NewsAPI api = new NewsAPI();
+		newsCategories = api.getCategoryList();
+		if (newsCategories == null) {
+			//error handling
+		}
 	}
 	
 	private void setViewPress(int pos) {
@@ -95,11 +93,14 @@ public class OverViewTabletFragment extends Fragment {
 		for(int i=0; i<viewFeatures.size(); i++) {
 			View tmp = viewFeatures.get(i);
 			View seperate = (View)tmp.findViewById(R.id.feature_seperate);
+			TextView tv  = (TextView)tmp.findViewById(R.id.feature_name);
 			if(i == pos) {
 				seperate.setVisibility(View.VISIBLE);
+				tv.setTextColor(mFragmentActivity.getResources().getColor(R.color.feature_tv_press));
 				tmp.setBackgroundResource(R.color.feature_press);
 			} else {
 				seperate.setVisibility(View.INVISIBLE);
+				tv.setTextColor(mFragmentActivity.getResources().getColor(R.color.feature_tv_normal));
 				tmp.setBackgroundResource(R.color.feature_normal);
 			}
 		}
@@ -110,22 +111,49 @@ public class OverViewTabletFragment extends Fragment {
 		
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.showStubImage(R.drawable.img_status_loading)
-		.showImageForEmptyUri(R.drawable.img_status_nopicture)
-		.showImageOnFail(R.drawable.img_status_error)
 		.cacheInMemory()
 		.cacheOnDisc()
-		.displayer(new RoundedBitmapDisplayer(20))
+		.displayer(new SimpleBitmapDisplayer())
 		.build();
 		
-		LayoutInflater myInflater = LayoutInflater.from(mContext);
+		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
 		for(int i=0; i<newsCategories.size(); i+=1){
-			View converView = myInflater.inflate(R.layout.item_feature, null);
+			View converView = myInflater.inflate(R.layout.item_categorye, null);
+			View seperate = (View)converView.findViewById(R.id.feature_seperate);
 			TextView tv = (TextView)converView.findViewById(R.id.feature_name);
 			ImageView iv = (ImageView)converView.findViewById(R.id.feature_pic);
+	        
+			RelativeLayout.LayoutParams vParams = new RelativeLayout.LayoutParams
+						(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.seperate),
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_name) +
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb) +
+								mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+			vParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			seperate.setLayoutParams(vParams);
 			
-	        tv.setText(newsCategories.get(i).getName());					
-			imageLoader.displayImage(newsCategories.get(i).getPosterUrl(), iv, options);
+	        RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams
+					((int) (mFragmentActivity.getResources().getDimension(R.dimen.overview_item_feature_iv_icon_tablet)),
+							(int) (mFragmentActivity.getResources().getDimension(R.dimen.overview_item_feature_iv_icon_tablet)));
+	        ivParams.addRule(RelativeLayout.RIGHT_OF, seperate.getId());
+	        ivParams.addRule(RelativeLayout.CENTER_VERTICAL);
+	        ivParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb), 
+					0, 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+	        iv.setLayoutParams(ivParams);
+	        iv.setScaleType(ScaleType.FIT_CENTER);
+			imageLoader.displayImage(newsCategories.get(i).getIconUrl(), iv, options);
+			
+			RelativeLayout.LayoutParams tvParams = new RelativeLayout.LayoutParams
+					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			tvParams.addRule(RelativeLayout.RIGHT_OF, iv.getId());
+			tvParams.addRule(RelativeLayout.CENTER_VERTICAL);
+			tvParams.setMargins((mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl) / 3), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_rl), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_board_tb));
+	        tv.setLayoutParams(tvParams);
+	        tv.setText(newsCategories.get(i).getName());		
 			
 			converView.setId(i);
 			converView.setOnClickListener(new OnClickListener(){
@@ -166,29 +194,22 @@ public class OverViewTabletFragment extends Fragment {
 	                    ft.replace(R.id.details, pics);//将得到的fragment 替换当前的viewGroup内容，add则不替换会依次累加
 	                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);//设置动画效果
 	                    ft.commit();//提交
-		                
-
 					}
 				}
 			});
+			
 			viewFeatures.add(converView);
 			llFeature.addView(converView);
 		}
 		setViewPress(0);
-		
-		FeatureTabletFragment features = new FeatureTabletFragment(); 
-
-        FragmentTransaction ft = getFragmentManager()
-                .beginTransaction();
-        ft.add(R.id.details, features);//将得到的fragment 替换当前的viewGroup内容，add则不替换会依次累加
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);//设置动画效果
-        ft.commit();//提交
 	}
 	
 	class LoadCategoryTask extends AsyncTask<Integer, Integer, String>{  
         
     	@Override  
         protected void onPreExecute() {
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           
@@ -206,6 +227,7 @@ public class OverViewTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(newsCategories != null && newsCategories.size() > 0){
         		setCategory();
         		imageButtonRefresh.setVisibility(View.GONE);		

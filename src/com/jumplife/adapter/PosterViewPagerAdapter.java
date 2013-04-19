@@ -82,6 +82,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         imageViewMoviePoster.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageViewMoviePoster.getLayoutParams().height = (int)(screenWidth / 2);
         imageViewMoviePoster.getLayoutParams().width = screenWidth;
+        imageViewMoviePoster.setBackgroundResource(R.drawable.overview_category_item_poster_background);
         
         textViewFeature.setText(news.get(pos).getCategory().getName());
         RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
@@ -100,6 +101,8 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		textViewFeature.setLayoutParams(rlFeatureParams);
 		if(news.get(pos).getCategory().getName() == null || news.get(pos).getCategory().getName().contains(""))
 			textViewFeature.setVisibility(View.INVISIBLE);
+		else
+			textViewFeature.setVisibility(View.GONE);
 		
         textViewContext.setText(news.get(pos).getName());
         RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams

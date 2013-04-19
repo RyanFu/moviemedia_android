@@ -1,0 +1,30 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/main_color_blue" />
+            <corners android:radius="@dimen/news_lv_item_radius" />
+        </shape>
+    </item>
+    <item 
+        android:left="@dimen/news_lv_item_background_padding"  
+        android:top="@dimen/news_lv_item_background_padding"  
+        android:right="@dimen/news_lv_item_background_padding"  
+        android:bottom="@dimen/news_lv_item_background_padding" >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/listview_item_bottomline_color" />  
+            <corners
+                android:radius="@dimen/news_lv_item_radius" />
+        </shape>
+    </item>
+    <item 
+        android:left="@dimen/news_lv_item_background_padding"  
+        android:top="@dimen/news_lv_item_background_padding"  
+        android:right="@dimen/news_lv_item_background_padding"  
+        android:bottom="@dimen/news_lv_item_background_padding_and_bottomline_height" >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />  
+            <corners
+                android:radius="@dimen/news_lv_item_radius" />
+        </shape>
+    </item>
+</layer-list>

@@ -23,7 +23,8 @@
         </shape>  
     </item>  
     <item>        
-        <shape>  
+        <shape>
+            <solid android:color="@color/transparent100"/>   
             <padding  
                 android:left="@dimen/item_bg_board"  
                 android:top="@dimen/item_bg_board"  

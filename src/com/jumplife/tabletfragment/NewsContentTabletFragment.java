@@ -1,6 +1,7 @@
 package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
+
 import java.util.Date;
 
 import com.facebook.FacebookException;
@@ -10,8 +11,9 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.jumplife.adapter.VideoListAdapter;
 import com.jumplife.adapter.VideosViewPagerAdapter;
-import com.jumplife.adapter.WrapSlidingDrawer;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
@@ -20,13 +22,14 @@ import com.jumplife.movienews.entity.Video;
 import com.jumplife.phonefragment.NewsContentPhoneFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -37,17 +40,15 @@ import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.SlidingDrawer.OnDrawerCloseListener;
-import android.widget.SlidingDrawer.OnDrawerOpenListener;
 import android.widget.Toast;
 import android.widget.TextView;
 
-@SuppressWarnings("deprecation")
 public class NewsContentTabletFragment extends Fragment {	
 	
 	private View fragmentView;
-	private View overheadView;
 	private TextView topbar_text;
 	private TextView textviewTitle;
 	private TextView textviewSource;
@@ -55,15 +56,23 @@ public class NewsContentTabletFragment extends Fragment {
 	private WebView webview;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonShare;
-	private VideosViewPagerAdapter mAdapter;
-	private ViewPager mPager;
-	private PageIndicator mIndicator;
-	private WrapSlidingDrawer slidingDrawer;
+	private ImageButton imageButtonAbourUs;
+	private ListView lvVideo;
+	private VideoListAdapter videoListAdapter;
+	private ProgressBar pbInit;
 	
 	//private TextNews newsContent;
 	private TextNews news;
 	
 	private LoadDataTask loadtask;
+    
+    private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
@@ -104,7 +113,7 @@ public class NewsContentTabletFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
         uiHelper.onCreate(savedInstanceState);
     }
 
@@ -147,23 +156,24 @@ public class NewsContentTabletFragment extends Fragment {
     
 	@SuppressLint("SetJavaScriptEnabled")
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news_content);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		textviewTitle = (TextView)fragmentView.findViewById(R.id.tv_title);
 		textviewSource = (TextView)fragmentView.findViewById(R.id.tv_source);
 		textviewReleaseDate = (TextView)fragmentView.findViewById(R.id.tv_date);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
-		slidingDrawer = (WrapSlidingDrawer)fragmentView.findViewById(R.id.sd_video);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
-		overheadView = (View)fragmentView.findViewById(R.id.view_overhead);
+		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
 		topbar_text.setText(getArguments().getString("featureName"));
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
-		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);
-		webview.setInitialScale(200);
+		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);  
+		webview.setInitialScale(150);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -174,6 +184,15 @@ public class NewsContentTabletFragment extends Fragment {
                 	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
             }
         });
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
+            }
+        });
+		
 	}
 	
 	private String fetchData() {
@@ -194,7 +213,6 @@ public class NewsContentTabletFragment extends Fragment {
 		return "progress end";
 	}
 	
-
 	
 	private void setView(){
 		textviewTitle.setText(news.getName());
@@ -203,42 +221,20 @@ public class NewsContentTabletFragment extends Fragment {
 		
 		final String mimeType = "text/html";
         final String encoding = "UTF-8";
-		webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
+        webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
 		
-		RelativeLayout rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
-		
-		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
-		
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-        LinearLayout.LayoutParams rlLayout = new LinearLayout.LayoutParams(screenWidth, 
-        		screenWidth / 2 + getActivity().getResources().getDimensionPixelSize(R.dimen.title) * 3);
-        
-        rlViewpager.setLayoutParams(rlLayout);
-        
-        mAdapter = new VideosViewPagerAdapter(getActivity(), news.getVideoList());
-		mPager.setAdapter(mAdapter);
-        
-		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
-        
-        slidingDrawer.getLayoutParams().height = displayMetrics.heightPixels / 2;
-        slidingDrawer.setVisibility(View.VISIBLE);
-        slidingDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
+		imageButtonShare.setOnClickListener(new OnClickListener(){
 			@Override
-			public void onDrawerOpened() {
-				overheadView.setVisibility(View.VISIBLE);
+			public void onClick(View arg0) {
+				publishFeedDialog();
 			}        	
         });
-        slidingDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
-			@Override
-			public void onDrawerClosed() {
-				overheadView.setVisibility(View.INVISIBLE);
-			}        	
-        });
+		
+		videoListAdapter = new VideoListAdapter(mFragmentActivity, news.getVideoList());
+		lvVideo.setAdapter(videoListAdapter);
         
-        imageButtonShare.setOnClickListener(new OnClickListener(){
+		
+		imageButtonShare.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
 				publishFeedDialog();
@@ -258,7 +254,7 @@ public class NewsContentTabletFragment extends Fragment {
 	        params.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
 	        
 	        // Invoke the dialog
-	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(getActivity(), session, params))
+	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(mFragmentActivity, session, params))
 				.setOnCompleteListener(new OnCompleteListener() {
 		
 					@Override
@@ -269,23 +265,23 @@ public class NewsContentTabletFragment extends Fragment {
 			                // and the post Id.
 							final String postId = values.getString("post_id");
 							if (postId != null) {
-								Toast.makeText(getActivity(),
+								Toast.makeText(mFragmentActivity,
 										"Posted story, id: "+postId,
 										Toast.LENGTH_SHORT).show();
 							} else {
 								// User clicked the Cancel button
-								Toast.makeText(getActivity().getApplicationContext(), 
+								Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                                "Publish cancelled", 
 		                                Toast.LENGTH_SHORT).show();
 							}
 						} else if (error instanceof FacebookOperationCanceledException) {
 							// User clicked the "x" button
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Publish cancelled", 
 		                            Toast.LENGTH_SHORT).show();
 						} else {
 							// Generic, ex: network error
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Error posting story", 
 		                            Toast.LENGTH_SHORT).show();
 						}
@@ -296,7 +292,7 @@ public class NewsContentTabletFragment extends Fragment {
 	    	feedDialog.show();
 	    } else {
 	    	LoginFragment splashFragment = new LoginFragment();
-	    	splashFragment.show(getActivity().getSupportFragmentManager(), "dialog"); 
+	    	splashFragment.show(mFragmentActivity.getSupportFragmentManager(), "dialog"); 
 	    }
     }
 	
@@ -304,6 +300,8 @@ public class NewsContentTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
     		super.onPreExecute();  
         }  
           
@@ -320,6 +318,7 @@ public class NewsContentTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(news != null){
         		setView();
         		imageButtonRefresh.setVisibility(View.GONE);		

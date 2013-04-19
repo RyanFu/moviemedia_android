@@ -14,6 +14,7 @@ import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.jumplife.adapter.VideosViewPagerAdapter;
 import com.jumplife.adapter.WrapSlidingDrawer;
+import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
@@ -24,11 +25,13 @@ import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -38,7 +41,9 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
@@ -57,10 +62,14 @@ public class NewsContentPhoneFragment extends Fragment {
 	private WebView webview;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonShare;
+	private ImageButton imageButtonAbourUs;
 	private VideosViewPagerAdapter mAdapter;
+	private RelativeLayout rlViewpager;
 	private ViewPager mPager;
 	private PageIndicator mIndicator;
 	private WrapSlidingDrawer slidingDrawer;
+	private ImageView slidingDrawerHandler;
+	private ProgressBar pbInit;
 	
 	//private TextNews newsContent;
 	private TextNews news;
@@ -73,8 +82,16 @@ public class NewsContentPhoneFragment extends Fragment {
             onSessionStateChange(session, state, exception);
         }
     };
+
+    private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
     
-	public static NewsContentPhoneFragment NewInstance(int newsId, String categoryName, String releaseDateStr, String origin, String name) {
+    public static NewsContentPhoneFragment NewInstance(int newsId, String categoryName, String releaseDateStr, String origin, String name) {
 		NewsContentPhoneFragment fragment = new NewsContentPhoneFragment();
 	    Bundle args = new Bundle();
 	    
@@ -107,7 +124,7 @@ public class NewsContentPhoneFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiHelper = new UiLifecycleHelper(getActivity(), callback);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
         uiHelper.onCreate(savedInstanceState);
     }
 
@@ -150,23 +167,33 @@ public class NewsContentPhoneFragment extends Fragment {
     
 	@SuppressLint("SetJavaScriptEnabled")
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news_content);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		textviewTitle = (TextView)fragmentView.findViewById(R.id.tv_title);
 		textviewSource = (TextView)fragmentView.findViewById(R.id.tv_source);
 		textviewReleaseDate = (TextView)fragmentView.findViewById(R.id.tv_date);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
-		slidingDrawer = (WrapSlidingDrawer)fragmentView.findViewById(R.id.sd_video);
+		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
 		overheadView = (View)fragmentView.findViewById(R.id.view_overhead);
 		
+
 		topbar_text.setText(getArguments().getString("categoryName"));
+
+		slidingDrawer = (WrapSlidingDrawer)fragmentView.findViewById(R.id.sd_video);
+		slidingDrawerHandler = (ImageView)fragmentView.findViewById(R.id.iv_handle);
+		rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);		
+		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
+		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
+        
+
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
 		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);
-		webview.setInitialScale(200);
+		webview.setInitialScale(150);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -175,6 +202,14 @@ public class NewsContentPhoneFragment extends Fragment {
                 	loadtask.execute();
                 else
                 	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
+		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	Intent newAct = new Intent();
+				newAct.setClass(getActivity(), AboutUsActivity.class );
+	            startActivity(newAct);
             }
         });
 	}
@@ -204,34 +239,31 @@ public class NewsContentPhoneFragment extends Fragment {
 	
 
 	private void setView(){
-		int a = 0;
-		a ++;
-		
 		textviewTitle.setText(news.getName());
 		textviewSource.setText(news.getOrigin());
 		textviewReleaseDate.setText(NewsAPI.dateToString(news.getReleaseDate()));
 		
 		final String mimeType = "text/html";
         final String encoding = "UTF-8";
+
 		webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
 		
 		RelativeLayout rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
-		
-		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
+
 		
 		DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
         LinearLayout.LayoutParams rlLayout = new LinearLayout.LayoutParams(screenWidth, 
-        		screenWidth / 2 + getActivity().getResources().getDimensionPixelSize(R.dimen.title) * 3);
+        		screenWidth / 2 + mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.title) * 3);
         
         rlViewpager.setLayoutParams(rlLayout);
         
-        mAdapter = new VideosViewPagerAdapter(getActivity(), news.getVideoList());
+        mAdapter = new VideosViewPagerAdapter(mFragmentActivity, news.getVideoList());
+
 		mPager.setAdapter(mAdapter);
         
-		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+		mIndicator.setViewPager(mPager);
         
         slidingDrawer.getLayoutParams().height = displayMetrics.heightPixels / 2;
         slidingDrawer.setVisibility(View.VISIBLE);
@@ -239,12 +271,14 @@ public class NewsContentPhoneFragment extends Fragment {
 			@Override
 			public void onDrawerOpened() {
 				overheadView.setVisibility(View.VISIBLE);
+				slidingDrawerHandler.setImageResource(R.drawable.handler_down);
 			}        	
         });
         slidingDrawer.setOnDrawerCloseListener(new OnDrawerCloseListener(){
 			@Override
 			public void onDrawerClosed() {
 				overheadView.setVisibility(View.INVISIBLE);
+				slidingDrawerHandler.setImageResource(R.drawable.handler_up);
 			}        	
         });
         
@@ -267,7 +301,7 @@ public class NewsContentPhoneFragment extends Fragment {
 	        //params.putString("picture", newsContent.getPosterUrl());
 	        
 	        // Invoke the dialog
-	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(getActivity(), session, params))
+	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(mFragmentActivity, session, params))
 				.setOnCompleteListener(new OnCompleteListener() {
 		
 					@Override
@@ -278,23 +312,23 @@ public class NewsContentPhoneFragment extends Fragment {
 			                // and the post Id.
 							final String postId = values.getString("post_id");
 							if (postId != null) {
-								Toast.makeText(getActivity(),
+								Toast.makeText(mFragmentActivity,
 										"Posted story, id: "+postId,
 										Toast.LENGTH_SHORT).show();
 							} else {
 								// User clicked the Cancel button
-								Toast.makeText(getActivity().getApplicationContext(), 
+								Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                                "Publish cancelled", 
 		                                Toast.LENGTH_SHORT).show();
 							}
 						} else if (error instanceof FacebookOperationCanceledException) {
 							// User clicked the "x" button
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Publish cancelled", 
 		                            Toast.LENGTH_SHORT).show();
 						} else {
 							// Generic, ex: network error
-							Toast.makeText(getActivity().getApplicationContext(), 
+							Toast.makeText(mFragmentActivity.getApplicationContext(), 
 		                            "Error posting story", 
 		                            Toast.LENGTH_SHORT).show();
 						}
@@ -305,7 +339,7 @@ public class NewsContentPhoneFragment extends Fragment {
 	    	feedDialog.show();
 	    } else {
 	    	LoginFragment splashFragment = new LoginFragment();
-	    	splashFragment.show(getActivity().getSupportFragmentManager(), "dialog"); 
+	    	splashFragment.show(mFragmentActivity.getSupportFragmentManager(), "dialog"); 
 	    }
     }
 	
@@ -313,7 +347,9 @@ public class NewsContentPhoneFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
-    		super.onPreExecute();  
+    		pbInit.setVisibility(View.VISIBLE);
+    		imageButtonRefresh.setVisibility(View.GONE);
+    		super.onPreExecute();
         }  
           
         @Override  
@@ -329,6 +365,7 @@ public class NewsContentPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+			pbInit.setVisibility(View.GONE);
         	if(news != null){
         		setView();
         		imageButtonRefresh.setVisibility(View.GONE);		

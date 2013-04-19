@@ -12,7 +12,6 @@ public class NewsPhoneActivity extends FragmentActivity{
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.main);
         
         Bundle bundle = this.getIntent().getExtras();
         int newsId = bundle.getInt("categoryId", 0);
@@ -25,7 +24,7 @@ public class NewsPhoneActivity extends FragmentActivity{
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commitAllowingStateLoss();
         
-        if(getResources().getBoolean(R.bool.landscape)){
+        if(getResources().getBoolean(R.bool.tablet)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }

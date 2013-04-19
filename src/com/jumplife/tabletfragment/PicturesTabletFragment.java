@@ -2,19 +2,25 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
-import com.jumplife.adapter.PictureAdapter;
+import com.jumplife.adapter.PictureGridAdapter;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +30,15 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 public class PicturesTabletFragment extends Fragment {	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
 	private PullToRefreshGridView picturesGridView;
-	private PictureAdapter pictureGridAdapter;
+	private PictureGridAdapter pictureGridAdapter;
+	private ProgressBar pbInit;
 	
 	//private ArrayList<Picture> pictures;
 	private ArrayList<News> newsList;
@@ -38,6 +46,21 @@ public class PicturesTabletFragment extends Fragment {
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
+    
+    private FragmentActivity mFragmentActivity;
+
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        public void call(final Session session, final SessionState state, final Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+    
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	public static PicturesTabletFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		PicturesTabletFragment fragment = new PicturesTabletFragment();
@@ -48,7 +71,7 @@ public class PicturesTabletFragment extends Fragment {
 	    fragment.setArguments(args);
 		return fragment;
 	}
-	
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -64,8 +87,53 @@ public class PicturesTabletFragment extends Fragment {
 	    
 		return fragmentView;
 	}
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
+        uiHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        uiHelper.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+    
+    /**
+     * Notifies that the session token has been updated.
+     */
+    private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
+
+    }
 	
 	private void initView() {
+		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_picture);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		picturesGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_pictures);
 		
@@ -106,7 +174,7 @@ public class PicturesTabletFragment extends Fragment {
 		picturesGridView.setOnRefreshListener(new OnRefreshListener2<GridView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-				 picturesGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 picturesGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -118,7 +186,7 @@ public class PicturesTabletFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-				picturesGridView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				picturesGridView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -131,7 +199,7 @@ public class PicturesTabletFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		pictureGridAdapter = new PictureAdapter(getActivity(), newsList);
+		pictureGridAdapter = new PictureGridAdapter(mFragmentActivity, newsList);
 		picturesGridView.setAdapter(pictureGridAdapter);
 	}
 	
@@ -139,6 +207,9 @@ public class PicturesTabletFragment extends Fragment {
         
     	@Override  
         protected void onPreExecute() {
+    		picturesGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+    		pbInit.setVisibility(View.VISIBLE);
     		super.onPreExecute();  
         }  
           
@@ -155,13 +226,17 @@ public class PicturesTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
+        	pbInit.setVisibility(View.GONE);
         	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
+            	picturesGridView.setVisibility(View.VISIBLE);
             	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+    		} else {
+    			picturesGridView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
 
 	        super.onPostExecute(result);  
         }
@@ -171,6 +246,9 @@ public class PicturesTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
+			picturesGridView.setVisibility(View.GONE);
+        	imageButtonRefresh.setVisibility(View.GONE);
+			pbInit.setVisibility(View.VISIBLE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -185,13 +263,17 @@ public class PicturesTabletFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+			pbInit.setVisibility(View.GONE);
         	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
-            	imageButtonRefresh.setVisibility(View.GONE);		
-    		} else
+            	picturesGridView.setVisibility(View.VISIBLE);
+    			imageButtonRefresh.setVisibility(View.GONE);		
+    		} else {
+    			picturesGridView.setVisibility(View.GONE);
                 imageButtonRefresh.setVisibility(View.VISIBLE);
+    		}
         	picturesGridView.onRefreshComplete();        	
         	super.onPostExecute(result);
         }

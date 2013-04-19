@@ -6,6 +6,23 @@
     android:background="@color/background" >
     <include android:id="@+id/topbar" layout="@layout/topbar"
         android:layout_alignParentTop="true" />
+    
+    <ImageButton
+        android:id="@+id/ib_about_us"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/topbar"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/topbar"
+        android:padding="@dimen/item_board"
+        android:background="@drawable/imagebutton_topbar_background"
+        android:scaleType="fitCenter"
+        android:src="@drawable/imagebutton_about_us" />
+    
+    <ProgressBar android:id="@+id/pb_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
     <com.jumplife.adapter.CustomScrollView         
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -13,31 +30,21 @@
         <LinearLayout android:id="@+id/ll_feature"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/layout_interval_width"
+            android:layout_marginRight="@dimen/layout_interval_width"
             android:background="@color/background"
             android:orientation="vertical" >
-            <RelativeLayout
-                android:layout_height="fill_parent"
-                android:layout_width="wrap_content" >
-                <TextView android:id="@+id/tv_editor_choice"
-                    android:layout_height="wrap_content"
-                    android:layout_width="fill_parent"
-                    android:layout_alignParentTop="true"
-                    android:padding="@dimen/text_board"
-                    android:background="@color/main_color_orange"
-                    android:textSize="@dimen/title"
-                    android:text="@string/editor_choice" />
-                <com.viewpagerindicator.CirclePageIndicator
-                    android:id="@+id/indicator"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_alignTop="@+id/tv_editor_choice"
-                    android:layout_alignBottom="@+id/tv_editor_choice"
-                    android:layout_alignParentRight="true"
-                    android:padding="8dp"
-                    app:radius="4dp"
-                    app:fillColor="@color/main_color_blue"
-                    app:pageColor="@color/white" />
-                </RelativeLayout>
+            <TextView android:id="@+id/tv_editor_choice"
+	            android:layout_height="wrap_content"
+	            android:layout_width="fill_parent"
+	            android:layout_marginTop="@dimen/layout_interval_width"
+	            android:gravity="center"
+	            android:padding="@dimen/textview_title_board"
+	            android:background="@color/main_color_orange"
+	            android:textColor="@color/white"
+	            android:textSize="@dimen/textview_title"
+	            android:text="@string/editor_choice" />
+                
             <RelativeLayout android:id="@+id/rl_viewpager"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent" >
@@ -45,8 +52,9 @@
                     android:id="@+id/pager"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true" />
-	            <ImageButton android:id="@+id/refresh_land"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/layout_interval_width" />
+                <ImageButton android:id="@+id/refresh_land"
 	                android:layout_width="fill_parent"
 	                android:layout_height="wrap_content"
 	                android:scaleType="fitCenter"
@@ -54,10 +62,32 @@
 	                android:background="@drawable/button_background"
 	                android:src="@drawable/renew" />
                  </RelativeLayout>
-            <View 
+            <RelativeLayout 
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent" >
+                <com.viewpagerindicator.CirclePageIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/indicator_padding"
+                    android:background="@color/transparent50"
+                    app:radius="@dimen/indicator_radius"
+                    app:strokeWidth="0dp"
+                    app:fillColor="@color/white"
+                    app:pageColor="@color/grey" />
+                </RelativeLayout>     
+            
+            <TextView
+                android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/seperate"
-                android:background="@color/main_color_orange" />
+                android:layout_marginTop="@dimen/layout_interval_width"
+                android:gravity="center"
+                android:padding="@dimen/textview_title_board"
+                android:background="@color/main_color_orange"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textview_title"
+                android:text="@string/topic" />
+            
             <ImageButton android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

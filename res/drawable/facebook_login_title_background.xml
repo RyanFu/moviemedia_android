@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/main_color_blue" />
+            <corners android:topLeftRadius="@dimen/fb_login_background_radius"
+                android:topRightRadius="@dimen/fb_login_background_radius" />
+            <stroke android:width="@dimen/fb_login_background_board"
+                android:color="@color/fb_login_board" />
+        </shape>
+    </item>
+</layer-list>

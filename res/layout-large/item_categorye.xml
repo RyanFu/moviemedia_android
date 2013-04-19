@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+    
+    <View android:id="@+id/feature_seperate"
+        android:layout_width="@dimen/overview_item_feature_view_press_tablet"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@color/main_color_blue" />
+        
+    <ImageView android:id="@+id/feature_pic"
+        android:layout_width="@dimen/overview_item_feature_iv_icon_tablet"
+        android:layout_height="@dimen/overview_item_feature_iv_icon_tablet"
+        android:layout_toLeftOf="@+id/feature_seperate"
+        android:scaleType="fitCenter" />
+    
+    <TextView android:id="@+id/feature_name" 
+        android:layout_width="wrap_content" 
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/overview_item_feature_margin_left_tablet"
+        android:layout_marginLeft="@dimen/overview_item_feature_margin_right_tablet"
+        android:layout_toLeftOf="@+id/feature_pic"
+        android:textSize="@dimen/overview_item_feature_tv_name_tablet"
+        android:textColor="@color/feature_tv_normal"
+        android:text="@string/news_lv_source" />
+    
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/overview_item_feature_seperate_tablet"
+        android:layout_alignParentBottom="true"
+        android:background="@color/topbar_seperate" />
+    
+    </RelativeLayout>
