@@ -7,7 +7,6 @@ import com.jumplife.movienews.PicturesPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -33,7 +32,6 @@ import android.widget.TextView;
 public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAdapter{
 
 	private Activity mActivty;
-	//private ArrayList<Picture> pictures;
 	private ArrayList<News> news;
 	private DisplayImageOptions options;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
@@ -59,7 +57,8 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	
 	@Override
 	public void destroyItem(View pager, int position, Object view) {
-		((ViewPager) pager).removeView(((ViewPager)pager).getChildAt(position));
+		//((ViewPager) pager).removeView(((ViewPager)pager).getChildAt(position));
+		((ViewPager) pager).removeView(pager);
 	}
 
 	@Override
@@ -137,6 +136,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	    });
 		
         ((ViewPager)pager).addView(view, ((ViewPager)pager).getChildCount() > pos ? pos : ((ViewPager)pager).getChildCount());
+        //((ViewPager)pager).addView(view);
         
 	    return view;
 	}

@@ -11,9 +11,6 @@
     <string name="news_lv_date">張貼日期</string>
     <string name="news_lv_comment">內容</string>
     
-    <!-- listview photo -->
-    <string name="news_lv_source">來源</string>
-    
     <!-- Share -->
     <string name="share">分享</string>
     

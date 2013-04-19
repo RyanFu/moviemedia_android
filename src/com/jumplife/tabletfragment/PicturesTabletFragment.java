@@ -246,9 +246,7 @@ public class PicturesTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
-			picturesGridView.setVisibility(View.GONE);
-        	imageButtonRefresh.setVisibility(View.GONE);
-			pbInit.setVisibility(View.VISIBLE);
+			imageButtonRefresh.setVisibility(View.GONE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -262,9 +260,7 @@ public class PicturesTabletFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-			pbInit.setVisibility(View.GONE);
-        	if(newsList != null && newsList.size() != 0){
+			if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;

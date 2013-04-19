@@ -1,8 +1,6 @@
 package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -13,8 +11,6 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.TextNews;
-import com.jumplife.movienews.entity.Video;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -106,10 +102,6 @@ public class NewsPhoneFragment extends Fragment {
 		
 		return "progress end";
 	}
-
-	private void setView() {
-	}
-
 	
 	private void setListener() {
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
@@ -198,8 +190,7 @@ public class NewsPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	setView();
-			pbInit.setVisibility(View.GONE);
+        	pbInit.setVisibility(View.GONE);
 			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
@@ -219,9 +210,7 @@ public class NewsPhoneFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
-			newsListView.setVisibility(View.GONE);
-        	imageButtonRefresh.setVisibility(View.GONE);
-			pbInit.setVisibility(View.VISIBLE);
+			imageButtonRefresh.setVisibility(View.GONE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -235,9 +224,6 @@ public class NewsPhoneFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	setView();
-        	pbInit.setVisibility(View.GONE);
 			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();

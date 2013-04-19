@@ -12,8 +12,6 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.TextNews;
-import com.jumplife.movienews.entity.Video;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -207,9 +205,7 @@ public class NewsTabletFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
-			newsGridView.setVisibility(View.GONE);
-        	imageButtonRefresh.setVisibility(View.GONE);
-			pbInit.setVisibility(View.VISIBLE);
+			imageButtonRefresh.setVisibility(View.GONE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -223,8 +219,6 @@ public class NewsTabletFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	pbInit.setVisibility(View.GONE);
 			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();

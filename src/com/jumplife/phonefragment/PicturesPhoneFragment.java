@@ -274,9 +274,7 @@ public class PicturesPhoneFragment extends Fragment {
 
 		@Override  
         protected void onPreExecute() {
-			picturesListView.setVisibility(View.GONE);
-        	imageButtonRefresh.setVisibility(View.GONE);
-			pbInit.setVisibility(View.VISIBLE);
+			imageButtonRefresh.setVisibility(View.GONE);
 			page = 1;
         	super.onPreExecute();  
         }  
@@ -290,9 +288,7 @@ public class PicturesPhoneFragment extends Fragment {
             super.onProgressUpdate(progress);  
         } 
 		protected void onPostExecute(String result) {
-			pbInit.setVisibility(View.GONE);
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	if(newsList != null && newsList.size() != 0){
+			if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
