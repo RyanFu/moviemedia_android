@@ -261,15 +261,9 @@ public class OverViewPhoneFragment extends Fragment {
 	
 	private void fetchPictureData() {
 		NewsAPI api = new NewsAPI();
-		Log.d("Ben", "call editor select api");
 		editorSelectedNewsList = api.getEditorSelectedList();
 		if (editorSelectedNewsList == null) {
-			Log.d("Ben", "editor select null");
-		}
-		else {
-			for (int i = 0; i < editorSelectedNewsList.size(); i++) {
-				Log.d("Ben", editorSelectedNewsList.get(i).getName());
-			}
+			//error handling
 		}
 	}
 	

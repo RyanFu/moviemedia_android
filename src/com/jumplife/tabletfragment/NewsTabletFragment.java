@@ -54,11 +54,12 @@ public class NewsTabletFragment extends Fragment {
         super.onAttach(activity);
     }
 	
-	public static NewsTabletFragment NewInstance(int featureId, String featureName) {
+	public static NewsTabletFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		NewsTabletFragment fragment = new NewsTabletFragment();
 	    Bundle args = new Bundle();
-	    args.putInt("featureId", featureId);
-	    args.putString("featureName", featureName);
+	    args.putInt("categoryId", categoryId);
+	    args.putString("categoryName", categoryName);
+	    args.putInt("typeId", typeId);
 	    fragment.setArguments(args);
 		return fragment;
 	}
