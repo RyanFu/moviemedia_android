@@ -2,13 +2,16 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.jumplife.adapter.NewsListAdapter;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsContent;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
+import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.movienews.entity.Video;
 
 import android.content.Intent;
@@ -35,7 +38,8 @@ public class NewsTabletFragment extends Fragment {
 	private PullToRefreshGridView newsGridView;
 	private NewsListAdapter newsGridAdapter;
 	
-	private ArrayList<NewsContent> newsContents;
+	//private ArrayList<TextNews> newsContents;
+	private ArrayList<News> news;
 	
 	private LoadDataTask loadtask;
 	
@@ -72,30 +76,14 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private String fetchData() {
-		newsContents = fakeData();
+		NewsAPI api = new NewsAPI();
+		
+		int categoryId = getArguments().getInt("categoryId");
+		int typeId = getArguments().getInt("typeId");
+		
+		news = api.getNewsList(categoryId, typeId, 1);
 		
 		return "progress end";
-	}
-	
-	private ArrayList<NewsContent> fakeData() {
-		ArrayList<NewsContent> tmps = new ArrayList<NewsContent>();
-		ArrayList<Video> tmpVideos = new ArrayList<Video>();
-		Video tmpVideo = new Video("康熙來囉～～", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q", 
-				"https://www.youtube.com/watch?v=U6YOj-zUj1Q");
-		tmpVideos.add(tmpVideo);
-		NewsContent tmp1 = new NewsContent(33, getArguments().getInt("featureId"), 
-				"第四屆「金掃帚獎」日前揭曉", "康熙來囉～～", 
-				"成為影史票房第二高的中國片 <br /><img src='http://m.udn.com/xhtml/image/7802699-3036999.jpg' alt='' id='test'>" +
-				"今年票房破億的電影數量增長不多，具體票房數字卻明顯「豪華」了很多。截至目前，已經有五部電影票房突破2億人民幣大關，" +
-				"八部電影衝破1億5000萬人民幣大關。12部過億電影的總票房達到33億7700萬元人民幣，" +
-				"這個數字比去年同期八部破億影片累計20億3200萬元人民幣和2011年同期11部破億電影累計17億5500萬元人民幣高了不少 <br />" +
-				"僅用兩天時間就突破了億元大關；最慢的是在宣傳方面毫無作為的《神隱任務》——共花了18天時間破億。從整體上看" +
-				"，12部電影平均破億時間為6.6天，也就是說單片破億用不了一周。 <br />", 
-				"http://pic.pimg.tw/jumplives/1364368222-4123437044.jpg?v=1364368282", "udn", "", tmpVideos);
-		tmps.add(tmp1);
-		
-		return tmps;
 	}
 	
 	private void setView() {
@@ -119,7 +107,7 @@ public class NewsTabletFragment extends Fragment {
 				Intent newAct = new Intent();
 				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
 				Bundle bundle = new Bundle();
-	            bundle.putInt("newsId", newsContents.get(position - 1).getId());
+	            bundle.putInt("newsId", news.get(position - 1).getId());
 	            bundle.putString("featureName", getArguments().getString("featureName"));
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
@@ -154,7 +142,7 @@ public class NewsTabletFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		newsGridAdapter = new NewsListAdapter(getActivity(), newsContents);
+		newsGridAdapter = new NewsListAdapter(getActivity(), news);
 		newsGridView.setAdapter(newsGridAdapter);
 	}
 	
@@ -179,7 +167,7 @@ public class NewsTabletFragment extends Fragment {
         @Override  
         protected void onPostExecute(String result) {
         	setView();		
-			if(newsContents != null && newsContents.size() != 0){
+			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -208,7 +196,7 @@ public class NewsTabletFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         	setView();		
-			if(newsContents != null && newsContents.size() != 0){
+			if(news != null && news.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -220,7 +208,7 @@ public class NewsTabletFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<NewsContent> tmpList;
+		private ArrayList<TextNews> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -239,7 +227,7 @@ public class NewsTabletFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			if(tmpList != null && tmpList.size() > 0){
-				newsContents.addAll(tmpList);
+				news.addAll(tmpList);
 				newsGridAdapter.notifyDataSetChanged();
 				page += 1;
         	}

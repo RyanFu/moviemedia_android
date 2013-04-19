@@ -10,6 +10,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.jumplife.adapter.PictureAdapter;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 
 import android.content.Intent;
@@ -36,7 +38,8 @@ public class PicturesPhoneFragment extends Fragment {
 	private PullToRefreshListView picturesListView;
 	private PictureAdapter pictureListAdapter;
 	
-	private ArrayList<Picture> pictures;
+	//private ArrayList<Picture> pictures;
+	private ArrayList<News> newsList;
 	
 	private LoadDataTask loadtask;
 	
@@ -49,11 +52,12 @@ public class PicturesPhoneFragment extends Fragment {
         }
     };
     
-	public static PicturesPhoneFragment NewInstance(int featureId, String featureName) {
+	public static PicturesPhoneFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		PicturesPhoneFragment fragment = new PicturesPhoneFragment();
 	    Bundle args = new Bundle();
-	    args.putInt("featureId", featureId);
-	    args.putString("featureName", featureName);
+	    args.putInt("categoryId", categoryId);
+	    args.putInt("typeId", typeId);
+	    args.putString("categoryName", categoryName);
 	    fragment.setArguments(args);
 		return fragment;
 	}
@@ -125,7 +129,7 @@ public class PicturesPhoneFragment extends Fragment {
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		picturesListView = (PullToRefreshListView)fragmentView.findViewById(R.id.listview_pictures);
 		
-		topbar_text.setText(getArguments().getString("featureName"));
+		topbar_text.setText(getArguments().getString("categoryName"));
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -140,11 +144,17 @@ public class PicturesPhoneFragment extends Fragment {
 	}
 	
 	private String fetchData() {
-		pictures = fakeData();
+		NewsAPI api = new NewsAPI();
+		
+		int categoryId = getArguments().getInt("categoryId");
+		int typeId = getArguments().getInt("typeId");
+		
+		newsList = api.getNewsList(categoryId, typeId, 1);
+		
 		
 		return "progress end";
 	}
-	
+	/*
 	private ArrayList<Picture> fakeData() {
 		ArrayList<Picture> tmps = new ArrayList<Picture>();
 		Picture tmp1 = new Picture(35, 2, "有詐～～", "http://pic.pimg.tw/jumplives/1364379312-2318126965.jpg", "蝙蝠俠");
@@ -154,6 +164,7 @@ public class PicturesPhoneFragment extends Fragment {
 		
 		return tmps;
 	}
+	*/
 	
 	private void setListener() {
 		picturesListView.setOnItemClickListener(new OnItemClickListener() {
@@ -193,7 +204,7 @@ public class PicturesPhoneFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		pictureListAdapter = new PictureAdapter(getActivity(), pictures);
+		pictureListAdapter = new PictureAdapter(getActivity(), newsList);
 		picturesListView.setAdapter(pictureListAdapter);
 	}
 	
@@ -217,7 +228,7 @@ public class PicturesPhoneFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	if(pictures != null && pictures.size() != 0){
+        	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -247,7 +258,7 @@ public class PicturesPhoneFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	if(pictures != null && pictures.size() != 0){
+        	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -280,7 +291,7 @@ public class PicturesPhoneFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			if(tmpList != null && tmpList.size() > 0){
-				pictures.addAll(tmpList);
+				newsList.addAll(tmpList);
 				pictureListAdapter.notifyDataSetChanged();
 				page += 1;
         	}

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.PicturesPhoneActivity;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,13 +33,14 @@ import android.widget.TextView;
 public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAdapter{
 
 	private Activity mActivty;
-	private ArrayList<Picture> pictures;
+	//private ArrayList<Picture> pictures;
+	private ArrayList<News> news;
 	private DisplayImageOptions options;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	
-	public PosterViewPagerAdapter(Activity activty, ArrayList<Picture> pictures) {
+	public PosterViewPagerAdapter(Activity activty, ArrayList<News> news) {
 		this.mActivty = activty;
-		this.pictures = pictures;
+		this.news = news;
 		
 		options = new DisplayImageOptions.Builder()
 		.showStubImage(R.drawable.img_status_loading)
@@ -51,7 +54,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	
 	@Override
 	public int getCount() {
-		return pictures.size();
+		return news.size();
 	}
 	
 	@Override
@@ -80,7 +83,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         imageViewMoviePoster.getLayoutParams().height = (int)(screenWidth / 2);
         imageViewMoviePoster.getLayoutParams().width = screenWidth;
         
-        textViewFeature.setText(pictures.get(pos).getSource());
+        textViewFeature.setText(news.get(pos).getCategory().getName());
         RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         rlFeatureParams.setMargins(mActivty.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
@@ -95,10 +98,10 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				mActivty.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
 				mActivty.getResources().getDimensionPixelSize(R.dimen.feature_padding));
 		textViewFeature.setLayoutParams(rlFeatureParams);
-		if(pictures.get(pos).getSource() == null || pictures.get(pos).getSource().contains(""))
+		if(news.get(pos).getCategory().getName() == null || news.get(pos).getCategory().getName().contains(""))
 			textViewFeature.setVisibility(View.INVISIBLE);
 		
-        textViewContext.setText(pictures.get(pos).getContent());
+        textViewContext.setText(news.get(pos).getName());
         RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 				(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -109,7 +112,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				mActivty.getResources().getDimensionPixelSize(R.dimen.text_board));
 		textViewContext.setLayoutParams(rlParams);
 		
-		imageLoader.displayImage(pictures.get(pos).getPicUrl(), imageViewMoviePoster, options);
+		imageLoader.displayImage(news.get(pos).getPosterUrl(), imageViewMoviePoster, options);
         
 		view.setOnClickListener(new ItemButtonClick(pos));
 		view.setOnTouchListener(new OnTouchListener() {
@@ -145,15 +148,20 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		public void onClick(View v) {
 			Intent newAct = new Intent();
 			Bundle bundle = new Bundle();
-            if (pictures.get(position).getTypeId() == 1) {
+            if (news.get(position).getCategory().getTypeId() == 1) {
 				newAct.setClass(mActivty, NewsContentPhoneActivity.class );
-				bundle.putInt("featureId", pictures.get(position).getId());
-	            bundle.putString("featureName", pictures.get(position).getSource());
+				bundle.putInt("newsId", news.get(position).getId());
+	            bundle.putString("categoryName", news.get(position).getCategory().getName());
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position).getReleaseDate()));
+	            bundle.putString("origin", "");
+	            bundle.putString("name", news.get(position).getName());
+	            
 	            newAct.putExtras(bundle);
 			} else {
 				newAct.setClass(mActivty, PicturesPhoneActivity.class );
-				bundle.putInt("featureId", pictures.get(position).getId());
-	            bundle.putString("featureName", pictures.get(position).getSource());
+				bundle.putInt("categoryId", news.get(position).getCategory().getId());
+	            bundle.putString("categoryName", news.get(position).getCategory().getName());
+	            bundle.putInt("typeId",  news.get(position).getCategory().getTypeId());
 	            newAct.putExtras(bundle);
 			}            
             mActivty.startActivity(newAct);

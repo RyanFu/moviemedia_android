@@ -7,6 +7,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
 import com.jumplife.adapter.PictureAdapter;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 
 import android.os.AsyncTask;
@@ -30,17 +32,19 @@ public class PicturesTabletFragment extends Fragment {
 	private PullToRefreshGridView picturesGridView;
 	private PictureAdapter pictureGridAdapter;
 	
-	private ArrayList<Picture> pictures;
+	//private ArrayList<Picture> pictures;
+	private ArrayList<News> newsList;
 	
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
 	
-	public static PicturesTabletFragment NewInstance(int featureId, String featureName) {
+	public static PicturesTabletFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		PicturesTabletFragment fragment = new PicturesTabletFragment();
 	    Bundle args = new Bundle();
-	    args.putInt("featureId", featureId);
-	    args.putString("featureName", featureName);
+	    args.putInt("categoryId", categoryId);
+	    args.putInt("typeId", typeId);
+	    args.putString("categoryName", categoryName);
 	    fragment.setArguments(args);
 		return fragment;
 	}
@@ -78,20 +82,16 @@ public class PicturesTabletFragment extends Fragment {
 	}
 	
 	private String fetchData() {
-		pictures = fakeData();
+		NewsAPI api = new NewsAPI();
+		
+		int categoryId = getArguments().getInt("categoryId");
+		int typeId = getArguments().getInt("typeId");
+		
+		newsList = api.getNewsList(categoryId, typeId, 1);
 		
 		return "progress end";
 	}
 	
-	private ArrayList<Picture> fakeData() {
-		ArrayList<Picture> tmps = new ArrayList<Picture>();
-		Picture tmp1 = new Picture(35, 2, "有詐～～", "http://pic.pimg.tw/jumplives/1364379312-2318126965.jpg", "蝙蝠俠");
-		Picture tmp2 = new Picture(36, 2, "ＮＯ～～～～～", "http://pic.pimg.tw/jumplives/1364379312-3610758421.jpg?v=1364379375", "");
-		tmps.add(tmp1);
-		tmps.add(tmp2);
-		
-		return tmps;
-	}
 	
 	private void setListener() {
 		picturesGridView.setOnItemClickListener(new OnItemClickListener() {
@@ -131,7 +131,7 @@ public class PicturesTabletFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		pictureGridAdapter = new PictureAdapter(getActivity(), pictures);
+		pictureGridAdapter = new PictureAdapter(getActivity(), newsList);
 		picturesGridView.setAdapter(pictureGridAdapter);
 	}
 	
@@ -155,7 +155,7 @@ public class PicturesTabletFragment extends Fragment {
   
         @Override  
         protected void onPostExecute(String result) {
-        	if(pictures != null && pictures.size() != 0){
+        	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -185,7 +185,7 @@ public class PicturesTabletFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	if(pictures != null && pictures.size() != 0){
+        	if(newsList != null && newsList.size() != 0){
         		setListAdatper();
         		setListener();
             	page += 1;
@@ -218,7 +218,7 @@ public class PicturesTabletFragment extends Fragment {
         } 
 		protected void onPostExecute(String result) {
 			if(tmpList != null && tmpList.size() > 0){
-				pictures.addAll(tmpList);
+				newsList.addAll(tmpList);
 				pictureGridAdapter.notifyDataSetChanged();
 				page += 1;
         	}

@@ -3,7 +3,7 @@ package com.jumplife.tabletfragment;
 import java.util.ArrayList;
 
 import com.jumplife.movienews.R;
-import com.jumplife.movienews.entity.NewsCategories;
+import com.jumplife.movienews.entity.NewsCategory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -30,7 +30,7 @@ public class OverViewTabletFragment extends Fragment {
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
 	private LinearLayout llFeature;
-	private ArrayList<NewsCategories> newsCategories;
+	private ArrayList<NewsCategory> newsCategories;
 	private ArrayList<View> viewFeatures;
 	private LoadCategoryTask loadCategoryTask;
 	
@@ -74,15 +74,15 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void fetchCategoryData() {
-		newsCategories = new ArrayList<NewsCategories>();
+		newsCategories = new ArrayList<NewsCategory>();
 		newsCategories = fakeDataCategories();
 	}
 	
-	private ArrayList<NewsCategories> fakeDataCategories() {
-		NewsCategories tmp0 = new NewsCategories(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", 0);
-		NewsCategories tmp1 = new NewsCategories(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", 1);
-		NewsCategories tmp2 = new NewsCategories(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	", 2);
-		ArrayList<NewsCategories> tmps = new ArrayList<NewsCategories>();
+	private ArrayList<NewsCategory> fakeDataCategories() {
+		NewsCategory tmp0 = new NewsCategory(0, "編輯每日精選", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", "", 0);
+		NewsCategory tmp1 = new NewsCategory(1, "電影新星聞", "http://pic.pimg.tw/jumplives/1364376965-2619884891.jpg", "", 1);
+		NewsCategory tmp2 = new NewsCategory(2,	"電影名言", "http://pic.pimg.tw/jumplives/1364376966-1338225628.jpg?v=1364376967	", "", 2);
+		ArrayList<NewsCategory> tmps = new ArrayList<NewsCategory>();
 		tmps.add(tmp0);
 		tmps.add(tmp1);
 		tmps.add(tmp2);
@@ -159,7 +159,7 @@ public class OverViewTabletFragment extends Fragment {
 					} else if(newsCategories.get(index).getTypeId() == 2) {
 						
 						PicturesTabletFragment pics = PicturesTabletFragment.NewInstance(newsCategories.get(index).getId(),
-		                			newsCategories.get(index).getName()); 
+		                			newsCategories.get(index).getName(), newsCategories.get(index).getTypeId()); 
 
 	                    FragmentTransaction ft = getFragmentManager()
 	                            .beginTransaction();
