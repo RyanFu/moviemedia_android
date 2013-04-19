@@ -176,7 +176,8 @@ public class OverViewTabletFragment extends Fragment {
 					} else if(newsCategories.get(index).getTypeId() == 1) {
 						
 						NewsTabletFragment news = NewsTabletFragment.NewInstance(newsCategories.get(index).getId(),
-		                			newsCategories.get(index).getName()); 
+	                			newsCategories.get(index).getName(), newsCategories.get(index).getTypeId()); 
+
 
 	                    FragmentTransaction ft = getFragmentManager()
 	                            .beginTransaction();
