@@ -1,18 +1,14 @@
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/share_picture_bg" />
-            <corners android:radius="@dimen/news_lv_item_radius" />
-        </shape>
-    </item>
+<?xml version="1.0" encoding="UTF-8"?> 
+
+<selector  
+    xmlns:android="http://schemas.android.com/apk/res/android">  
+    <item android:state_pressed="true" 
+        android:drawable="@drawable/listview_item_picture_background_press">
+    </item>  
+    <item android:state_focused="true" 
+        android:drawable="@drawable/listview_item_picture_background_press">
+    </item>  
     <item 
-        android:left="@dimen/pictures_lv_item_padding"  
-        android:top="@dimen/pictures_lv_item_padding"  
-        android:right="@dimen/pictures_lv_item_padding"  
-        android:bottom="@dimen/pictures_lv_item_padding" >
-        <shape android:shape="rectangle">
-            <solid android:color="@color/white" />
-            <corners android:radius="@dimen/pictures_lv_item_radius" />
-        </shape>
-    </item>
-</layer-list>
+        android:drawable="@drawable/listview_item_picture_background_normal">
+    </item>  
+</selector>

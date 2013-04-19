@@ -1,0 +1,28 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/transparent100" />
+            <corners android:radius="@dimen/news_lv_item_radius" />
+        </shape>
+    </item>
+    <item
+        android:left="@dimen/pictures_lv_item_board"  
+        android:top="@dimen/pictures_lv_item_board"  
+        android:right="@dimen/pictures_lv_item_board"  
+        android:bottom="@dimen/pictures_lv_item_board">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/share_picture_bg" />
+            <corners android:radius="@dimen/news_lv_item_radius" />
+        </shape>
+    </item>
+    <item 
+        android:left="@dimen/pictures_lv_item_padding"  
+        android:top="@dimen/pictures_lv_item_padding"  
+        android:right="@dimen/pictures_lv_item_padding"  
+        android:bottom="@dimen/pictures_lv_item_padding" >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+            <corners android:radius="@dimen/pictures_lv_item_radius" />
+        </shape>
+    </item>
+</layer-list>

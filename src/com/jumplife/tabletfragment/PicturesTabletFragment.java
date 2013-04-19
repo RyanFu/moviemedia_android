@@ -13,8 +13,12 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -26,11 +30,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 public class PicturesTabletFragment extends Fragment {	
 	
@@ -163,11 +172,27 @@ public class PicturesTabletFragment extends Fragment {
 	
 	private void setListener() {
 		picturesGridView.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				// TODO Auto-generated method stub
+				Dialog dialog = new Dialog(mFragmentActivity);
+				dialog.setContentView(R.layout.dialog_picture);
+				ImageView ivPicture = (ImageView)dialog.findViewById(R.id.iv_picture);
+				RelativeLayout.LayoutParams ivrlParams = new RelativeLayout.LayoutParams
+						(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				ivPicture.setLayoutParams(ivrlParams);
+				ivPicture.setScaleType(ScaleType.FIT_CENTER);
 				
+				ImageLoader imageLoader = ImageLoader.getInstance();
+				DisplayImageOptions  options = new DisplayImageOptions.Builder()
+				.cacheInMemory()
+				.cacheOnDisc()
+				.displayer(new SimpleBitmapDisplayer())
+				.build();
+				imageLoader.displayImage(newsList.get(arg2-1).show(), ivPicture, options);
+				
+				dialog.show();
 			}			
 		});
 		

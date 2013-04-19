@@ -32,11 +32,6 @@
         android:scaleType="fitCenter"
         android:src="@drawable/imagebutton_share_source" />
 
-    <ProgressBar android:id="@+id/pb_news_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-    
     <ScrollView 
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -166,6 +161,12 @@
 	            </LinearLayout>
         </RelativeLayout>
     </com.jumplife.adapter.WrapSlidingDrawer>
+    
+    <ProgressBar android:id="@+id/pb_news_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+    
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

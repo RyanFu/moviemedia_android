@@ -1,7 +1,5 @@
 package com.jumplife.phonefragment;
 
-import java.util.ArrayList;
-
 import java.util.Date;
 
 import com.facebook.FacebookException;
@@ -17,10 +15,8 @@ import com.jumplife.adapter.WrapSlidingDrawer;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
-import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.TextNews;
-import com.jumplife.movienews.entity.Video;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
@@ -212,6 +208,10 @@ public class NewsContentPhoneFragment extends Fragment {
 	            startActivity(newAct);
             }
         });
+		
+		textviewTitle.setText(getArguments().getString("name"));
+		textviewSource.setText(getArguments().getString("origin"));
+		textviewReleaseDate.setText(NewsAPI.dateToString(NewsAPI.stringToDate(getArguments().getString("releaseDateStr"))));
 	}
 	
 	private String fetchData() {
@@ -239,17 +239,10 @@ public class NewsContentPhoneFragment extends Fragment {
 	
 
 	private void setView(){
-		textviewTitle.setText(news.getName());
-		textviewSource.setText(news.getOrigin());
-		textviewReleaseDate.setText(NewsAPI.dateToString(news.getReleaseDate()));
-		
 		final String mimeType = "text/html";
         final String encoding = "UTF-8";
 
 		webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
-		
-		RelativeLayout rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);
-
 		
 		DisplayMetrics displayMetrics = new DisplayMetrics();
         mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

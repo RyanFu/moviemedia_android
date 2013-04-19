@@ -83,7 +83,8 @@
     <dimen name="pictures_lv_item_ll_board_tb">12dp</dimen>
     <dimen name="pictures_lv_item_name">16dp</dimen>
     <dimen name="pictures_lv_item_comment">16dp</dimen>
-    <dimen name="pictures_lv_item_padding">1dp</dimen>   
+    <dimen name="pictures_lv_item_padding">3dp</dimen>
+    <dimen name="pictures_lv_item_board">2dp</dimen>     
     <dimen name="pictures_lv_item_radius">4dp</dimen>
     
     <!-- Share -->

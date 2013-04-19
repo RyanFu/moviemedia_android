@@ -1,7 +1,5 @@
 package com.jumplife.tabletfragment;
 
-import java.util.ArrayList;
-
 import java.util.Date;
 
 import com.facebook.FacebookException;
@@ -12,16 +10,11 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.jumplife.adapter.VideoListAdapter;
-import com.jumplife.adapter.VideosViewPagerAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.TextNews;
-import com.jumplife.movienews.entity.Video;
-import com.jumplife.phonefragment.NewsContentPhoneFragment;
-import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.PageIndicator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -30,8 +23,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,10 +30,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -193,6 +182,9 @@ public class NewsContentTabletFragment extends Fragment {
             }
         });
 		
+		textviewTitle.setText(getArguments().getString("name"));
+		textviewSource.setText(getArguments().getString("origin"));
+		textviewReleaseDate.setText(NewsAPI.dateToString(NewsAPI.stringToDate(getArguments().getString("releaseDateStr"))));
 	}
 	
 	private String fetchData() {
@@ -215,10 +207,6 @@ public class NewsContentTabletFragment extends Fragment {
 	
 	
 	private void setView(){
-		textviewTitle.setText(news.getName());
-		textviewSource.setText(news.getOrigin());
-		textviewReleaseDate.setText(NewsAPI.dateToString(news.getReleaseDate()));
-		
 		final String mimeType = "text/html";
         final String encoding = "UTF-8";
         webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");

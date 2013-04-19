@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:clickable="false"
         android:numColumns="2"
         android:verticalSpacing="@dimen/pictures_lv_board"
         android:horizontalSpacing="@dimen/pictures_lv_board"

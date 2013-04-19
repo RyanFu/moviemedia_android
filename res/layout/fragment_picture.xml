@@ -32,7 +32,6 @@
         android:background="@color/background"
         android:layout_marginLeft="@dimen/pictures_lv_board"
         android:layout_marginRight="@dimen/pictures_lv_board"
-        android:clickable="false"
         android:divider="@color/transparent100"
         android:dividerHeight="@dimen/pictures_lv_divider"
         ptr:ptrMode="both" />

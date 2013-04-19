@@ -30,11 +30,6 @@
         android:scaleType="fitCenter"
         android:src="@drawable/imagebutton_share_source" />
 
-    <ProgressBar android:id="@+id/pb_news_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-
     <LinearLayout 
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -133,6 +128,11 @@
                 android:dividerHeight="@dimen/pictures_lv_divider"/>
             </RelativeLayout>
     </LinearLayout>
+    <ProgressBar android:id="@+id/pb_news_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

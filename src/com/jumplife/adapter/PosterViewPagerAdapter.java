@@ -3,7 +3,6 @@ package com.jumplife.adapter;
 import java.util.ArrayList;
 
 import com.jumplife.movienews.NewsContentPhoneActivity;
-import com.jumplife.movienews.PicturesPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
@@ -13,6 +12,7 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
@@ -148,6 +149,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 			position = pos;
 		}
 
+		@SuppressWarnings("deprecation")
 		public void onClick(View v) {
 			Intent newAct = new Intent();
 			Bundle bundle = new Bundle();
@@ -160,14 +162,25 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	            bundle.putString("name", news.get(position).getName());
 	            
 	            newAct.putExtras(bundle);
+	            mActivty.startActivity(newAct);
 			} else {
-				newAct.setClass(mActivty, PicturesPhoneActivity.class );
-				bundle.putInt("categoryId", news.get(position).getCategory().getId());
-	            bundle.putString("categoryName", news.get(position).getCategory().getName());
-	            bundle.putInt("typeId",  news.get(position).getCategory().getTypeId());
-	            newAct.putExtras(bundle);
+				Dialog dialog = new Dialog(mActivty);
+				dialog.setContentView(R.layout.dialog_picture);
+				ImageView ivPicture = (ImageView)dialog.findViewById(R.id.iv_picture);
+				
+				RelativeLayout.LayoutParams ivrlParams = new RelativeLayout.LayoutParams
+						(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+				ivPicture.setLayoutParams(ivrlParams);
+				ivPicture.setScaleType(ScaleType.FIT_CENTER);
+				
+				DisplayImageOptions optionsPic = new DisplayImageOptions.Builder()
+				.cacheInMemory()
+				.cacheOnDisc()
+				.displayer(new SimpleBitmapDisplayer())
+				.build();				
+				imageLoader.displayImage(news.get(position).show(), ivPicture, optionsPic);
+				dialog.show();
 			}            
-            mActivty.startActivity(newAct);
 		}
 	}
 

@@ -6,12 +6,12 @@ import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 
 public class FeatureTabletFragment extends Fragment {	
@@ -45,6 +46,9 @@ public class FeatureTabletFragment extends Fragment {
 	private ProgressBar pbInit;
 	
 	private FragmentActivity mFragmentActivity;
+	
+	private ImageLoader imageLoader = ImageLoader.getInstance();
+	private DisplayImageOptions options;
 
     @Override
     public void onAttach(Activity activity) {
@@ -92,8 +96,8 @@ public class FeatureTabletFragment extends Fragment {
 	@SuppressWarnings("deprecation")
 	private void setPictureView() {
 		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
-		ImageLoader imageLoader = ImageLoader.getInstance();
-		DisplayImageOptions options = new DisplayImageOptions.Builder()
+		
+		options = new DisplayImageOptions.Builder()
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
@@ -129,16 +133,16 @@ public class FeatureTabletFragment extends Fragment {
 			imageLoader.displayImage(news.get(0).getPosterUrl(), iv, options);
 			converView.setId(0);
 
-			if(news.get(0).getCategory().getTypeId() == 1) {
-				converView.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View arg0) {
+			converView.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					int index = arg0.getId();
+					if(news.get(0).getCategory().getTypeId() == 1) {
 						Intent newAct = new Intent();
-						int index = arg0.getId();
 						newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 					
 			            Bundle bundle = new Bundle();
-
+	
 			            bundle.putInt("newsId", news.get(index).getId());
 			            bundle.putString("categoryName", news.get(index).getCategory().getName());
 			            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(index).getReleaseDate()));
@@ -147,11 +151,25 @@ public class FeatureTabletFragment extends Fragment {
 			            
 			            newAct.putExtras(bundle);
 			            startActivity(newAct);
-					}						
-				});
-			} else {
-				converView.setClickable(false);
-			}
+					} else {
+						Dialog dialog = new Dialog(mFragmentActivity);
+						dialog.setContentView(R.layout.dialog_picture);
+						ImageView ivPicture = (ImageView)dialog.findViewById(R.id.iv_picture);
+						RelativeLayout.LayoutParams ivrlParams = new RelativeLayout.LayoutParams
+								(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+						ivPicture.setLayoutParams(ivrlParams);
+						ivPicture.setScaleType(ScaleType.FIT_CENTER);
+						
+						DisplayImageOptions optionsPic = new DisplayImageOptions.Builder()
+						.cacheInMemory()
+						.cacheOnDisc()
+						.displayer(new SimpleBitmapDisplayer())
+						.build();
+						imageLoader.displayImage(news.get(index).show(), ivPicture, optionsPic);
+						dialog.show();
+					} 
+				}						
+			});
 			
 			TableRow.LayoutParams Params = new TableRow.LayoutParams
 					(screenWidth, screenWidth / 2, 1.0f);

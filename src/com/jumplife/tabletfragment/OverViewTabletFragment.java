@@ -81,8 +81,11 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void fetchCategoryData() {
+		NewsCategory editorCHoice = new NewsCategory(-1, "編輯精選", "", "", 0);
+		newsCategories.add(editorCHoice);
+		
 		NewsAPI api = new NewsAPI();
-		newsCategories = api.getCategoryList();
+		newsCategories.addAll(api.getCategoryList());
 		if (newsCategories == null) {
 			//error handling
 		}
