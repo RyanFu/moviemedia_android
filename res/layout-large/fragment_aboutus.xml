@@ -38,6 +38,9 @@
 		            android:layout_width="match_parent"
 		            android:layout_margin="@dimen/about_us_aboutapp_margin"
 		            android:textIsSelectable="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/about_us_intro"
+                    android:text="@string/aboutapp_intro"
 		            android:gravity="center" />
 		        </ScrollView>
 	        </RelativeLayout>

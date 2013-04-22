@@ -36,6 +36,7 @@
     
     <!-- tablet -->
     <string name="aboutapp">關於電影窩</string>
+    <string name="aboutapp_intro">電影窩為你在平板和手機上，彙整世界各地的電影精彩時刻，以最輕鬆的方式呈現在你眼前，透過Facebook，可以隨時隨地和朋友分享一切，打造出最貼近你的生活！</string>
     <string name="aboutus_other_func">建議回饋與爆料</string>
     <string name="aboutus_other_productor">其他產品</string>
     

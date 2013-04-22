@@ -81,6 +81,8 @@ public class OverViewTabletFragment extends Fragment {
 	}
 	
 	private void fetchCategoryData() {
+		newsCategories = new ArrayList<NewsCategory>(10);
+		
 		NewsCategory editorCHoice = new NewsCategory(-1, "編輯精選", "", "", 0);
 		newsCategories.add(editorCHoice);
 		

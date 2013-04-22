@@ -182,13 +182,11 @@ public class NewsContentPhoneFragment extends Fragment {
 		rlViewpager = (RelativeLayout)fragmentView.findViewById(R.id.rl_viewpager);		
 		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
 		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
-        
-
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
-		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);
+		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);  
 		webview.setInitialScale(150);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {

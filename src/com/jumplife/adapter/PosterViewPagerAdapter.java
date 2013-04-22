@@ -11,6 +11,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.viewpagerindicator.IconPagerAdapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -149,6 +150,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 			position = pos;
 		}
 
+		@SuppressLint("InlinedApi")
 		@SuppressWarnings("deprecation")
 		public void onClick(View v) {
 			Intent newAct = new Intent();
@@ -164,7 +166,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	            newAct.putExtras(bundle);
 	            mActivty.startActivity(newAct);
 			} else {
-				Dialog dialog = new Dialog(mActivty);
+				Dialog dialog = new Dialog(mActivty, android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
 				dialog.setContentView(R.layout.dialog_picture);
 				ImageView ivPicture = (ImageView)dialog.findViewById(R.id.iv_picture);
 				

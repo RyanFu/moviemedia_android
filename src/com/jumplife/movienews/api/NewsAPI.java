@@ -303,6 +303,37 @@ public class NewsAPI {
 		return news;
 	}
 	
+	public ArrayList<AppProject> getAppProjectList () {
+		ArrayList<AppProject> appList = new ArrayList<AppProject>(10);
+		String message = getMessageFromServer("GET", "api/v1/appprojects.json", null);
+		
+		if(message == null) {
+			return null;
+		}
+		else {
+			JSONArray appArray;
+			
+			try {
+				appArray = new JSONArray(message.toString());
+				for (int i = 0; i < appArray.length() ; i++) {
+					JSONObject appJson = appArray.getJSONObject(i);
+					String name = appJson.getString("name"); 
+					String iconurl = appJson.getString("iconurl");
+					String pack = appJson.getString("pack");
+					String clas = appJson.getString("clas");
+					
+					AppProject appProject = new AppProject(name, iconurl, pack, clas);
+					appList.add(appProject);
+				}
+			} 
+			catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return appList;
+	}
+	
 	public String getMessageFromServer(String requestMethod, String apiPath, JSONObject json) {
 		URL url;
 		try {

@@ -10,7 +10,6 @@ import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.TextNews;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -97,7 +96,7 @@ public class NewsPhoneFragment extends Fragment {
 		int categoryId = getArguments().getInt("categoryId");
 		int typeId = getArguments().getInt("typeId");
 		
-		news = api.getNewsList(categoryId, typeId, 1);
+		news = api.getNewsList(categoryId, typeId, page);
 		
 		
 		return "progress end";
@@ -241,7 +240,7 @@ public class NewsPhoneFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<TextNews> tmpList;
+		private ArrayList<News> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -250,8 +249,11 @@ public class NewsPhoneFragment extends Fragment {
         @Override
 		protected String doInBackground(Integer... params) {
         	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	/*VarietyAPI api = new VarietyAPI();
-        	tmpList = api.getVarietyChapter(varietyId, page);*/
+        	int categoryId = getArguments().getInt("categoryId");
+    		int typeId = getArguments().getInt("typeId");
+    		
+    		NewsAPI api = new NewsAPI();    		
+    		tmpList = api.getNewsList(categoryId, typeId, page);
         	return "progress end";
 		}
 		@Override  

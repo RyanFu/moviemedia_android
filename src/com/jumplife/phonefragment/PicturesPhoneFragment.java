@@ -13,11 +13,11 @@ import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
@@ -37,7 +37,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView.ScaleType;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -180,7 +179,7 @@ public class PicturesPhoneFragment extends Fragment {
 		int categoryId = getArguments().getInt("categoryId");
 		int typeId = getArguments().getInt("typeId");
 		
-		newsList = api.getNewsList(categoryId, typeId, 1);
+		newsList = api.getNewsList(categoryId, typeId, page);
 		
 		
 		return "progress end";
@@ -199,11 +198,12 @@ public class PicturesPhoneFragment extends Fragment {
 	
 	private void setListener() {
 		picturesListView.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressLint("InlinedApi")
 			@SuppressWarnings("deprecation")
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Dialog dialog = new Dialog(mFragmentActivity);
+				Dialog dialog = new Dialog(mFragmentActivity, android.R.style.Theme_DeviceDefault_NoActionBar_Fullscreen);
 				dialog.setContentView(R.layout.dialog_picture);
 				ImageView ivPicture = (ImageView)dialog.findViewById(R.id.iv_picture);
 				RelativeLayout.LayoutParams ivrlParams = new RelativeLayout.LayoutParams
@@ -330,7 +330,7 @@ public class PicturesPhoneFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<Picture> tmpList;
+		private ArrayList<News> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -339,8 +339,11 @@ public class PicturesPhoneFragment extends Fragment {
         @Override
 		protected String doInBackground(Integer... params) {
         	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	/*VarietyAPI api = new VarietyAPI();
-        	tmpList = api.getVarietyChapter(varietyId, page);*/
+        	int categoryId = getArguments().getInt("categoryId");
+    		int typeId = getArguments().getInt("typeId");
+    		
+    		NewsAPI api = new NewsAPI();    		
+    		tmpList = api.getNewsList(categoryId, typeId, page);
         	return "progress end";
 		}
 		@Override  

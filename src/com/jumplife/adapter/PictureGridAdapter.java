@@ -12,10 +12,8 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
-import com.jumplife.adapter.PictureListAdapter.ItemButtonClick;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.jumplife.phonefragment.LoginFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -35,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,12 +42,12 @@ import android.widget.Toast;
 
 public class PictureGridAdapter extends BaseAdapter {
 	private FragmentActivity mActivity;
-	//private ArrayList<Picture> pictures;
 	private ArrayList<News> news;
 	private DisplayImageOptions options;
 	private PostRecordTask postRecordTask;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private Session session = Session.getActiveSession();
+	private static int numColumns = 2;
 	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	
@@ -97,7 +96,7 @@ public class PictureGridAdapter extends BaseAdapter {
 		mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels * 3 / 8;
         imageviewNewsPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageviewNewsPhoto.getLayoutParams().height = screenWidth * 3 / 5;
+        imageviewNewsPhoto.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
         imageviewNewsPhoto.getLayoutParams().width = screenWidth;
 		imageLoader.displayImage(news.get(position).show(), imageviewNewsPhoto, options);
 		

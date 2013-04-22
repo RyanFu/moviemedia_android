@@ -11,7 +11,6 @@ import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.TextNews;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -92,7 +91,7 @@ public class NewsTabletFragment extends Fragment {
 		int categoryId = getArguments().getInt("categoryId");
 		int typeId = getArguments().getInt("typeId");
 		
-		news = api.getNewsList(categoryId, typeId, 1);
+		news = api.getNewsList(categoryId, typeId, page);
 		
 		return "progress end";
 	}
@@ -117,13 +116,13 @@ public class NewsTabletFragment extends Fragment {
 				
 				Bundle bundle = new Bundle();
 				
-	            bundle.putInt("newsId", news.get(position - 1).getId());
+	            bundle.putInt("newsId", news.get(position).getId());
 	            bundle.putString("categoryName", getArguments().getString("categoryName"));
 	            
-	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position ).getReleaseDate()));
 	            
-	            bundle.putString("origin", news.get(position - 1).getOrigin());
-	            bundle.putString("name", news.get(position - 1).getName());
+	            bundle.putString("origin", news.get(position).getOrigin());
+	            bundle.putString("name", news.get(position).getName());
 				
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
@@ -237,7 +236,7 @@ public class NewsTabletFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<TextNews> tmpList;
+		private ArrayList<News> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -246,8 +245,11 @@ public class NewsTabletFragment extends Fragment {
         @Override
 		protected String doInBackground(Integer... params) {
         	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	/*VarietyAPI api = new VarietyAPI();
-        	tmpList = api.getVarietyChapter(varietyId, page);*/
+        	int categoryId = getArguments().getInt("categoryId");
+    		int typeId = getArguments().getInt("typeId");
+    		
+    		NewsAPI api = new NewsAPI();    		
+    		tmpList = api.getNewsList(categoryId, typeId, page);
         	return "progress end";
 		}
 		@Override  

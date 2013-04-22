@@ -12,7 +12,6 @@ import com.jumplife.adapter.PictureGridAdapter;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -37,7 +36,6 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -164,7 +162,7 @@ public class PicturesTabletFragment extends Fragment {
 		int categoryId = getArguments().getInt("categoryId");
 		int typeId = getArguments().getInt("typeId");
 		
-		newsList = api.getNewsList(categoryId, typeId, 1);
+		newsList = api.getNewsList(categoryId, typeId, page);
 		
 		return "progress end";
 	}
@@ -190,7 +188,7 @@ public class PicturesTabletFragment extends Fragment {
 				.cacheOnDisc()
 				.displayer(new SimpleBitmapDisplayer())
 				.build();
-				imageLoader.displayImage(newsList.get(arg2-1).show(), ivPicture, options);
+				imageLoader.displayImage(newsList.get(arg2).show(), ivPicture, options);
 				
 				dialog.show();
 			}			
@@ -302,7 +300,7 @@ public class PicturesTabletFragment extends Fragment {
 	
 	class NextPageTask  extends AsyncTask<Integer, Integer, String>{
 
-		private ArrayList<Picture> tmpList;
+		private ArrayList<News> tmpList;
 		
 		@Override  
         protected void onPreExecute() {
@@ -311,8 +309,11 @@ public class PicturesTabletFragment extends Fragment {
         @Override
 		protected String doInBackground(Integer... params) {
         	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	/*VarietyAPI api = new VarietyAPI();
-        	tmpList = api.getVarietyChapter(varietyId, page);*/
+        	int categoryId = getArguments().getInt("categoryId");
+    		int typeId = getArguments().getInt("typeId");
+    		
+    		NewsAPI api = new NewsAPI();    		
+    		tmpList = api.getNewsList(categoryId, typeId, page);
         	return "progress end";
 		}
 		@Override  
