@@ -1,5 +1,6 @@
 package com.jumplife.movienews;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.phonefragment.NewsContentPhoneFragment;
 
 import android.os.Bundle;
@@ -26,4 +27,17 @@ public class NewsContentPhoneActivity extends FragmentActivity{
         fragTrans.add(android.R.id.content, newsFragment);
         fragTrans.commitAllowingStateLoss();
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this); // Add this method.
+	}
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this); // Add this method
+	}
 }

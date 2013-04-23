@@ -2,6 +2,7 @@ package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.adapter.PosterViewPagerAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsPhoneActivity;
@@ -178,7 +179,7 @@ public class OverViewPhoneFragment extends Fragment {
 						public void onClick(View arg0) {
 							Intent newAct = new Intent();
 							int index = arg0.getId();
-							Log.d("", "index : " + index + " type id : " + newsCategories.get(index).getTypeId());
+							//Log.d("", "index : " + index + " type id : " + newsCategories.get(index).getTypeId());
 							if(newsCategories.get(index).getTypeId() == 1)
 								newAct.setClass(getActivity(), NewsPhoneActivity.class );
 							else
@@ -188,6 +189,10 @@ public class OverViewPhoneFragment extends Fragment {
 				            bundle.putString("categoryName", newsCategories.get(index).getName());
 				            bundle.putInt("typeId", newsCategories.get(index).getTypeId());
 				            newAct.putExtras(bundle);
+				            
+				            EasyTracker.getTracker().sendEvent("精選主題", "點擊", "類別id: " +  newsCategories.get(index).getId() + 
+				            		" ; 類別名稱: " + newsCategories.get(index).getName(), (long) 0);
+				            
 				            startActivity(newAct);
 						}						
 					});
@@ -327,4 +332,19 @@ public class OverViewPhoneFragment extends Fragment {
         	super.onPostExecute(result);
         }
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getTracker().sendView("手機首頁Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+	}
 }

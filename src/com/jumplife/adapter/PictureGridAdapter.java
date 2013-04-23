@@ -12,6 +12,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.phonefragment.LoginFragment;
@@ -209,18 +210,19 @@ public class PictureGridAdapter extends BaseAdapter {
         }
     }
 	
-	private void publishFeedDialog(int position, Bitmap bitmap) {
+	private void publishFeedDialog(final int position, Bitmap bitmap) {
 		
 		if (hasPublishPermission()) {
         	Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
                 public void onCompleted(Response response) {
                 	postRecordTask.closeProgressDilog();
-                    if(response.getError() != null) {
+                    if(response.getError() != null) {            	
                 		Log.d("", "error : " + response.getError().getErrorMessage());
 		            	Toast toast = Toast.makeText(mActivity, "Facebook分享失敗 請再分享一次", Toast.LENGTH_LONG);
 		                toast.setGravity(Gravity.CENTER, 0, 0);
 		                toast.show();
                 	} else {
+                		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
                 		Toast toast = Toast.makeText(mActivity, "Facebook分享成功", Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();

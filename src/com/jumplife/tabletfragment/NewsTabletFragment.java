@@ -3,6 +3,7 @@ package com.jumplife.tabletfragment;
 import java.util.ArrayList;
 
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -110,6 +111,10 @@ public class NewsTabletFragment extends Fragment {
 		Log.d(null, "set click item listener ");
 		newsGridView.setOnItemClickListener(new OnItemClickListener(){
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				EasyTracker.getTracker().sendEvent(getArguments().getString("categoryName") + "_新聞列表", "點擊", "new id: " +
+		            	news.get(position).getId(), (long)(news.get(position).getId()));
+				
 				Log.d(null, "click item : " + position);
 				Intent newAct = new Intent();
 				newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
@@ -266,5 +271,20 @@ public class NewsTabletFragment extends Fragment {
             
 			super.onPostExecute(result);
         }
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getTracker().sendView("平板新聞列表Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
 	}
 }

@@ -1,5 +1,6 @@
 package com.jumplife.movienews;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.tabletfragment.FeatureTabletFragment;
 
 import android.content.Intent;
@@ -42,4 +43,19 @@ public class OverViewActivity extends FragmentActivity{
             });
         }
     }
+	
+	@Override
+	public void onStart() {
+	  super.onStart();
+	     // The rest of your onStart() code.
+	  EasyTracker.getInstance().activityStart(this); // Add this method.
+	  //myTracker.sendView("Home Screen"); // Where myTracker is an instance of Tracker.
+	}
+
+	@Override
+	public void onStop() {
+	  super.onStop();
+	  // The rest of your onStop() code.
+	  EasyTracker.getInstance().activityStop(this); // Add this method
+	}
 }

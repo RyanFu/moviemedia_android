@@ -4,9 +4,10 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry exported="true" kind="lib" path="libs/android-support-v4.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ViewPagerIndicatorLibrary"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/FacebookSDK"/>
-	<classpathentry kind="lib" path="E:/Work/APP Work/MovieNews/libs/universal-image-loader-1.8.4-with-sources.jar"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ViewPagerIndicatorLibrary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/FacebookSDK"/>
+	<classpathentry kind="lib" path="libs/universal-image-loader-1.8.4-with-sources.jar"/>
+	<classpathentry kind="lib" path="libs/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -3,6 +3,7 @@ package com.jumplife.movienews;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.phonefragment.PicturesPhoneFragment;
 
 import android.content.Intent;
@@ -80,4 +81,18 @@ public class PicturesPhoneActivity extends FragmentActivity{
     private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
 
     }
+    
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this); // Add this method.
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this); // Add this method
+	}
 }

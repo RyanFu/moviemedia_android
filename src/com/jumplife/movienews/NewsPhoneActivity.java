@@ -1,5 +1,6 @@
 package com.jumplife.movienews;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.phonefragment.NewsPhoneFragment;
 
 import android.content.pm.ActivityInfo;
@@ -26,6 +27,20 @@ public class NewsPhoneActivity extends FragmentActivity{
         
         if(getResources().getBoolean(R.bool.tablet)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
+        }        
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this); // Add this method.
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this); // Add this method
+	}
 }

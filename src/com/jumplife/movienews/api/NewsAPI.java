@@ -249,10 +249,11 @@ public class NewsAPI {
 					ArrayList<Video> videoList = new ArrayList<Video>(5);
 					
 					for (int i =  0; i < videoAry.length(); i++) {
+						int id = videoAry.getJSONObject(i).getInt("id");
 						String name = videoAry.getJSONObject(i).getString("name");
 						String videoUrl = videoAry.getJSONObject(i).getString("video_url");
 						String posterUrl = videoAry.getJSONObject(i).getString("pic_url");
-						videoList.add(new Video(name, videoUrl, posterUrl));
+						videoList.add(new Video(id, name, videoUrl, posterUrl));
 					}
 					
 					news = new TextNews(-1, "", "", null, "", new Date(), content, contentUrl, videoList, "");

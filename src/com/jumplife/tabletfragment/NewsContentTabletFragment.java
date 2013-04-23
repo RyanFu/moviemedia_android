@@ -9,6 +9,7 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.adapter.VideoListAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
@@ -253,6 +254,9 @@ public class NewsContentTabletFragment extends Fragment {
 			                // and the post Id.
 							final String postId = values.getString("post_id");
 							if (postId != null) {
+								int newsId = getArguments().getInt("newsId"); //for log
+								EasyTracker.getTracker().sendEvent("文字新聞", "分享", "news id: " + newsId, (long) newsId);
+								
 								Toast.makeText(mFragmentActivity,
 										"Posted story, id: "+postId,
 										Toast.LENGTH_SHORT).show();
@@ -316,4 +320,19 @@ public class NewsContentTabletFragment extends Fragment {
 	        super.onPostExecute(result);  
         }
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getTracker().sendView("平板文字新聞Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+	}
 }

@@ -1,6 +1,8 @@
 package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
+
+import com.google.analytics.tracking.android.EasyTracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -128,6 +130,9 @@ public class NewsPhoneFragment extends Fragment {
 	            
 	            bundle.putString("origin", news.get(position - 1).getOrigin());
 	            bundle.putString("name", news.get(position - 1).getName());
+	            
+	            EasyTracker.getTracker().sendEvent(getArguments().getString("categoryName") + "_新聞列表", "點擊", "new id: " +
+	            	news.get(position - 1).getId(), (long)(news.get(position - 1).getId()));
 	            
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
@@ -270,5 +275,20 @@ public class NewsPhoneFragment extends Fragment {
             
 			super.onPostExecute(result);
         }
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getTracker().sendView("手機新聞列表Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
 	}
 }
