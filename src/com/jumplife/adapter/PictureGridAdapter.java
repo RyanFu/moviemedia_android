@@ -12,6 +12,7 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
+import com.facebook.SessionState;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.phonefragment.LoginFragment;
@@ -33,7 +34,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,12 +42,14 @@ import android.widget.Toast;
 
 public class PictureGridAdapter extends BaseAdapter {
 	private FragmentActivity mActivity;
+	//private ArrayList<Picture> pictures;
 	private ArrayList<News> news;
 	private DisplayImageOptions options;
 	private PostRecordTask postRecordTask;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private Session session = Session.getActiveSession();
-	private static int numColumns = 2;
+	private final int numColumns = 2;
+	private View[] viewsInRow = new View[numColumns];
 	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	
@@ -82,21 +84,24 @@ public class PictureGridAdapter extends BaseAdapter {
 				((int)mActivity.getResources().getDimensionPixelSize(R.dimen.pictures_lv_item_radius)))
 		.build();
 		
+		ViewGroup container = new GridViewItemContainer(mActivity);
+		
 		LayoutInflater myInflater = LayoutInflater.from(mActivity);
 		View converView = myInflater.inflate(R.layout.listview_picture, null);
 		
-		ImageView imageviewNewsPhoto = (ImageView)converView.findViewById(R.id.news_poster);
+		container.addView(converView);
+		converView = container;
 		
+		ImageView imageviewNewsPhoto = (ImageView)converView.findViewById(R.id.news_poster);		
 		TextView textvieTitle = (TextView)converView.findViewById(R.id.news_name);
-		TextView textViewContent = (TextView)converView.findViewById(R.id.news_comment);
-		
+		TextView textViewContent = (TextView)converView.findViewById(R.id.news_comment);		
 		LinearLayout llShare = (LinearLayout)converView.findViewById(R.id.ll_share);
 		
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels * 3 / 8;
         imageviewNewsPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageviewNewsPhoto.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
+        imageviewNewsPhoto.getLayoutParams().height = screenWidth * 3 / 5;
         imageviewNewsPhoto.getLayoutParams().width = screenWidth;
 		imageLoader.displayImage(news.get(position).show(), imageviewNewsPhoto, options);
 		
@@ -105,6 +110,15 @@ public class PictureGridAdapter extends BaseAdapter {
 		
 		llShare.setOnClickListener(new ItemButtonClick(position, news.get(position).getShareLink()));
 		
+		viewsInRow[position % numColumns] = converView;
+        GridViewItemContainer referenceView = (GridViewItemContainer)converView;
+        if ((position % numColumns == (numColumns-1)) || (position == getCount()-1)) {
+            referenceView.setViewsInRow(viewsInRow);
+        }
+        else {
+            referenceView.setViewsInRow(null);
+        }
+        
 		return converView;
 
 	}
@@ -165,8 +179,8 @@ public class PictureGridAdapter extends BaseAdapter {
         @Override
         protected void onPreExecute() {
         	progressdialogInit = new ProgressDialog(mActivity);
-            progressdialogInit.setTitle("Facebook分享");
-            progressdialogInit.setMessage("分享中…");
+            progressdialogInit.setTitle(mActivity.getResources().getString(R.string.fb_share));
+            progressdialogInit.setMessage(mActivity.getResources().getString(R.string.sharing));
             progressdialogInit.setOnCancelListener(cancelListener);
             progressdialogInit.setCanceledOnTouchOutside(false);
         	progressdialogInit.show();
@@ -193,7 +207,8 @@ public class PictureGridAdapter extends BaseAdapter {
 				publishFeedDialog(position, bitmap);
 			else {
 				closeProgressDilog();
-	            Toast toast = Toast.makeText(mActivity, "Facebook分享失敗 請再分享一次", Toast.LENGTH_LONG);
+	            Toast toast = Toast.makeText(mActivity, 
+	            		mActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 Log.d(null, "Facebook share failed");
@@ -212,37 +227,63 @@ public class PictureGridAdapter extends BaseAdapter {
 	private void publishFeedDialog(int position, Bitmap bitmap) {
 		
 		if (hasPublishPermission()) {
-        	Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
-                public void onCompleted(Response response) {
-                	postRecordTask.closeProgressDilog();
-                    if(response.getError() != null) {
-                		Log.d("", "error : " + response.getError().getErrorMessage());
-		            	Toast toast = Toast.makeText(mActivity, "Facebook分享失敗 請再分享一次", Toast.LENGTH_LONG);
-		                toast.setGravity(Gravity.CENTER, 0, 0);
-		                toast.show();
-                	} else {
-                		Toast toast = Toast.makeText(mActivity, "Facebook分享成功", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                	}
-                }
-            });
-            Bundle params = request.getParameters();
-            params.putString("message", news.get(position).getName());
-			request.executeAsync();
+			PublishPhotoToFB(bitmap, position);
 			return;
         } else {
-        	postRecordTask.closeProgressDilog();
+        	NewPermissionCallBack callback = new NewPermissionCallBack(position, bitmap);
             Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(mActivity, PERMISSIONS)
         			.setDefaultAudience(SessionDefaultAudience.EVERYONE);
+            session.addCallback(callback);
         	session.requestNewPublishPermissions(newPermissionsRequest);
         	return;
         }
          
     }
 	
+	class NewPermissionCallBack implements Session.StatusCallback {
+		private Bitmap bitmap;
+		private int position;
+		
+		public NewPermissionCallBack(int position, Bitmap bitmap) {
+			this.bitmap = bitmap;
+			this.position = position;
+		}
+		
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			Log.d(null, "enter call back");
+			PublishPhotoToFB(bitmap, position);
+		}		
+	};
+	
 	private boolean hasPublishPermission() {
         Session session = Session.getActiveSession();
         return session != null && session.getPermissions().contains("publish_actions");
     }
+	
+	public void PublishPhotoToFB(Bitmap bitmap, int position) {
+		Log.d(null, "enter publish fb");
+		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
+            public void onCompleted(Response response) {
+            	postRecordTask.closeProgressDilog();
+                if(response.getError() != null) {
+            		Log.d("", "error : " + response.getError().getErrorMessage());
+	            	Toast toast = Toast.makeText(mActivity,
+	            			mActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
+	                toast.setGravity(Gravity.CENTER, 0, 0);
+	                toast.show();
+            	} else {
+            		Toast toast = Toast.makeText(mActivity, 
+            				mActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+            	}
+            }
+        });
+        Bundle params = request.getParameters();
+        params.putString("message", news.get(position).getName());
+		request.executeAsync();
+		postRecordTask.closeProgressDilog();
+	}
 }

@@ -67,7 +67,6 @@ public class NewsContentPhoneFragment extends Fragment {
 	private ImageView slidingDrawerHandler;
 	private ProgressBar pbInit;
 	
-	//private TextNews newsContent;
 	private TextNews news;
 	
 	private LoadDataTask loadtask;
@@ -304,28 +303,28 @@ public class NewsContentPhoneFragment extends Fragment {
 							final String postId = values.getString("post_id");
 							if (postId != null) {
 								Toast.makeText(mFragmentActivity,
-										"Posted story, id: "+postId,
+										mFragmentActivity.getResources().getString(R.string.fb_share_success),
 										Toast.LENGTH_SHORT).show();
 							} else {
 								// User clicked the Cancel button
 								Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                                "Publish cancelled", 
+										mFragmentActivity.getResources().getString(R.string.fb_share_cancel), 
 		                                Toast.LENGTH_SHORT).show();
 							}
 						} else if (error instanceof FacebookOperationCanceledException) {
 							// User clicked the "x" button
 							Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                            "Publish cancelled", 
+									mFragmentActivity.getResources().getString(R.string.fb_share_cancel), 
 		                            Toast.LENGTH_SHORT).show();
 						} else {
 							// Generic, ex: network error
 							Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                            "Error posting story", 
+									mFragmentActivity.getResources().getString(R.string.fb_share_failed), 
 		                            Toast.LENGTH_SHORT).show();
 						}
 					}
 					
-					})
+				})
 				.build();
 	    	feedDialog.show();
 	    } else {

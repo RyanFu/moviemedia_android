@@ -23,6 +23,12 @@
     <!-- facebook -->
     <string name="fb_login_description">請登入Facebook分享內容</string>
     <string name="fb_login">Facebook 登入</string>
+    <string name="fb_share">Facebook 分享</string>
+    <string name="fb_share_success">Facebook分享成功</string>
+    <string name="fb_share_cancel">Facebook分享取消</string>
+    <string name="fb_share_failed">Facebook分享失敗</string>
+    <string name="fb_share_failed_again">Facebook分享失敗 請再分享一次</string>
+    <string name="sharing">分享中…</string>
     <string name="applicationId">144757872370903</string>
     
     <!-- about us -->
