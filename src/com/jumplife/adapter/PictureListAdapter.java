@@ -13,6 +13,7 @@ import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 import com.facebook.SessionState;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.phonefragment.LoginFragment;
@@ -250,7 +251,7 @@ public class PictureListAdapter extends BaseAdapter {
         return session != null && session.getPermissions().contains("publish_actions");
     }
 	
-	public void PublishPhotoToFB(Bitmap bitmap, int position) {
+	public void PublishPhotoToFB(Bitmap bitmap, final int position) {
 		Log.d(null, "enter publish fb");
 		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
             public void onCompleted(Response response) {
@@ -262,6 +263,7 @@ public class PictureListAdapter extends BaseAdapter {
 	                toast.setGravity(Gravity.CENTER, 0, 0);
 	                toast.show();
             	} else {
+            		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
             		Toast toast = Toast.makeText(mActivity, 
             				mActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);

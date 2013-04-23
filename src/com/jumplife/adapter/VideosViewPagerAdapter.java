@@ -2,6 +2,7 @@ package com.jumplife.adapter;
 
 import java.util.ArrayList;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.Video;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -143,6 +144,8 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		}
 
 		public void onClick(View v) {
+			EasyTracker.getTracker().sendEvent("影片", "點擊", "video id: " + videos.get(position).getId(),
+				(long)(videos.get(position).getId()));
 			Uri uri = Uri.parse(videos.get(position).getVideoUrl());
     		Intent it = new Intent(Intent.ACTION_VIEW, uri);
     		mActivty.startActivity(it);

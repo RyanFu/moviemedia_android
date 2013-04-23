@@ -2,6 +2,7 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
@@ -137,7 +138,10 @@ public class FeatureTabletFragment extends Fragment {
 				@Override
 				public void onClick(View arg0) {
 					int index = arg0.getId();
-					if(news.get(0).getCategory().getTypeId() == 1) {
+					
+					EasyTracker.getTracker().sendEvent("編輯精選", "點擊", "新聞id: " +  news.get(index).getId(), (long) news.get(index).getId());
+					
+					if(news.get(index).getCategory().getTypeId() == 1) {
 						Intent newAct = new Intent();
 						newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 					
@@ -296,4 +300,17 @@ public class FeatureTabletFragment extends Fragment {
         	super.onPostExecute(result);
         }
     }
+	public void onStart() {
+		  super.onStart();
+		  // The rest of your onStart() code.
+		  EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		  EasyTracker.getTracker().sendView("平板電影新聞種類列表Fragment");
+		}
+
+		@Override
+		public void onStop() {
+		  super.onStop();
+		  // The rest of your onStop() code.
+		  EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		}
 }

@@ -2,6 +2,7 @@ package com.jumplife.adapter;
 
 import java.util.ArrayList;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
@@ -155,6 +156,9 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		public void onClick(View v) {
 			Intent newAct = new Intent();
 			Bundle bundle = new Bundle();
+			
+			EasyTracker.getTracker().sendEvent("編輯精選", "點擊", "新聞id: " +  news.get(position).getId(), (long) news.get(position).getId());
+			
             if (news.get(position).getCategory().getTypeId() == 1) {
 				newAct.setClass(mActivty, NewsContentPhoneActivity.class );
 				bundle.putInt("newsId", news.get(position).getId());

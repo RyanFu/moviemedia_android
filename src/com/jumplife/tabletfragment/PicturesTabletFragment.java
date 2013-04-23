@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
@@ -188,6 +189,9 @@ public class PicturesTabletFragment extends Fragment {
 				.cacheOnDisc()
 				.displayer(new SimpleBitmapDisplayer())
 				.build();
+				
+				EasyTracker.getTracker().sendEvent("圖片新聞", "點擊", "news id: " + newsList.get(arg2).getId(), (long)newsList.get(arg2).getId());
+				
 				imageLoader.displayImage(newsList.get(arg2).show(), ivPicture, options);
 				
 				dialog.show();
@@ -330,5 +334,20 @@ public class PicturesTabletFragment extends Fragment {
             
 			super.onPostExecute(result);
         }
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getTracker().sendView("平板圖片列表Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
 	}
 }

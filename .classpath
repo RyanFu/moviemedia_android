@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ViewPagerIndicatorLibrary"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/FacebookSDK"/>
 	<classpathentry exported="true" kind="lib" path="E:/Work/APP Work/MovieNews/libs/universal-image-loader-1.8.4-with-sources.jar"/>
+	<classpathentry kind="lib" path="libs/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
