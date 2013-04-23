@@ -16,6 +16,9 @@
 
 package com.jumplife.tabletfragment;
 
+//import java.util.Arrays;
+//import java.util.List;
+
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
@@ -33,6 +36,7 @@ import android.view.ViewGroup;
 
 public class LoginFragment extends DialogFragment {
 	
+	//private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         public void call(final Session session, final SessionState state, final Exception exception) {

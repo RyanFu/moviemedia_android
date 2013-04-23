@@ -16,8 +16,8 @@
 
 package com.jumplife.phonefragment;
 
-import java.util.Arrays;
-import java.util.List;
+//import java.util.Arrays;
+//import java.util.List;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -30,13 +30,14 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class LoginFragment extends DialogFragment {
 	
-    private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
+    //private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private UiLifecycleHelper uiHelper;
     private Session.StatusCallback callback = new Session.StatusCallback() {
         public void call(final Session session, final SessionState state, final Exception exception) {
@@ -52,7 +53,7 @@ public class LoginFragment extends DialogFragment {
         
         LoginButton authButton = (LoginButton) view.findViewById(R.id.login_button);
         authButton.setFragment(this);
-        authButton.setPublishPermissions(PERMISSIONS);
+        //authButton.setPublishPermissions(PERMISSIONS);
         
         return view;
     }
@@ -74,9 +75,8 @@ public class LoginFragment extends DialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         uiHelper.onActivityResult(requestCode, resultCode, data);
-        Session session = Session.getActiveSession();
-        if (session != null && session.isOpened())
-        	this.dismiss();
+        Log.d(getTag(), "facebook login onActivityResult");
+        
     }
 
     @Override
@@ -101,6 +101,10 @@ public class LoginFragment extends DialogFragment {
      * Notifies that the session token has been updated.
      */
     private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
-
+    	if (session != null && session.isOpened()) {
+        	Log.d(getTag(), "session != null && session.isOpened()");
+        	this.dismiss();
+        } else
+        	Log.d(getTag(), "session == null || !session.isOpened()");
     }
 }

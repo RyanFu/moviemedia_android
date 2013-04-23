@@ -12,11 +12,11 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
+import com.facebook.SessionState;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.asynctask.NewsShareTask;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.movienews.entity.Picture;
 import com.jumplife.phonefragment.LoginFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -169,8 +169,8 @@ public class PictureListAdapter extends BaseAdapter {
         @Override
         protected void onPreExecute() {
         	progressdialogInit = new ProgressDialog(mActivity);
-            progressdialogInit.setTitle("Facebook分享");
-            progressdialogInit.setMessage("分享中…");
+            progressdialogInit.setTitle(mActivity.getResources().getString(R.string.fb_share));
+            progressdialogInit.setMessage(mActivity.getResources().getString(R.string.sharing));
             progressdialogInit.setOnCancelListener(cancelListener);
             progressdialogInit.setCanceledOnTouchOutside(false);
         	progressdialogInit.show();
@@ -197,7 +197,8 @@ public class PictureListAdapter extends BaseAdapter {
 				publishFeedDialog(position, bitmap);
 			else {
 				closeProgressDilog();
-	            Toast toast = Toast.makeText(mActivity, "Facebook分享失敗 請再分享一次", Toast.LENGTH_LONG);
+	            Toast toast = Toast.makeText(mActivity, 
+	            		mActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
                 Log.d(null, "Facebook share failed");
@@ -213,40 +214,67 @@ public class PictureListAdapter extends BaseAdapter {
         }
     }
 	
+
 	private void publishFeedDialog(final int position, Bitmap bitmap) {		
 		if (hasPublishPermission()) {
-        	Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
-                public void onCompleted(Response response) {
-                	postRecordTask.closeProgressDilog();
-                    if(response.getError() != null) {
-                		Log.d("", "error : " + response.getError().getErrorMessage());
-		            	Toast toast = Toast.makeText(mActivity, "Facebook分享失敗 請再分享一次", Toast.LENGTH_LONG);
-		                toast.setGravity(Gravity.CENTER, 0, 0);
-		                toast.show();
-                	} else {
-                		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
-                		Toast toast = Toast.makeText(mActivity, "Facebook分享成功", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                	}
-                }
-            });
-            Bundle params = request.getParameters();
-			params.putString("message", news.get(position).getName());
-			request.executeAsync();
+			PublishPhotoToFB(bitmap, position);
 			return;
         } else {
-        	postRecordTask.closeProgressDilog();
+        	NewPermissionCallBack callback = new NewPermissionCallBack(position, bitmap);
             Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(mActivity, PERMISSIONS)
         			.setDefaultAudience(SessionDefaultAudience.EVERYONE);
+            session.addCallback(callback);
         	session.requestNewPublishPermissions(newPermissionsRequest);
         	return;
         }
          
     }
 	
+	class NewPermissionCallBack implements Session.StatusCallback {
+		private Bitmap bitmap;
+		private int position;
+		
+		public NewPermissionCallBack(int position, Bitmap bitmap) {
+			this.bitmap = bitmap;
+			this.position = position;
+		}
+		
+		@Override
+		public void call(Session session, SessionState state,
+				Exception exception) {
+			Log.d(null, "enter call back");
+			PublishPhotoToFB(bitmap, position);
+		}		
+	};
+	
 	private boolean hasPublishPermission() {
         Session session = Session.getActiveSession();
         return session != null && session.getPermissions().contains("publish_actions");
     }
+	
+	public void PublishPhotoToFB(Bitmap bitmap, final int position) {
+		Log.d(null, "enter publish fb");
+		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
+            public void onCompleted(Response response) {
+            	postRecordTask.closeProgressDilog();
+                if(response.getError() != null) {
+            		Log.d("", "error : " + response.getError().getErrorMessage());
+	            	Toast toast = Toast.makeText(mActivity, 
+	            			mActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
+	                toast.setGravity(Gravity.CENTER, 0, 0);
+	                toast.show();
+            	} else {
+            		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
+            		Toast toast = Toast.makeText(mActivity, 
+            				mActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+            	}
+            }
+        });
+        Bundle params = request.getParameters();
+        params.putString("message", news.get(position).getName());
+		request.executeAsync();
+		postRecordTask.closeProgressDilog();
+	}
 }

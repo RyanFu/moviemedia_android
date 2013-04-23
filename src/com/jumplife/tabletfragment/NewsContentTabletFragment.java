@@ -52,7 +52,6 @@ public class NewsContentTabletFragment extends Fragment {
 	private VideoListAdapter videoListAdapter;
 	private ProgressBar pbInit;
 	
-	//private TextNews newsContent;
 	private TextNews news;
 	
 	private LoadDataTask loadtask;
@@ -236,12 +235,11 @@ public class NewsContentTabletFragment extends Fragment {
 		Session session = Session.getActiveSession();
 
 		if (session != null && session.isOpened()) {
-	        Bundle params = new Bundle();
-	        params.putString("name", "Facebook SDK for Android");
-	        params.putString("caption", "Build great social apps and get more installs.");
-	        params.putString("description", "The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
-	        params.putString("link", "https://developers.facebook.com/android");
-	        params.putString("picture", "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+			Bundle params = new Bundle();
+	        params.putString("name", news.getName());
+	        params.putString("caption", news.getName());
+	        params.putString("link", news.getSourceUrl());
+	        //params.putString("picture", newsContent.getPosterUrl());
 	        
 	        // Invoke the dialog
 	    	WebDialog feedDialog = ( new WebDialog.FeedDialogBuilder(mFragmentActivity, session, params))
@@ -262,23 +260,23 @@ public class NewsContentTabletFragment extends Fragment {
 								newsShareTask.execute();
 								
 								Toast.makeText(mFragmentActivity,
-										"Posted story, id: "+postId,
+										mFragmentActivity.getResources().getString(R.string.fb_share_success),
 										Toast.LENGTH_SHORT).show();
 							} else {
 								// User clicked the Cancel button
 								Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                                "Publish cancelled", 
+										mFragmentActivity.getResources().getString(R.string.fb_share_cancel), 
 		                                Toast.LENGTH_SHORT).show();
 							}
 						} else if (error instanceof FacebookOperationCanceledException) {
 							// User clicked the "x" button
 							Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                            "Publish cancelled", 
+									mFragmentActivity.getResources().getString(R.string.fb_share_cancel), 
 		                            Toast.LENGTH_SHORT).show();
 						} else {
 							// Generic, ex: network error
 							Toast.makeText(mFragmentActivity.getApplicationContext(), 
-		                            "Error posting story", 
+									mFragmentActivity.getResources().getString(R.string.fb_share_failed), 
 		                            Toast.LENGTH_SHORT).show();
 						}
 					}
