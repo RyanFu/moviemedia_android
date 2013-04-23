@@ -106,7 +106,12 @@ public class PictureListAdapter extends BaseAdapter {
 		imageLoader.displayImage(news.get(position).show(), imageviewNewsPhoto, options);
 		
 		textvieTitle.setText(news.get(position).getName());
-		textViewContent.setText(news.get(position).getOrigin());
+		
+		String origin = "";
+		if (news.get(position).getOrigin() != null && (!news.get(position).getOrigin().equalsIgnoreCase("null")))
+			origin = news.get(position).getOrigin() ;
+		
+		textViewContent.setText(origin);
 		
 		llShare.setOnClickListener(new ItemButtonClick(position, news.get(position).getShareLink()));
 		return converView;
@@ -265,6 +270,10 @@ public class PictureListAdapter extends BaseAdapter {
 	                toast.show();
             	} else {
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
+            		
+            		NewsShareTask newsShareTask = new NewsShareTask(news.get(position).getId());
+            		newsShareTask.execute();
+            		
             		Toast toast = Toast.makeText(mActivity, 
             				mActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
