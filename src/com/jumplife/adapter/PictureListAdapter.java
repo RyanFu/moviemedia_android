@@ -14,6 +14,7 @@ import com.facebook.Session;
 import com.facebook.SessionDefaultAudience;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
+import com.jumplife.movienews.asynctask.NewsShareTask;
 import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.Picture;
 import com.jumplife.phonefragment.LoginFragment;
@@ -212,8 +213,7 @@ public class PictureListAdapter extends BaseAdapter {
         }
     }
 	
-	private void publishFeedDialog(final int position, Bitmap bitmap) {
-		
+	private void publishFeedDialog(final int position, Bitmap bitmap) {		
 		if (hasPublishPermission()) {
         	Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
                 public void onCompleted(Response response) {
