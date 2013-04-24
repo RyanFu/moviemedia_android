@@ -21,7 +21,7 @@
 	            android:layout_margin="@dimen/about_us_aboutapp_margin"
                 android:background="@color/main_color_orange"
                 android:padding="@dimen/about_us_tv_padding"
-                android:gravity="left"
+                android:gravity="center"
                 android:textSize="@dimen/about_us_tv"
                 android:textColor="@color/white"
                 android:text="@string/aboutapp" />
@@ -41,7 +41,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/about_us_intro"
                     android:text="@string/aboutapp_intro"
-		            android:gravity="center" />
+		            android:gravity="left" />
 		        </ScrollView>
 	        </RelativeLayout>
         <View

@@ -161,7 +161,8 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:background="@color/background"
-            android:layout_weight="0.7" >
+            android:layout_weight="0.7"
+            android:visibility="gone" >
             <View 
                 android:layout_width="@dimen/seperate_shadow"
                 android:layout_height="fill_parent"

@@ -176,7 +176,7 @@ public class AboutUsTabletFragment extends Fragment {
 				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
 				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
 				it.putExtra(Intent.EXTRA_CC, ccs); 
-				it.putExtra(Intent.EXTRA_SUBJECT, "[電影窩] 建議回饋"); 
+				it.putExtra(Intent.EXTRA_SUBJECT, "[電影窩] 作家投稿"); 
 				startActivity(it);  
 			}				
 		});

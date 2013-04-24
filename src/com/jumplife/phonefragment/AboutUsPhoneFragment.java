@@ -79,13 +79,27 @@ public class AboutUsPhoneFragment extends Fragment {
 	}
 	
 	private void initBasicView() {
-		TableRow Schedule_row = new TableRow(mFragmentActivity);
+		TableRow Schedule_row_first = new TableRow(mFragmentActivity);
+		TableRow Schedule_row_second = new TableRow(mFragmentActivity);
+		
+
+        
+        RelativeLayout rlempty1 = new RelativeLayout(mFragmentActivity);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels / 3;
+		TableRow.LayoutParams Params = new TableRow.LayoutParams
+				(screenWidth, screenWidth * 5 / 6, 0.33f);				
+		rlempty1.setLayoutParams(Params);
+		rlempty1.setVisibility(View.INVISIBLE);
+		Schedule_row_first.addView(rlempty1);
 				
+		
+		
 		TextView tvFeed = new TextView(mFragmentActivity);
 		ImageView ivFeed = new ImageView(mFragmentActivity);
 		RelativeLayout rlFeed = new RelativeLayout(mFragmentActivity);		
 			
-		DisplayMetrics displayMetrics = new DisplayMetrics();
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels / 6;
         ivFeed.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -114,10 +128,6 @@ public class AboutUsPhoneFragment extends Fragment {
 		
 		rlFeed.setBackgroundResource(R.drawable.about_us_item_background);
 		
-		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels / 3;
-		TableRow.LayoutParams Params = new TableRow.LayoutParams
-				(screenWidth, screenWidth * 5 / 6, 0.33f);				
 		rlFeed.setLayoutParams(Params);
 		rlFeed.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
@@ -129,7 +139,50 @@ public class AboutUsPhoneFragment extends Fragment {
 				startActivity(it);  
 			}			
 		});
-		Schedule_row.addView(rlFeed);
+		Schedule_row_first.addView(rlFeed);
+		
+		
+		
+		
+		TextView tvSubmit = new TextView(mFragmentActivity);
+		ImageView ivSubmit= new ImageView(mFragmentActivity);
+		RelativeLayout rlSubmit = new RelativeLayout(mFragmentActivity);		
+			
+		ivSubmit.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		ivSubmit.setImageResource(R.drawable.declare);
+		rlSubmit.addView(ivSubmit, rlIvParams);
+		
+        RelativeLayout.LayoutParams rlTvSubmitParams = new RelativeLayout.LayoutParams
+				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        rlTvSubmitParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        rlTvSubmitParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        rlTvSubmitParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				0, 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
+        tvSubmit.setText(mFragmentActivity.getResources().getString(R.string.reader_submit));
+        tvSubmit.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
+        tvSubmit.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
+        rlSubmit.addView(tvSubmit, rlTvSubmitParams);		
+		
+        rlSubmit.setBackgroundResource(R.drawable.about_us_item_background);
+        rlSubmit.setLayoutParams(Params);
+        rlSubmit.setOnClickListener(new OnClickListener(){
+        	public void onClick(View arg0) {
+				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
+				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
+				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
+				it.putExtra(Intent.EXTRA_CC, ccs); 
+				it.putExtra(Intent.EXTRA_SUBJECT, "[電影窩] 作家投稿"); 
+				startActivity(it);  
+			}				
+		});
+        Schedule_row_first.addView(rlSubmit);
+
+		Schedule_row_first.setLayoutParams(new LayoutParams
+				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+		llAboutUs.addView(Schedule_row_first);
+		
 		
 		
 		
@@ -180,7 +233,8 @@ public class AboutUsPhoneFragment extends Fragment {
 		        dialog.show();
 			}			
 		});
-		Schedule_row.addView(rlDeclare);
+		Schedule_row_second.addView(rlDeclare);
+		
 		
 		
 		
@@ -214,12 +268,18 @@ public class AboutUsPhoneFragment extends Fragment {
                 startActivity(it);
 			}			
 		});
-		Schedule_row.addView(rlFacebook);
+		Schedule_row_second.addView(rlFacebook);
 		
 
-		Schedule_row.setLayoutParams(new LayoutParams
+
+		RelativeLayout rlempty2 = new RelativeLayout(mFragmentActivity);
+		rlempty2.setLayoutParams(Params);
+		rlempty2.setVisibility(View.INVISIBLE);
+		Schedule_row_second.addView(rlempty2);
+		
+		Schedule_row_second.setLayoutParams(new LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-		llAboutUs.addView(Schedule_row);
+		llAboutUs.addView(Schedule_row_second);
 	}
 	
 	private String fetchData() {

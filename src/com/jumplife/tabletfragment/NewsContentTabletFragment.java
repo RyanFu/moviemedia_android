@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -50,6 +51,7 @@ public class NewsContentTabletFragment extends Fragment {
 	private ImageButton imageButtonAbourUs;
 	private ListView lvVideo;
 	private VideoListAdapter videoListAdapter;
+	private RelativeLayout rlVideo;
 	private ProgressBar pbInit;
 	
 	private TextNews news;
@@ -155,6 +157,7 @@ public class NewsContentTabletFragment extends Fragment {
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
 		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		webview = (TitleBarWebView)fragmentView.findViewById(R.id.webview_pic);
+		rlVideo = (RelativeLayout)fragmentView.findViewById(R.id.rl_video);
 		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
 		topbar_text.setText(getArguments().getString("categoryName"));
@@ -212,16 +215,12 @@ public class NewsContentTabletFragment extends Fragment {
         final String encoding = "UTF-8";
         webview.loadDataWithBaseURL("", news.getContent(), mimeType, encoding, "");
 		
-		imageButtonShare.setOnClickListener(new OnClickListener(){
-			@Override
-			public void onClick(View arg0) {
-				publishFeedDialog();
-			}        	
-        });
-		
 		videoListAdapter = new VideoListAdapter(mFragmentActivity, news.getVideoList());
 		lvVideo.setAdapter(videoListAdapter);
-        
+        if(news.getVideoList() != null && news.getVideoList().size() > 0)
+        	rlVideo.setVisibility(View.VISIBLE);
+        else
+        	rlVideo.setVisibility(View.GONE);
 		
 		imageButtonShare.setOnClickListener(new OnClickListener(){
 			@Override
