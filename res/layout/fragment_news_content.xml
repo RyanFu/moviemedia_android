@@ -31,12 +31,21 @@
         android:background="@drawable/imagebutton_topbar_background"
         android:scaleType="fitCenter"
         android:src="@drawable/imagebutton_share_source" />
+    
+    <RelativeLayout
+        android:id="@+id/ad_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:gravity="center_horizontal" 
+        android:layout_below="@+id/topbar"
+        android:layout_gravity="center_horizontal"/> 
 
     <com.jumplife.titlebarwebview.TitleBarWebView
 		android:id="@+id/webview_pic"
 		android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topbar"
+       	android:layout_below="@+id/ad_layout"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="@dimen/news_content_board_rl"
         android:layout_marginLeft="@dimen/news_content_board_rl"

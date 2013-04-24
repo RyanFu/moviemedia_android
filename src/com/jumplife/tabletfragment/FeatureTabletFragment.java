@@ -481,9 +481,13 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
         adWhirlLayout3 = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
         
         adWhirlLayout.setAdWhirlInterface(this);
-    	
+        adWhirlLayout2.setAdWhirlInterface(this);
+        adWhirlLayout3.setAdWhirlInterface(this);
+        
         adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-	 	
+        adWhirlLayout2.setGravity(Gravity.CENTER_HORIZONTAL);
+        adWhirlLayout3.setGravity(Gravity.CENTER_HORIZONTAL);
+        
     	adLayout.addView(adWhirlLayout);
     	adLayout2.addView(adWhirlLayout2);
     	adLayout3.addView(adWhirlLayout3);

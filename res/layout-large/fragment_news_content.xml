@@ -36,7 +36,9 @@
         android:background="@color/white"
         android:layout_below="@+id/topbar"
         android:weightSum="1.0"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:layout_above="@+id/ad_list_layout">
+        
         <com.jumplife.titlebarwebview.TitleBarWebView
             android:id="@+id/webview_pic"
             android:layout_width="match_parent"
@@ -200,4 +202,49 @@
         android:visibility="gone"
         android:background="@drawable/button_background"
         android:src="@drawable/renew"/>
+    
+        <LinearLayout 
+	        android:id="@+id/ad_list_layout"
+	        android:layout_alignParentBottom="true"
+	        android:background="@color/background"
+	        android:layout_width="fill_parent"
+	        android:layout_height="50dp"
+	        >
+	        
+	        <RelativeLayout
+	            android:id="@+id/ad_layout"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            
+	            android:background="@color/background"
+	            android:gravity="center_horizontal" 
+	            android:layout_gravity="center_horizontal"/>
+	        
+	        <RelativeLayout
+	            android:id="@+id/ad_layout2"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            
+	            android:background="@color/background"
+	            android:gravity="center_horizontal" 
+	            android:layout_gravity="center_horizontal"/>
+	        
+	        <RelativeLayout
+	            android:id="@+id/ad_layout3"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            
+	            android:background="@color/background"
+	            android:gravity="center_horizontal" 
+	            android:layout_gravity="center_horizontal"/>
+	        
+	       <RelativeLayout
+	            android:id="@+id/ad_layout4"
+	            android:layout_width="wrap_content"
+	            android:layout_height="fill_parent"
+	            
+	            android:background="@color/background"
+	            android:gravity="center_horizontal" 
+	            android:layout_gravity="center_horizontal"/>  
+	    </LinearLayout> 
     </RelativeLayout>

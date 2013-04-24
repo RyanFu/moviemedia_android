@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,14 +30,23 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.AppProject;
+import com.jumplife.phonefragment.OverViewPhoneFragment.AdTask;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
-public class AboutUsPhoneFragment extends Fragment {	
+public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {	
 	
 	private View fragmentView;
 	private TextView topbar_text;
@@ -46,6 +57,10 @@ public class AboutUsPhoneFragment extends Fragment {
 	private LoadDataTask loadtask;
 
 	private FragmentActivity mFragmentActivity;
+	
+	//for ad
+	RelativeLayout adLayout;
+	private AdWhirlLayout adWhirlLayout;
 
     @Override
     public void onAttach(Activity activity) {
@@ -66,6 +81,9 @@ public class AboutUsPhoneFragment extends Fragment {
         else
         	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
 	    
+	    AdTask adTask = new AdTask();
+		adTask.execute();
+	    
 		return fragmentView;
 	}
 	
@@ -73,6 +91,7 @@ public class AboutUsPhoneFragment extends Fragment {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_about_us);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		llAboutUs = (LinearLayout)fragmentView.findViewById(R.id.ll_aboutus);
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
         
 		topbar_text.setText(mFragmentActivity.getResources().getString(R.string.about_us));
 		initBasicView();
@@ -406,4 +425,84 @@ public class AboutUsPhoneFragment extends Fragment {
 	        super.onPostExecute(result);  
         }
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
+		EasyTracker.getTracker().sendView("手機關於我們Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
+	
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+    	
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+	 	
+    	adLayout.addView(adWhirlLayout);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
+		@Override
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
+		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }
+
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
+	}
 }

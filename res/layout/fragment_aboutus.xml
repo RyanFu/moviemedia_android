@@ -14,7 +14,9 @@
     <ScrollView 
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:layout_below="@+id/topbar" >
+        android:layout_below="@+id/topbar" 
+        android:layout_above="@+id/ad_layout">
+        
         <LinearLayout android:id="@+id/ll_aboutus" 
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
@@ -22,4 +24,14 @@
             android:orientation="vertical" >
             </LinearLayout>
         </ScrollView>
-    </RelativeLayout>
+        
+	<RelativeLayout
+        android:id="@+id/ad_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:gravity="center_horizontal" 
+        android:layout_gravity="center_horizontal"/>    
+    
+</RelativeLayout>
