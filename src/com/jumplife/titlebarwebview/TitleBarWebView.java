@@ -22,9 +22,9 @@ public class TitleBarWebView extends WebView {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		// determine height of title bar
 		View title = getChildAt(0);
-		titleHeight = title==null ? 0 : title.getMeasuredHeight();
+		titleHeight = title == null ? 0 : title.getMeasuredHeight();
 	}
-
+	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		return true;   // don't pass our touch events to children (title bar), we send these in dispatchTouchEvent
@@ -84,7 +84,11 @@ public class TitleBarWebView extends WebView {
    			int sx = getScrollX(), sy = getScrollY();
    			c.clipRect(sx, sy+tH, sx+getWidth(), sy+getHeight());
    		}
-   		//c.translate(0, titleHeight);
+   		
+   		int tansX = titleHeight - getScrollY(); 
+   		if(tansX > 0)
+   			c.translate(0, tansX);
+   		
    		super.onDraw(c);
    		c.restore();
    	}

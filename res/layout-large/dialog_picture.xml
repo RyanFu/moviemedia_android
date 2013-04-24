@@ -15,4 +15,67 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:background="@color/transparent50"
+	    android:orientation="vertical" >
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="@dimen/pictures_lv_item_ll_board_rl"
+	        android:paddingRight="@dimen/pictures_lv_item_ll_board_rl"
+	        android:paddingTop="@dimen/pictures_lv_item_ll_board_tb"
+	        android:paddingBottom="@dimen/pictures_lv_item_ll_board_tb"
+	        android:orientation="vertical"
+	        android:gravity="center" >    
+	        <TextView android:id="@+id/news_name" 
+	            android:layout_width="fill_parent" 
+	            android:layout_height="wrap_content"
+	            android:gravity="left"
+	            android:textSize="@dimen/pictures_lv_item_name"
+	            android:textColor="@color/share_picture_content_name"
+	            android:text="@string/title" />
+	        <TextView android:id="@+id/news_comment" 
+	            android:layout_width="fill_parent" 
+	            android:layout_height="wrap_content"
+	            android:gravity="right"
+	            android:lines="1"
+	            android:textSize="@dimen/pictures_lv_item_comment"
+	            android:textColor="@color/share_picture_content_orgin"
+	            android:text="@string/news_lv_comment" />
+	        </LinearLayout>    
+	    <View android:layout_width="fill_parent" 
+	        android:layout_height="@dimen/pictures_lv_item_seperate"
+	        android:background="@color/share_picture_content_seperate" />
+	    <LinearLayout android:id="@+id/ll_share"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:background="@drawable/button_share_picture_content_background"
+	        android:orientation="horizontal"
+	        android:gravity="center" >
+	
+	        <ImageView
+	            android:id="@+id/iv_share"
+	            android:layout_width="@dimen/pictures_lv_item_share_text"
+	            android:layout_height="@dimen/pictures_lv_item_share_text"
+	            android:layout_marginRight="@dimen/pictures_lv_item_padding"
+	            android:layout_gravity="center_vertical"
+	            android:scaleType="fitCenter"
+	            android:src="@drawable/share_press" />
+	
+	        <TextView
+	            android:id="@+id/tv_share"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="@dimen/pictures_lv_item_padding"
+	            android:layout_gravity="center_vertical"
+	            android:lines="1"
+	            android:text="@string/share"
+	            android:textColor="@color/share_picture_content_name"
+	            android:textSize="@dimen/pictures_lv_item_share_text" />
+	
+	        </LinearLayout>	        
+        </LinearLayout>
 </RelativeLayout>

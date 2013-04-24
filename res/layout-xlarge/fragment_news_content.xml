@@ -41,8 +41,6 @@
 	        android:id="@+id/webview_pic"
 	        android:layout_width="match_parent"
 	        android:layout_height="match_parent"
-	        android:layout_below="@+id/topbar"
-	        android:layout_alignParentBottom="true"
 	        android:layout_marginRight="@dimen/news_content_board_rl"
 	        android:layout_marginLeft="@dimen/news_content_board_rl"
 	        android:layerType="software"

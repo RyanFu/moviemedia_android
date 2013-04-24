@@ -2,6 +2,9 @@ package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
 
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.adapter.PosterViewPagerAdapter;
 import com.jumplife.movienews.AboutUsActivity;
@@ -17,14 +20,15 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,6 +63,21 @@ public class OverViewPhoneFragment extends Fragment {
 	private LoadPictureTask loadPictureTask;
 	private ProgressBar pbInit;
 	
+	private FragmentActivity mFragmentActivity;
+
+	private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        public void call(final Session session, final SessionState state, final Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -80,6 +99,50 @@ public class OverViewPhoneFragment extends Fragment {
 	    
 		return fragmentView;
 	}
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
+        uiHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        uiHelper.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+    
+    /**
+     * Notifies that the session token has been updated.
+     */
+    private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
+
+    }
 	
 	private void initView() {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_overview);
@@ -130,6 +193,7 @@ public class OverViewPhoneFragment extends Fragment {
 			//error handling
 		}
 	}
+	
 	@SuppressWarnings("deprecation")
 	private void setCategory() {
 		LayoutInflater myInflater = LayoutInflater.from(getActivity());

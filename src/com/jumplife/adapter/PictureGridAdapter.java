@@ -225,7 +225,7 @@ public class PictureGridAdapter extends BaseAdapter {
         }
     }
 	
-private void publishFeedDialog(int position, Bitmap bitmap) {
+	private void publishFeedDialog(int position, Bitmap bitmap) {
 		
 		if (hasPublishPermission()) {
 			PublishPhotoToFB(bitmap, position);
@@ -286,6 +286,5 @@ private void publishFeedDialog(int position, Bitmap bitmap) {
         Bundle params = request.getParameters();
         params.putString("message", news.get(position).getName());
 		request.executeAsync();
-		postRecordTask.closeProgressDilog();
 	}
 }

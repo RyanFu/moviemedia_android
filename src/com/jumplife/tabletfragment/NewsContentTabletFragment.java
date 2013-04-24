@@ -156,7 +156,7 @@ public class NewsContentTabletFragment extends Fragment {
 		webview = (TitleBarWebView)fragmentView.findViewById(R.id.webview_pic);
 		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
-		topbar_text.setText(getArguments().getString("featureName"));
+		topbar_text.setText(getArguments().getString("categoryName"));
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);

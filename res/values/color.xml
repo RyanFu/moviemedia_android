@@ -48,6 +48,11 @@
     <color name="share_picture_normal">#efefef</color>
     <color name="share_picture_press">#d1d1d1</color>
     
+    <!-- Picture content -->
+    <color name="share_picture_content_seperate">#efefef</color>
+    <color name="share_picture_content_orgin">#959595</color>
+    <color name="share_picture_content_name">#efefef</color>
+    
     <!-- facebook login -->
     <color name="fb_login_board">#959595</color>
     
