@@ -12,6 +12,7 @@ import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -84,6 +85,17 @@ public class NewsTabletFragment extends Fragment {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		newsGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_news);
+		
+		imageButtonRefresh.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	loadtask = new LoadDataTask();
+                if(Build.VERSION.SDK_INT < 11)
+                	loadtask.execute();
+                else
+                	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
 	}
 	
 	private String fetchData() {

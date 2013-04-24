@@ -19,10 +19,6 @@ import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-<<<<<<< HEAD
-=======
-import com.jumplife.phonefragment.OverViewPhoneFragment.AdTask;
->>>>>>> 3ee5992811f46a8e5ec870bc2a6996f28e233d0f
 
 import android.app.Activity;
 import android.content.Intent;
@@ -114,6 +110,16 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 		
 		topbar_text.setText(getArguments().getString("categoryName"));
 	
+		imageButtonRefresh.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	loadtask = new LoadDataTask();
+                if(Build.VERSION.SDK_INT < 11)
+                	loadtask.execute();
+                else
+                	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
