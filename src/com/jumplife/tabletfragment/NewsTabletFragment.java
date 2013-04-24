@@ -119,18 +119,19 @@ public class NewsTabletFragment extends Fragment {
 				Intent newAct = new Intent();
 				newAct.setClass(mFragmentActivity, NewsContentTabletActivity.class );
 				
-				Bundle bundle = new Bundle();
-				
+				Bundle bundle = new Bundle();				
 	            bundle.putInt("newsId", news.get(position).getId());
-	            bundle.putString("categoryName", getArguments().getString("categoryName"));
+	            bundle.putString("categoryName", getArguments().getString("categoryName"));	            
 	            
-	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position ).getReleaseDate()));
-	            
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position ).getReleaseDate()));	            
 	            bundle.putString("origin", news.get(position).getOrigin());
 	            bundle.putString("name", news.get(position).getName());
 				
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
+	            
+	            Thread mThread = new Thread(new updateNewsWatcheThread(position));
+	            mThread.start();
 			}
 		});
 		
@@ -159,6 +160,20 @@ public class NewsTabletFragment extends Fragment {
 			        	task.executeOnExecutor(NextPageTask.THREAD_POOL_EXECUTOR, 0);
 		     }
 		 });
+	}
+	
+	class updateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		updateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(news.get(position).getId());
+		}		
 	}
 	
 	private void setListAdatper() {

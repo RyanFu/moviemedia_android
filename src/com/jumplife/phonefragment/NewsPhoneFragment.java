@@ -12,11 +12,14 @@ import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +49,14 @@ public class NewsPhoneFragment extends Fragment {
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
+	
+	private FragmentActivity mFragmentActivity;
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	public static NewsPhoneFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		NewsPhoneFragment fragment = new NewsPhoneFragment();
@@ -85,7 +96,7 @@ public class NewsPhoneFragment extends Fragment {
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
-				newAct.setClass(getActivity(), AboutUsActivity.class );
+				newAct.setClass(mFragmentActivity, AboutUsActivity.class );
 	            startActivity(newAct);
             }
         });
@@ -120,14 +131,13 @@ public class NewsPhoneFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(null, "click item : " + position);
 				Intent newAct = new Intent();
-				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
+				newAct.setClass(mFragmentActivity, NewsContentPhoneActivity.class );
 				Bundle bundle = new Bundle();
 				
 	            bundle.putInt("newsId", news.get(position - 1).getId());
 	            bundle.putString("categoryName", getArguments().getString("categoryName"));
 	            
-	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));
-	            
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));	            
 	            bundle.putString("origin", news.get(position - 1).getOrigin());
 	            bundle.putString("name", news.get(position - 1).getName());
 	            
@@ -136,13 +146,16 @@ public class NewsPhoneFragment extends Fragment {
 	            
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
+	            
+	            Thread mThread = new Thread(new updateNewsWatcheThread(position - 1));
+	            mThread.start();
 			}
 		});
 		
 		newsListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				 newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -154,7 +167,7 @@ public class NewsPhoneFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -166,8 +179,22 @@ public class NewsPhoneFragment extends Fragment {
 		 });
 	}
 	
+	class updateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		updateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(news.get(position).getId());
+		}		
+	}
+	
 	private void setListAdatper() {
-		newsContentListAdapter = new NewsListAdapter(getActivity(), news);
+		newsContentListAdapter = new NewsListAdapter(mFragmentActivity, news);
 		newsListView.setAdapter(newsContentListAdapter);
 	}
 	
@@ -281,7 +308,7 @@ public class NewsPhoneFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(this.mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("手機新聞列表Fragment");
 	}
 
@@ -289,6 +316,6 @@ public class NewsPhoneFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(this.mFragmentActivity); // Add this method
 	}
 }
