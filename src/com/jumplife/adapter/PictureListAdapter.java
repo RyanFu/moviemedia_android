@@ -284,6 +284,5 @@ public class PictureListAdapter extends BaseAdapter {
         Bundle params = request.getParameters();
         params.putString("message", news.get(position).getName());
 		request.executeAsync();
-		postRecordTask.closeProgressDilog();
 	}
 }

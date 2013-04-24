@@ -37,7 +37,63 @@
         android:layout_below="@+id/topbar"
         android:weightSum="1.0"
         android:orientation="horizontal" >
-        <ScrollView 
+        <com.jumplife.titlebarwebview.TitleBarWebView
+	        android:id="@+id/webview_pic"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginRight="@dimen/news_content_board_rl"
+	        android:layout_marginLeft="@dimen/news_content_board_rl"
+	        android:layerType="software"
+	        android:descendantFocusability="blocksDescendants"
+	        android:layout_weight="0.3" >
+	        <LinearLayout android:id="@+id/ll_newscontent" 
+	            android:layout_height="wrap_content"
+	            android:layout_width="fill_parent"
+	            android:paddingBottom="@dimen/news_content_board_bottom"
+	            android:gravity="center"
+	            android:orientation="vertical" >
+	            <TextView android:id="@+id/tv_title"
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:gravity="left"
+	                android:paddingTop="@dimen/news_content_board_top"
+	                android:paddingBottom="@dimen/news_content_board_bottom"
+	                android:paddingRight="@dimen/news_content_board_rl"
+	                android:paddingLeft="@dimen/news_content_board_rl"
+	                android:textSize="@dimen/news_content_name"
+	                android:textColor="@color/black"
+	                android:text="@string/title" />
+	            <RelativeLayout 
+	                android:layout_width="fill_parent"
+	                android:layout_height="wrap_content"
+	                android:paddingBottom="@dimen/news_content_board_bottom"
+	                android:paddingRight="@dimen/news_content_board_rl"
+	                android:paddingLeft="@dimen/news_content_board_rl"
+	                android:orientation="horizontal" >
+	                <TextView android:id="@+id/tv_source"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentLeft="true"
+	                    android:textSize="@dimen/news_content_source"
+	                    android:textColor="@color/news_content_source_date_color"
+	                    android:text="@string/news_content_source" />
+	                <TextView android:id="@+id/tv_date"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:layout_alignParentRight="true"
+	                    android:textSize="@dimen/news_content_date"
+	                    android:textColor="@color/news_content_source_date_color"
+	                    android:text="@string/news_content_date" />
+	            </RelativeLayout>
+	            <View 
+	                android:layout_width="fill_parent"
+	                android:layout_height="@dimen/news_content_seperate"
+	                android:background="@color/news_content_source_date_color"
+	                android:layout_marginLeft="@dimen/news_content_board_rl"
+	                android:layout_marginRight="@dimen/news_content_board_rl" />           
+	        </LinearLayout>
+	        </com.jumplife.titlebarwebview.TitleBarWebView>
+        <!-- <ScrollView 
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:paddingRight="@dimen/news_content_board_rl"
@@ -93,7 +149,7 @@
                     android:layout_height="fill_parent"
                     android:background="@color/white" />           
             </LinearLayout>    
-        </ScrollView>
+        </ScrollView> -->
         <View
             android:layout_width="@dimen/topbar_title_seperate" 
             android:layout_height="match_parent"

@@ -5,17 +5,28 @@
 	android:orientation="vertical" android:layout_width="match_parent"
 	android:layout_height="wrap_content" 
     android:background="@color/white">
-	
-	<TextView android:id="@+id/topbar_text"
+	<LinearLayout 
+	    android:orientation="horizontal" 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_gravity="left"
-	    android:padding="@dimen/topbar_title_padding"
-	    android:textSize="@dimen/topbar_title_title"
-	    android:textStyle="bold"
-	    android:textColor="@color/main_color_blue"
-	    android:text="@string/title"
-	    />
+        android:layout_gravity="left" >
+	    <ImageView 
+	        android:layout_width="@dimen/topbar_title_title"
+	        android:layout_height="@dimen/topbar_title_title"
+	        android:layout_gravity="center"
+	        android:layout_marginLeft="@dimen/topbar_title_padding"
+	        android:src="@drawable/icon"
+	        android:scaleType="fitCenter" />
+		<TextView android:id="@+id/topbar_text"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:padding="@dimen/topbar_title_padding"
+		    android:textSize="@dimen/topbar_title_title"
+		    android:textStyle="bold"
+		    android:textColor="@color/main_color_blue"
+		    android:text="@string/title"
+		    />
+	</LinearLayout>
     <View android:id="@+id/seperate_line"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/topbar_title_seperate"

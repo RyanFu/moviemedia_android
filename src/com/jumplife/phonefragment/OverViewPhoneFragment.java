@@ -3,11 +3,15 @@ package com.jumplife.phonefragment;
 import java.util.ArrayList;
 
 
+
 import com.adwhirl.AdWhirlLayout;
 import com.adwhirl.AdWhirlManager;
 import com.adwhirl.AdWhirlTargeting;
 import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
 import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.UiLifecycleHelper;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.hodo.HodoADView;
 import com.hodo.listener.HodoADListener;
@@ -75,7 +79,20 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
 	RelativeLayout adLayout;
 	private AdWhirlLayout adWhirlLayout;
 	private FragmentActivity mFragmentActivity;
-	
+
+	private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        public void call(final Session session, final SessionState state, final Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+
+    @Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -101,11 +118,49 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
 	    
 		return fragmentView;
 	}
-	
-	@Override
-    public void onAttach(Activity activity) {
-    	mFragmentActivity = getActivity();
-        super.onAttach(activity);
+    
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        uiHelper = new UiLifecycleHelper(mFragmentActivity, callback);
+        uiHelper.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uiHelper.onResume();
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        uiHelper.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        uiHelper.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        uiHelper.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        uiHelper.onDestroy();
+    }
+    
+    /**
+     * Notifies that the session token has been updated.
+     */
+    private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
+
     }
 	
 	private void initView() {
@@ -158,6 +213,7 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
 			//error handling
 		}
 	}
+	
 	@SuppressWarnings("deprecation")
 	private void setCategory() {
 		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);

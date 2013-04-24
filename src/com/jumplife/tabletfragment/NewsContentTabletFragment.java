@@ -17,6 +17,8 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.asynctask.NewsShareTask;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.TextNews;
+import com.jumplife.titlebarwebview.TitleBarWebView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -29,8 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebSettings.ZoomDensity;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -44,7 +44,7 @@ public class NewsContentTabletFragment extends Fragment {
 	private TextView textviewTitle;
 	private TextView textviewSource;
 	private TextView textviewReleaseDate;
-	private WebView webview;
+	private TitleBarWebView webview;
 	private ImageButton imageButtonRefresh;
 	private ImageButton imageButtonShare;
 	private ImageButton imageButtonAbourUs;
@@ -56,6 +56,13 @@ public class NewsContentTabletFragment extends Fragment {
 	
 	private LoadDataTask loadtask;
     
+    private UiLifecycleHelper uiHelper;
+    private Session.StatusCallback callback = new Session.StatusCallback() {
+        public void call(final Session session, final SessionState state, final Exception exception) {
+            onSessionStateChange(session, state, exception);
+        }
+    };
+    
     private FragmentActivity mFragmentActivity;
 
     @Override
@@ -64,13 +71,6 @@ public class NewsContentTabletFragment extends Fragment {
         super.onAttach(activity);
     }
 	
-	private UiLifecycleHelper uiHelper;
-    private Session.StatusCallback callback = new Session.StatusCallback() {
-        public void call(final Session session, final SessionState state, final Exception exception) {
-            onSessionStateChange(session, state, exception);
-        }
-    };
-    
 	public static NewsContentTabletFragment NewInstance(int newsId, String categoryName, String releaseDateStr, String origin, String name) {
 		NewsContentTabletFragment fragment = new NewsContentTabletFragment();
 	    Bundle args = new Bundle();
@@ -144,7 +144,7 @@ public class NewsContentTabletFragment extends Fragment {
 
     }
     
-	@SuppressLint("SetJavaScriptEnabled")
+	@SuppressLint({ "SetJavaScriptEnabled", "NewApi" })
 	private void initView() {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news_content);
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
@@ -154,16 +154,15 @@ public class NewsContentTabletFragment extends Fragment {
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonShare = (ImageButton)fragmentView.findViewById(R.id.ib_share);
 		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
-		webview = (WebView)fragmentView.findViewById(R.id.webview_pic);
+		webview = (TitleBarWebView)fragmentView.findViewById(R.id.webview_pic);
 		lvVideo = (ListView)fragmentView.findViewById(R.id.listview_video);
 		
-		topbar_text.setText(getArguments().getString("featureName"));
+		topbar_text.setText(getArguments().getString("categoryName"));
 		
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
-		webview.getSettings().setDefaultZoom(ZoomDensity.CLOSE);  
-		webview.setInitialScale(150);
+		webview.getSettings().setDisplayZoomControls(false);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
