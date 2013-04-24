@@ -186,7 +186,8 @@ public class NewsContentPhoneFragment extends Fragment {
 		webview.getSettings().setSupportZoom(true);
 		webview.getSettings().setJavaScriptEnabled(true);
 		webview.getSettings().setBuiltInZoomControls(true);
-		webview.getSettings().setDisplayZoomControls(false);
+		if(Build.VERSION.SDK_INT > 10)
+			webview.getSettings().setDisplayZoomControls(false);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {

@@ -547,7 +547,10 @@ public class PicturesTabletFragment extends Fragment {
             }
         });
         Bundle params = request.getParameters();
-        params.putString("message", newsList.get(position).getName());
+        if(newsList.get(position).getOrigin() != null && newsList.get(position).getOrigin().equalsIgnoreCase("null"))
+            params.putString("message", newsList.get(position).getName() + "--《" + newsList.get(position).getOrigin() + "》");
+        else
+        	params.putString("message", newsList.get(position).getName());
 		request.executeAsync();
 	}
 }
