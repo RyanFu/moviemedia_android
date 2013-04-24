@@ -2,6 +2,7 @@ package com.jumplife.phonefragment;
 
 import java.util.Date;
 
+
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
@@ -21,6 +22,7 @@ import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.titlebarwebview.TitleBarWebView;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
+import com.jumplife.movienews.asynctask.NewsShareTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -280,7 +282,7 @@ public class NewsContentPhoneFragment extends Fragment {
 	
 	private void publishFeedDialog() {
 		Session session = Session.getActiveSession();
-
+		
 		if (session != null && session.isOpened()) {
 	        Bundle params = new Bundle();
 	        params.putString("name", news.getName());
@@ -302,6 +304,9 @@ public class NewsContentPhoneFragment extends Fragment {
 							if (postId != null) {
 								int newsId = getArguments().getInt("newsId"); //for log
 								EasyTracker.getTracker().sendEvent("文字新聞", "分享", "news id: " + newsId, (long) newsId);
+								
+								NewsShareTask newsShareTask = new NewsShareTask(newsId);
+								newsShareTask.execute();
 								
 								Toast.makeText(mFragmentActivity,
 										mFragmentActivity.getResources().getString(R.string.fb_share_success),
@@ -366,6 +371,7 @@ public class NewsContentPhoneFragment extends Fragment {
 	        super.onPostExecute(result);  
         }
     }
+	
 	@Override
 	public void onStart() {
 		super.onStart();

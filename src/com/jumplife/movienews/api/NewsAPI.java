@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import com.jumplife.movienews.entity.*;
@@ -15,6 +16,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -261,40 +267,6 @@ public class NewsAPI {
 				else {
 					news = new TextNews(-1, "", "", null, "", new Date(), content, contentUrl, "");
 				}
-				
-				
-				
-				
-				/*
-				//有影片
-				if (!json.isNull("videos")) {
-					//TextNews(int id, String name, String posterUrl, NewsCategory category, String comment, Date releaseDate, String content, String sourceUrl, ArrayList<Video> videoList)
-					JSONArray videoAry = newsJson.getJSONArray("videos");
-					
-					int a = 0; 
-					a++;
-					a--;
-					
-					ArrayList<Video> videoList = new ArrayList<Video>(5);
-					
-					for (int i =  0; i < videoAry.length(); i++) {
-						String name = videoAry.getJSONObject(i).getString("name");
-						String videoUrl = videoAry.getJSONObject(i).getString("video_url");
-						String posterUrl = videoAry.getJSONObject(i).getString("pic_url");
-						videoList.add(new Video(name, videoUrl, posterUrl));
-						int b = 0; 
-						b++;
-						b--;
-					}
-					
-					news = new TextNews(-1, "", "", null, "", new Date(), content, contentUrl, videoList, "");
-				}
-				//沒有影片
-				else {
-					//TextNews(int id, String name, String posterUrl, NewsCategory category, String comment, Date releaseDate, String content, String sourceUrl)
-					news = new TextNews(-1, "", "", null, "", new Date(), content, contentUrl, "");
-				}
-				*/
 			}
 			catch (JSONException e) {
 				e.printStackTrace();
@@ -334,6 +306,38 @@ public class NewsAPI {
 		
 		return appList;
 	}
+	
+	public boolean updateNewsShares(int newsId) {
+		boolean result = false;
+
+		try{
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			String url = "http://106.187.53.220//api/v1/news/" + newsId + ".json";						
+			if(DEBUG)
+				Log.d(TAG, "URL : " + url);
+			
+			HttpPut httpPut = new HttpPut(url);
+			HttpResponse response = httpClient.execute(httpPut);
+			
+			StatusLine statusLine =  response.getStatusLine();
+			if (statusLine.getStatusCode() == 200){
+				result = true;
+			}
+		} 
+	    catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return result;
+		} 
+		catch (ClientProtocolException e) {
+			e.printStackTrace();
+			return result;
+		} 
+		catch (IOException e){
+			e.printStackTrace();
+			return result;
+		}	
+		return result;
+	} 
 	
 	public String getMessageFromServer(String requestMethod, String apiPath, JSONObject json) {
 		URL url;

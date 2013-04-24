@@ -14,6 +14,7 @@ import com.jumplife.adapter.VideoListAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
+import com.jumplife.movienews.asynctask.NewsShareTask;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.TextNews;
 import com.jumplife.titlebarwebview.TitleBarWebView;
@@ -253,6 +254,9 @@ public class NewsContentTabletFragment extends Fragment {
 							if (postId != null) {
 								int newsId = getArguments().getInt("newsId"); //for log
 								EasyTracker.getTracker().sendEvent("文字新聞", "分享", "news id: " + newsId, (long) newsId);
+								
+								NewsShareTask newsShareTask = new NewsShareTask(newsId);
+								newsShareTask.execute();
 								
 								Toast.makeText(mFragmentActivity,
 										mFragmentActivity.getResources().getString(R.string.fb_share_success),
