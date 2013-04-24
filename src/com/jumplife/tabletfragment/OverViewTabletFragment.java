@@ -2,7 +2,15 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
@@ -11,6 +19,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +41,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class OverViewTabletFragment extends Fragment {	
+public class OverViewTabletFragment extends Fragment{	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
@@ -42,6 +52,7 @@ public class OverViewTabletFragment extends Fragment {
 	private ProgressBar pbInit;
 	
 	private FragmentActivity mFragmentActivity;
+	
 
     @Override
     public void onAttach(Activity activity) {
@@ -61,7 +72,7 @@ public class OverViewTabletFragment extends Fragment {
 	    	loadCategoryTask.execute();
         else
         	loadCategoryTask.executeOnExecutor(LoadCategoryTask.THREAD_POOL_EXECUTOR, 0);
-	    
+
 	    return fragmentView;
 	}
 	
@@ -251,7 +262,7 @@ public class OverViewTabletFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("平板首頁Fragment");
 	}
 
@@ -259,6 +270,7 @@ public class OverViewTabletFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
 	}
+
 }

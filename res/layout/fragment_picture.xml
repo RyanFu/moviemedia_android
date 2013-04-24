@@ -34,7 +34,9 @@
         android:layout_marginRight="@dimen/pictures_lv_board"
         android:divider="@color/transparent100"
         android:dividerHeight="@dimen/pictures_lv_divider"
-        ptr:ptrMode="both" />
+        ptr:ptrMode="both" 
+        android:layout_above="@+id/ad_layout"/>
+    
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -43,4 +45,13 @@
         android:visibility="gone"
         android:background="@drawable/button_background"
         android:src="@drawable/renew"/>
+    
+    <RelativeLayout
+        android:id="@+id/ad_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:gravity="center_horizontal" 
+        android:layout_gravity="center_horizontal"/>
     </RelativeLayout>
