@@ -215,11 +215,6 @@ public class NewsAPI {
 						Picture pic = new Picture(id, name, posterUrl, category, picUrl, releaseDate, origin);
 						newsList.add(pic);
 					}
-					
-					
-					int f = 0;
-					f ++;
-						
 				}
 				
 			} catch (JSONException e) {

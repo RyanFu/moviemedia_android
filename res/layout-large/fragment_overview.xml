@@ -22,7 +22,7 @@
     <com.jumplife.adapter.CustomScrollView         
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/topbar_text" >
+        android:layout_below="@+id/topbar_text">
         <LinearLayout android:id="@+id/ll_feature"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -34,12 +34,13 @@
 		        android:background="@color/grey" />                   
             </LinearLayout>     
         </com.jumplife.adapter.CustomScrollView>
-    
+
     <View 
         android:layout_width="@dimen/seperate_shadow"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:background="@drawable/seperate_shadow_inverse" />
+    
 	<ImageButton android:id="@+id/refresh"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"

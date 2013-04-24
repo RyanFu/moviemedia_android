@@ -2,7 +2,15 @@ package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
 
+
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.adapter.PosterViewPagerAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsPhoneActivity;
@@ -17,14 +25,18 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,7 +50,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
-public class OverViewPhoneFragment extends Fragment {	
+public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{	
 	
 	private View fragmentView;
 	private TextView topbar_text;
@@ -59,13 +71,18 @@ public class OverViewPhoneFragment extends Fragment {
 	private LoadPictureTask loadPictureTask;
 	private ProgressBar pbInit;
 	
+	//for ad
+	RelativeLayout adLayout;
+	private AdWhirlLayout adWhirlLayout;
+	private FragmentActivity mFragmentActivity;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
 		fragmentView = inflater.inflate(R.layout.fragment_overview, container, false);		
 		initView();
-		
+	
 		loadCategoryTask = new LoadCategoryTask();
 	    if(Build.VERSION.SDK_INT < 11)
 	    	loadCategoryTask.execute();
@@ -78,8 +95,18 @@ public class OverViewPhoneFragment extends Fragment {
         else
         	loadPictureTask.executeOnExecutor(LoadPictureTask.THREAD_POOL_EXECUTOR, 0);
 	    
+
+		AdTask adTask = new AdTask();
+		adTask.execute();
+	    
 		return fragmentView;
 	}
+	
+	@Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	private void initView() {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_overview);
@@ -91,8 +118,9 @@ public class OverViewPhoneFragment extends Fragment {
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
 		mPager = (ViewPager)fragmentView.findViewById(R.id.pager);
 		mIndicator = (CirclePageIndicator)fragmentView.findViewById(R.id.indicator);
-        
-		topbar_text.setText(getActivity().getResources().getString(R.string.app_name));
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
+		
+		topbar_text.setText(mFragmentActivity.getResources().getString(R.string.app_name));
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -117,7 +145,7 @@ public class OverViewPhoneFragment extends Fragment {
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
-				newAct.setClass(getActivity(), AboutUsActivity.class );
+				newAct.setClass(mFragmentActivity, AboutUsActivity.class );
 	            startActivity(newAct);
             }
         });
@@ -132,7 +160,7 @@ public class OverViewPhoneFragment extends Fragment {
 	}
 	@SuppressWarnings("deprecation")
 	private void setCategory() {
-		LayoutInflater myInflater = LayoutInflater.from(getActivity());
+		LayoutInflater myInflater = LayoutInflater.from(mFragmentActivity);
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.showStubImage(R.drawable.img_status_loading)
@@ -145,7 +173,7 @@ public class OverViewPhoneFragment extends Fragment {
 		.build();
 		
 		for(int i=0; i<newsCategories.size(); i+=2){
-			TableRow Schedule_row = new TableRow(getActivity());
+			TableRow Schedule_row = new TableRow(mFragmentActivity);
 			for(int j=0; j<2; j++){
 				int index = i + j;
 				View converView = myInflater.inflate(R.layout.item_category, null);
@@ -155,7 +183,7 @@ public class OverViewPhoneFragment extends Fragment {
 				RelativeLayout rl = (RelativeLayout)converView.findViewById(R.id.rl_overview_category);
 				
 				DisplayMetrics displayMetrics = new DisplayMetrics();
-				getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+				mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		        int screenWidth = displayMetrics.widthPixels;
 		        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		        iv.getLayoutParams().height = (int)(screenWidth * 4 / 5);
@@ -167,10 +195,10 @@ public class OverViewPhoneFragment extends Fragment {
 					RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 							(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 					rlParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-					tv.setPadding(getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.text_board), 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.text_board));
+					tv.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board));
 					tv.setLayoutParams(rlParams);
 					imageLoader.displayImage(newsCategories.get(index).getPosterUrl(), iv, options);
 					converView.setId(index);
@@ -181,9 +209,9 @@ public class OverViewPhoneFragment extends Fragment {
 							int index = arg0.getId();
 							//Log.d("", "index : " + index + " type id : " + newsCategories.get(index).getTypeId());
 							if(newsCategories.get(index).getTypeId() == 1)
-								newAct.setClass(getActivity(), NewsPhoneActivity.class );
+								newAct.setClass(mFragmentActivity, NewsPhoneActivity.class );
 							else
-								newAct.setClass(getActivity(), PicturesPhoneActivity.class );
+								newAct.setClass(mFragmentActivity, PicturesPhoneActivity.class );
 				            Bundle bundle = new Bundle();
 				            bundle.putInt("categoryId", newsCategories.get(index).getId());
 				            bundle.putString("categoryName", newsCategories.get(index).getName());
@@ -208,19 +236,19 @@ public class OverViewPhoneFragment extends Fragment {
 						(screenWidth / 2, screenWidth * 3 / 8, 0.5f);
 				if(index%2 != 1)
 					Params.setMargins(0, 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2,
+						mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+						mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2,
 						0);
 				else
-					Params.setMargins(getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2, 
-							getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
+					Params.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width)/2, 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_interval_width), 
 							0, 
 							0);
 				converView.setLayoutParams(Params);
-				converView.setPadding(getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
-						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng), 
-						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
-						getActivity().getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng));
+				converView.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
+						mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng), 
+						mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng),
+						mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_board_and_paddijng));
 				converView.setBackgroundResource(R.drawable.overview_category_item_background);
 				Schedule_row.addView(converView);
 			}
@@ -274,13 +302,13 @@ public class OverViewPhoneFragment extends Fragment {
 	
 
 	private void setPictureView() {
-		mAdapter = new PosterViewPagerAdapter(getActivity(), editorSelectedNewsList);
+		mAdapter = new PosterViewPagerAdapter(mFragmentActivity, editorSelectedNewsList);
 
         mPager.setAdapter(mAdapter);
         mPager.setVisibility(View.VISIBLE);
         
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
         LayoutParams rlLayout = new LayoutParams(screenWidth, screenWidth / 2);
         
@@ -291,7 +319,7 @@ public class OverViewPhoneFragment extends Fragment {
 	
 	private void setRefresh() {
 		DisplayMetrics displayMetrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels;
         
         LayoutParams rlLayout = new LayoutParams(screenWidth, screenWidth / 2);
@@ -337,7 +365,7 @@ public class OverViewPhoneFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("手機首頁Fragment");
 	}
 
@@ -345,6 +373,71 @@ public class OverViewPhoneFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
+	
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+    	
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+	 	
+    	adLayout.addView(adWhirlLayout);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
+		@Override
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
+		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }
+
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
 	}
 }

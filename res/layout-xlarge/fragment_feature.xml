@@ -9,7 +9,9 @@
         android:layout_centerInParent="true" />
     <com.jumplife.adapter.CustomScrollView         
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/ad_list_layout" >
+        
         <LinearLayout android:id="@+id/ll_feature"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -25,4 +27,43 @@
                 android:src="@drawable/renew"/>
             </LinearLayout>     
         </com.jumplife.adapter.CustomScrollView>
-    </RelativeLayout>
+    
+    <LinearLayout 
+        android:id="@+id/ad_list_layout"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        >
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>
+        
+    </LinearLayout>
+    
+    
+</RelativeLayout>

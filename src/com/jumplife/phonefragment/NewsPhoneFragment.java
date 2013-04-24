@@ -2,23 +2,36 @@ package com.jumplife.phonefragment;
 
 import java.util.ArrayList;
 
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.adapter.NewsListAdapter;
 import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
+import com.jumplife.phonefragment.OverViewPhoneFragment.AdTask;
+
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +41,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class NewsPhoneFragment extends Fragment {	
+public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{	
 	
 	private View fragmentView;
 	private TextView topbar_text;
@@ -46,6 +60,11 @@ public class NewsPhoneFragment extends Fragment {
 	private LoadDataTask loadtask;
 	
 	private int page = 1;
+	
+	//for ad
+	RelativeLayout adLayout;
+	private AdWhirlLayout adWhirlLayout;
+	private FragmentActivity mFragmentActivity;
 	
 	public static NewsPhoneFragment NewInstance(int categoryId, String categoryName, int typeId) {
 		NewsPhoneFragment fragment = new NewsPhoneFragment();
@@ -70,8 +89,17 @@ public class NewsPhoneFragment extends Fragment {
         else
         	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
 	    
+	    AdTask adTask = new AdTask();
+		adTask.execute();
+	    
 		return fragmentView;
 	}
+	
+	@Override
+    public void onAttach(Activity activity) {
+    	mFragmentActivity = getActivity();
+        super.onAttach(activity);
+    }
 	
 	private void initView() {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
@@ -79,13 +107,14 @@ public class NewsPhoneFragment extends Fragment {
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		newsListView = (PullToRefreshListView)fragmentView.findViewById(R.id.lv_news);
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
 		
 		topbar_text.setText(getArguments().getString("categoryName"));
 	
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
-				newAct.setClass(getActivity(), AboutUsActivity.class );
+				newAct.setClass(mFragmentActivity, AboutUsActivity.class );
 	            startActivity(newAct);
             }
         });
@@ -120,7 +149,7 @@ public class NewsPhoneFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Log.d(null, "click item : " + position);
 				Intent newAct = new Intent();
-				newAct.setClass(getActivity(), NewsContentPhoneActivity.class );
+				newAct.setClass(mFragmentActivity, NewsContentPhoneActivity.class );
 				Bundle bundle = new Bundle();
 				
 	            bundle.putInt("newsId", news.get(position - 1).getId());
@@ -142,7 +171,7 @@ public class NewsPhoneFragment extends Fragment {
 		newsListView.setOnRefreshListener(new OnRefreshListener2<ListView>() {
 			 @SuppressWarnings("deprecation")
 			public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-				 newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				 newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 						 System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 								| DateUtils.FORMAT_ABBREV_ALL));
 				 RefreshTask task = new RefreshTask();
@@ -154,7 +183,7 @@ public class NewsPhoneFragment extends Fragment {
 		
 			@SuppressWarnings("deprecation")
 			public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-				newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
+				newsListView.setLastUpdatedLabel(DateUtils.formatDateTime(mFragmentActivity.getApplicationContext(),
 							System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
 									| DateUtils.FORMAT_ABBREV_ALL));
 		    	 NextPageTask task = new NextPageTask();
@@ -167,7 +196,7 @@ public class NewsPhoneFragment extends Fragment {
 	}
 	
 	private void setListAdatper() {
-		newsContentListAdapter = new NewsListAdapter(getActivity(), news);
+		newsContentListAdapter = new NewsListAdapter(mFragmentActivity, news);
 		newsListView.setAdapter(newsContentListAdapter);
 	}
 	
@@ -281,7 +310,7 @@ public class NewsPhoneFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(this.mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("手機新聞列表Fragment");
 	}
 
@@ -289,6 +318,71 @@ public class NewsPhoneFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(this.mFragmentActivity); // Add this method
+	}
+
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+    	
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+	 	
+    	adLayout.addView(adWhirlLayout);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
+		@Override
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
+		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }	
+	
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -2,7 +2,15 @@ package com.jumplife.tabletfragment;
 
 import java.util.ArrayList;
 
+
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
@@ -14,12 +22,14 @@ import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +44,7 @@ import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
 
-public class FeatureTabletFragment extends Fragment {	
+public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
@@ -50,6 +60,16 @@ public class FeatureTabletFragment extends Fragment {
 	
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 	private DisplayImageOptions options;
+	
+	//for ad
+	LinearLayout adListLayout;
+	RelativeLayout adLayout;
+	RelativeLayout adLayout2;
+	RelativeLayout adLayout3;
+	
+	private AdWhirlLayout adWhirlLayout;
+	private AdWhirlLayout adWhirlLayout2;
+	private AdWhirlLayout adWhirlLayout3;
 
     @Override
     public void onAttach(Activity activity) {
@@ -70,6 +90,9 @@ public class FeatureTabletFragment extends Fragment {
         else
         	loadPictureTask.executeOnExecutor(LoadPictureTask.THREAD_POOL_EXECUTOR, 0);
 	    
+	    AdTask adTask = new AdTask();
+		adTask.execute();
+	    
 		return fragmentView;
 	}
 	
@@ -77,6 +100,10 @@ public class FeatureTabletFragment extends Fragment {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_feature);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		llFeature = (LinearLayout)fragmentView.findViewById(R.id.ll_feature);
+		adListLayout = (LinearLayout) fragmentView.findViewById(R.id.ad_list_layout);
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
+		adLayout2 = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout2);
+		adLayout3 = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout3);
 		
 		imageButtonRefresh.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -301,16 +328,85 @@ public class FeatureTabletFragment extends Fragment {
         }
     }
 	public void onStart() {
-		  super.onStart();
-		  // The rest of your onStart() code.
-		  EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
-		  EasyTracker.getTracker().sendView("平板電影新聞種類列表Fragment");
-		}
+	  super.onStart();
+	  // The rest of your onStart() code.
+	  EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
+	  EasyTracker.getTracker().sendView("平板電影新聞種類列表Fragment");
+	}
 
+	@Override
+	public void onStop() {
+	  super.onStop();
+	  // The rest of your onStop() code.
+	  EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
+
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_tablet_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);
+        adWhirlLayout2 = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        adWhirlLayout3 = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+    	
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+	 	
+    	adLayout.addView(adWhirlLayout);
+    	adLayout2.addView(adWhirlLayout2);
+    	adLayout3.addView(adWhirlLayout3);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
 		@Override
-		public void onStop() {
-		  super.onStop();
-		  // The rest of your onStop() code.
-		  EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
 		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }	
+	
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
+	}
 }
