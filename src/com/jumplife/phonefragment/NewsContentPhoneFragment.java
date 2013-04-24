@@ -3,6 +3,11 @@ package com.jumplife.phonefragment;
 import java.util.Date;
 
 
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.facebook.FacebookException;
 import com.facebook.FacebookOperationCanceledException;
 import com.facebook.Session;
@@ -12,6 +17,8 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.WebDialog;
 import com.facebook.widget.WebDialog.OnCompleteListener;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.adapter.VideosViewPagerAdapter;
 import com.jumplife.adapter.WrapSlidingDrawer;
 import com.jumplife.movienews.AboutUsActivity;
@@ -23,10 +30,12 @@ import com.jumplife.titlebarwebview.TitleBarWebView;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 import com.jumplife.movienews.asynctask.NewsShareTask;
+import com.jumplife.phonefragment.NewsPhoneFragment.AdTask;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +43,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,7 +59,7 @@ import android.widget.Toast;
 import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
-public class NewsContentPhoneFragment extends Fragment {	
+public class NewsContentPhoneFragment extends Fragment implements AdWhirlInterface{	
 	
 	private View fragmentView;
 	private View overheadView;
@@ -81,6 +91,10 @@ public class NewsContentPhoneFragment extends Fragment {
     };
 
     private FragmentActivity mFragmentActivity;
+    
+    //for ad
+  	RelativeLayout adLayout;
+  	private AdWhirlLayout adWhirlLayout;
 
     @Override
     public void onAttach(Activity activity) {
@@ -113,6 +127,9 @@ public class NewsContentPhoneFragment extends Fragment {
 	    	loadtask.execute();
         else
         	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+	    
+	    AdTask adTask = new AdTask();
+		adTask.execute();
 	    
 		return fragmentView;
 	}
@@ -173,6 +190,7 @@ public class NewsContentPhoneFragment extends Fragment {
 		imageButtonAbourUs = (ImageButton)fragmentView.findViewById(R.id.ib_about_us);
 		webview = (TitleBarWebView)fragmentView.findViewById(R.id.webview_pic);
 		overheadView = (View)fragmentView.findViewById(R.id.view_overhead);
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
 		
 
 		topbar_text.setText(getArguments().getString("categoryName"));
@@ -201,7 +219,7 @@ public class NewsContentPhoneFragment extends Fragment {
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
-				newAct.setClass(getActivity(), AboutUsActivity.class );
+				newAct.setClass(mFragmentActivity, AboutUsActivity.class );
 	            startActivity(newAct);
             }
         });
@@ -376,7 +394,7 @@ public class NewsContentPhoneFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("手機文字新聞Fragment");
 	}
 
@@ -384,6 +402,72 @@ public class NewsContentPhoneFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
+	
+	
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+    	
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+	 	
+    	adLayout.addView(adWhirlLayout);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
+		@Override
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
+		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }	
+
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
 	}
 }

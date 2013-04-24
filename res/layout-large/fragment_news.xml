@@ -17,7 +17,9 @@
         android:numColumns="2"
         android:verticalSpacing="@dimen/news_lv_board"
         android:horizontalSpacing="@dimen/news_lv_board"
-        ptr:ptrMode="both" />
+        ptr:ptrMode="both" 
+        android:layout_above="@+id/ad_list_layout"/>
+    
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -25,4 +27,39 @@
         android:visibility="gone"
         android:background="@drawable/button_background"
         android:src="@drawable/renew"/>
-    </RelativeLayout>
+    <LinearLayout 
+        android:id="@+id/ad_list_layout"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        >
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>
+        
+        <RelativeLayout
+            android:id="@+id/ad_layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            
+            android:background="@color/background"
+            android:gravity="center_horizontal" 
+            android:layout_gravity="center_horizontal"/>    
+    </LinearLayout>  
+</RelativeLayout>

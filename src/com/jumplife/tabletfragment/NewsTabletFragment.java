@@ -3,17 +3,27 @@ package com.jumplife.tabletfragment;
 import java.util.ArrayList;
 
 
+import com.adwhirl.AdWhirlLayout;
+import com.adwhirl.AdWhirlManager;
+import com.adwhirl.AdWhirlTargeting;
+import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
+import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener2;
+import com.hodo.HodoADView;
+import com.hodo.listener.HodoADListener;
 import com.jumplife.adapter.NewsGridAdapter;
 import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
+import com.jumplife.tabletfragment.FeatureTabletFragment.AdTask;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +31,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +40,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
-public class NewsTabletFragment extends Fragment {	
+public class NewsTabletFragment extends Fragment implements AdWhirlInterface{	
 	
 	private View fragmentView;
 	private ImageButton imageButtonRefresh;
@@ -47,6 +60,16 @@ public class NewsTabletFragment extends Fragment {
 	private int page = 1;
     
     private FragmentActivity mFragmentActivity;
+    
+    //for ad
+  	LinearLayout adListLayout;
+  	RelativeLayout adLayout;
+  	RelativeLayout adLayout2;
+  	RelativeLayout adLayout3;
+  	
+  	private AdWhirlLayout adWhirlLayout;
+  	private AdWhirlLayout adWhirlLayout2;
+  	private AdWhirlLayout adWhirlLayout3;
 
     @Override
     public void onAttach(Activity activity) {
@@ -77,6 +100,9 @@ public class NewsTabletFragment extends Fragment {
         else
         	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
 	    
+	    AdTask adTask = new AdTask();
+		adTask.execute();
+	    
 		return fragmentView;
 	}
 	
@@ -84,6 +110,9 @@ public class NewsTabletFragment extends Fragment {
 		pbInit = (ProgressBar)fragmentView.findViewById(R.id.pb_news);
 		imageButtonRefresh = (ImageButton)fragmentView.findViewById(R.id.refresh);
 		newsGridView = (PullToRefreshGridView)fragmentView.findViewById(R.id.gv_news);
+		adLayout = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout);
+		adLayout2 = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout2);
+		adLayout3 = (RelativeLayout)fragmentView.findViewById(R.id.ad_layout3);
 	}
 	
 	private String fetchData() {
@@ -277,7 +306,7 @@ public class NewsTabletFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		// The rest of your onStart() code.
-		EasyTracker.getInstance().activityStart(this.getActivity()); // Add this method.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
 		EasyTracker.getTracker().sendView("平板新聞列表Fragment");
 	}
 
@@ -285,6 +314,79 @@ public class NewsTabletFragment extends Fragment {
 	public void onStop() {
 		super.onStop();
 		// The rest of your onStop() code.
-		EasyTracker.getInstance().activityStop(this.getActivity()); // Add this method
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
+	
+	public void setAd() {
+    	
+    	Resources res = mFragmentActivity.getResources();
+    	String adwhirlKey = res.getString(R.string.adwhirl_tablet_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+
+        AdWhirlTargeting.setTestMode(false);
+   		
+        adWhirlLayout = new AdWhirlLayout(mFragmentActivity, adwhirlKey);
+        adWhirlLayout2 = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        adWhirlLayout3 = new AdWhirlLayout(mFragmentActivity, adwhirlKey);	
+        
+        adWhirlLayout.setAdWhirlInterface(this);
+        adWhirlLayout2.setAdWhirlInterface(this);
+        adWhirlLayout3.setAdWhirlInterface(this);
+        
+        adWhirlLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+        adWhirlLayout2.setGravity(Gravity.CENTER_HORIZONTAL);
+        adWhirlLayout3.setGravity(Gravity.CENTER_HORIZONTAL);
+        
+    	adLayout.addView(adWhirlLayout);
+    	adLayout2.addView(adWhirlLayout2);
+    	adLayout3.addView(adWhirlLayout3);
+    }
+	
+	public void showHodoAd() {
+    	Resources res = mFragmentActivity.getResources();
+    	String hodoKey = res.getString(R.string.hodo_key);
+    	AdWhirlManager.setConfigExpireTimeout(1000 * 30); 
+		final HodoADView hodoADview = new HodoADView(mFragmentActivity);
+        hodoADview.reruestAD(hodoKey);
+        //關掉自動輪撥功能,交由adWhirl輪撥
+        hodoADview.setAutoRefresh(false);
+        
+        hodoADview.setListener(new HodoADListener() {
+            public void onGetBanner() {
+                //成功取得banner
+            	//Log.d("hodo", "onGetBanner");
+		        adWhirlLayout.adWhirlManager.resetRollover();
+	            adWhirlLayout.handler.post(new ViewAdRunnable(adWhirlLayout, hodoADview));
+	            adWhirlLayout.rotateThreadedDelayed();
+            }
+            public void onFailed(String msg) {
+                //失敗取得banner
+                //Log.d("hodo", "onFailed :" +msg);
+                adWhirlLayout.rollover();
+            }
+            public void onBannerChange(){
+                //banner 切換
+                //Log.d("hodo", "onBannerChange");
+            }
+        });
+    }
+	
+	class AdTask extends AsyncTask<Integer, Integer, String> {
+		@Override
+		protected String doInBackground(Integer... arg0) {
+			
+			return null;
+		}
+		 @Override  
+	     protected void onPostExecute(String result) {
+			 setAd();
+			 super.onPostExecute(result);
+		 }
+    }
+
+	@Override
+	public void adWhirlGeneric() {
+		// TODO Auto-generated method stub
+		
 	}
 }

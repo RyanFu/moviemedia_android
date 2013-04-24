@@ -25,6 +25,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.AppProject;
@@ -419,4 +420,19 @@ public class AboutUsTabletFragment extends Fragment {
 	        super.onPostExecute(result);  
         }
     }
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		// The rest of your onStart() code.
+		EasyTracker.getInstance().activityStart(mFragmentActivity); // Add this method.
+		EasyTracker.getTracker().sendView("平板關於我們Fragment");
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		// The rest of your onStop() code.
+		EasyTracker.getInstance().activityStop(mFragmentActivity); // Add this method
+	}
 }
