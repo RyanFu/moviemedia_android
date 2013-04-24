@@ -30,7 +30,6 @@ import com.jumplife.movienews.AboutUsActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.phonefragment.NewsPhoneFragment.AdTask;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -655,7 +654,10 @@ public class PicturesPhoneFragment extends Fragment implements AdWhirlInterface{
             }
         });
         Bundle params = request.getParameters();
-        params.putString("message", newsList.get(position).getName());
+        if(newsList.get(position).getOrigin() != null && newsList.get(position).getOrigin().equalsIgnoreCase("null"))
+            params.putString("message", newsList.get(position).getName() + "--《" + newsList.get(position).getOrigin() + "》");
+        else
+        	params.putString("message", newsList.get(position).getName());
 		request.executeAsync();
 	}
 }

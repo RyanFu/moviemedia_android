@@ -55,9 +55,9 @@
     <dimen name="news_lv_photo">120dp</dimen>
     
     <!-- text -->
-    <dimen name="news_lv_source">13dp</dimen>
-    <dimen name="news_lv_date">13dp</dimen>
-    <dimen name="news_lv_name">16dp</dimen>
+    <dimen name="news_lv_source">12dp</dimen>
+    <dimen name="news_lv_date">12dp</dimen>
+    <dimen name="news_lv_name">15dp</dimen>
     <dimen name="news_lv_comment">14dp</dimen>
     <dimen name="news_lv_tv_board_left">6dp</dimen>
     <dimen name="news_lv_tv_board_right">6dp</dimen>

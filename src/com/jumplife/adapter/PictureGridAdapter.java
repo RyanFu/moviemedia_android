@@ -109,11 +109,10 @@ public class PictureGridAdapter extends BaseAdapter {
 		
 		textvieTitle.setText(news.get(position).getName());
 		
-		String origin = "";
 		if (news.get(position).getOrigin() != null && (!news.get(position).getOrigin().equalsIgnoreCase("null")))
-			origin = news.get(position).getOrigin() ;
-		
-		textViewContent.setText(origin);
+			textViewContent.setText(news.get(position).getOrigin());
+		else
+			textViewContent.setVisibility(View.GONE);
 		
 		llShare.setOnClickListener(new ItemButtonClick(position, news.get(position).getShareLink()));
 		
@@ -294,7 +293,10 @@ public class PictureGridAdapter extends BaseAdapter {
             }
         });
         Bundle params = request.getParameters();
-        params.putString("message", news.get(position).getName());
+        if(news.get(position).getOrigin() != null && news.get(position).getOrigin().equalsIgnoreCase("null"))
+            params.putString("message", news.get(position).getName() + "--《" + news.get(position).getOrigin() + "》");
+        else
+        	params.putString("message", news.get(position).getName());
 		request.executeAsync();
 	}
 }

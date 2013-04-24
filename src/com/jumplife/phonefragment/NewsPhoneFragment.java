@@ -19,7 +19,6 @@ import com.jumplife.movienews.NewsContentPhoneActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.phonefragment.OverViewPhoneFragment.AdTask;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -111,6 +110,16 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 		
 		topbar_text.setText(getArguments().getString("categoryName"));
 	
+		imageButtonRefresh.setOnClickListener(new OnClickListener() {
+            public void onClick(View arg0) {
+            	loadtask = new LoadDataTask();
+                if(Build.VERSION.SDK_INT < 11)
+                	loadtask.execute();
+                else
+                	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
+            }
+        });
+		
 		imageButtonAbourUs.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	Intent newAct = new Intent();
@@ -155,8 +164,7 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 	            bundle.putInt("newsId", news.get(position - 1).getId());
 	            bundle.putString("categoryName", getArguments().getString("categoryName"));
 	            
-	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));
-	            
+	            bundle.putString("releaseDateStr", NewsAPI.dateToString(news.get(position - 1).getReleaseDate()));	            
 	            bundle.putString("origin", news.get(position - 1).getOrigin());
 	            bundle.putString("name", news.get(position - 1).getName());
 	            
@@ -165,6 +173,9 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 	            
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
+	            
+	            Thread mThread = new Thread(new updateNewsWatcheThread(position - 1));
+	            mThread.start();
 			}
 		});
 		
@@ -193,6 +204,20 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 			        	task.executeOnExecutor(NextPageTask.THREAD_POOL_EXECUTOR, 0);
 		     }
 		 });
+	}
+	
+	class updateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		updateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(news.get(position).getId());
+		}		
 	}
 	
 	private void setListAdatper() {
@@ -383,6 +408,5 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 	@Override
 	public void adWhirlGeneric() {
 		// TODO Auto-generated method stub
-		
 	}
 }

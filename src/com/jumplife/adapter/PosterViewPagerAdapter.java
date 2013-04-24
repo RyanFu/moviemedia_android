@@ -388,7 +388,10 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
             }
         });
         Bundle params = request.getParameters();
-        params.putString("message", news.get(position).getName());
+        if(news.get(position).getOrigin() != null && news.get(position).getOrigin().equalsIgnoreCase("null"))
+            params.putString("message", news.get(position).getName() + "--《" + news.get(position).getOrigin() + "》");
+        else
+        	params.putString("message", news.get(position).getName());
 		request.executeAsync();
 	}
 	

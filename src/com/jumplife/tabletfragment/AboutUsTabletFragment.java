@@ -299,7 +299,7 @@ public class AboutUsTabletFragment extends Fragment {
 		.cacheInMemory()
 		.cacheOnDisc()
 		.displayer(new RoundedBitmapDisplayer
-				((int)this.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_radius)))
+				((int)mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_radius)))
 		.build();
 		
 		for(int i=0; i<appProject.size(); i+=columnNum){
