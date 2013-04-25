@@ -30,8 +30,6 @@ import com.jumplife.titlebarwebview.TitleBarWebView;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 import com.jumplife.movienews.asynctask.NewsShareTask;
-import com.jumplife.phonefragment.NewsPhoneFragment.AdTask;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -275,7 +273,10 @@ public class NewsContentPhoneFragment extends Fragment implements AdWhirlInterfa
 		mIndicator.setViewPager(mPager);
         
         slidingDrawer.getLayoutParams().height = displayMetrics.heightPixels / 2;
-        slidingDrawer.setVisibility(View.VISIBLE);
+        if(news.getVideoList() != null && news.getVideoList().size() > 0) 
+        	slidingDrawer.setVisibility(View.VISIBLE);
+        else
+        	slidingDrawer.setVisibility(View.GONE);
         slidingDrawer.setOnDrawerOpenListener(new OnDrawerOpenListener(){
 			@Override
 			public void onDrawerOpened() {

@@ -3,14 +3,7 @@ package com.jumplife.tabletfragment;
 import java.util.ArrayList;
 
 
-import com.adwhirl.AdWhirlLayout;
-import com.adwhirl.AdWhirlManager;
-import com.adwhirl.AdWhirlTargeting;
-import com.adwhirl.AdWhirlLayout.AdWhirlInterface;
-import com.adwhirl.AdWhirlLayout.ViewAdRunnable;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.hodo.HodoADView;
-import com.hodo.listener.HodoADListener;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
@@ -19,7 +12,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,7 +90,9 @@ public class OverViewTabletFragment extends Fragment{
 		newsCategories.add(editorCHoice);
 		
 		NewsAPI api = new NewsAPI();
-		newsCategories.addAll(api.getCategoryList());
+		ArrayList<NewsCategory> tmp = api.getCategoryList();
+		if(tmp != null)
+			newsCategories.addAll(tmp);
 		if (newsCategories == null) {
 			//error handling
 		}

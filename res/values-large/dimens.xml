@@ -148,7 +148,7 @@
     <dimen name="about_us_seperate">2dp</dimen>
     
     <!-- tablet -->
-    <dimen name="about_us_intro">12dp</dimen>
+    <dimen name="about_us_intro">15dp</dimen>
     <dimen name="about_us_tv">20dp</dimen>
     <dimen name="about_us_tv_padding">6dp</dimen>
     <dimen name="about_us_aboutapp_margin">20dp</dimen>

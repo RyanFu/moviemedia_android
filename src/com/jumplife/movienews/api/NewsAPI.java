@@ -343,36 +343,38 @@ public class NewsAPI {
 		String account = "";
 		AccountManager accountManager = AccountManager.get(mActivity);
 		Account[] accounts = accountManager.getAccountsByType("com.google");
-		account = accounts[0].name;
-
-		try{
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			String url = "http://106.187.53.220/api/v1/news/update_device_watch.json?" +
-					"user_email=" + account + 
-					"&news_id=" + newsId;						
-			if(DEBUG)
-				Log.d(TAG, "URL : " + url);
-			
-			HttpPut httpPut = new HttpPut(url);
-			HttpResponse response = httpClient.execute(httpPut);
-			
-			StatusLine statusLine =  response.getStatusLine();
-			if (statusLine.getStatusCode() == 200){
-				result = true;
+		if(accounts.length > 0) {
+			account = accounts[0].name;
+	
+			try{
+				DefaultHttpClient httpClient = new DefaultHttpClient();
+				String url = "http://106.187.53.220/api/v1/news/update_device_watch.json?" +
+						"user_email=" + account + 
+						"&news_id=" + newsId;						
+				if(DEBUG)
+					Log.d(TAG, "URL : " + url);
+				
+				HttpPut httpPut = new HttpPut(url);
+				HttpResponse response = httpClient.execute(httpPut);
+				
+				StatusLine statusLine =  response.getStatusLine();
+				if (statusLine.getStatusCode() == 200){
+					result = true;
+				}
+			} 
+		    catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return result;
+			} 
+			catch (ClientProtocolException e) {
+				e.printStackTrace();
+				return result;
+			} 
+			catch (IOException e){
+				e.printStackTrace();
+				return result;
 			}
-		} 
-	    catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return result;
-		} 
-		catch (ClientProtocolException e) {
-			e.printStackTrace();
-			return result;
-		} 
-		catch (IOException e){
-			e.printStackTrace();
-			return result;
-		}	
+		}
 		return result;
 	}
 	

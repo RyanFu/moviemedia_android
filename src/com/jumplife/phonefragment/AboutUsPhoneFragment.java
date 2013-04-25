@@ -41,7 +41,6 @@ import com.hodo.listener.HodoADListener;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.AppProject;
-import com.jumplife.phonefragment.OverViewPhoneFragment.AdTask;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -103,25 +102,13 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		
 
         
-        RelativeLayout rlempty1 = new RelativeLayout(mFragmentActivity);
         DisplayMetrics displayMetrics = new DisplayMetrics();
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels / 3;
 		TableRow.LayoutParams Params = new TableRow.LayoutParams
 				(screenWidth, screenWidth * 5 / 6, 0.33f);				
-		rlempty1.setLayoutParams(Params);
-		rlempty1.setVisibility(View.INVISIBLE);
-		Schedule_row_first.addView(rlempty1);
-				
-		
-		
-		TextView tvFeed = new TextView(mFragmentActivity);
-		ImageView ivFeed = new ImageView(mFragmentActivity);
-		RelativeLayout rlFeed = new RelativeLayout(mFragmentActivity);		
-			
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels / 6;
-        ivFeed.setScaleType(ImageView.ScaleType.CENTER_CROP);
         RelativeLayout.LayoutParams rlIvParams = new RelativeLayout.LayoutParams(width, width);
         rlIvParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         rlIvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -129,6 +116,56 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
+        
+        
+        
+        TextView tvAboutApp = new TextView(mFragmentActivity);
+		ImageView ivAboutApp = new ImageView(mFragmentActivity);
+		RelativeLayout rlAboutApp = new RelativeLayout(mFragmentActivity);		
+			
+		ivAboutApp.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ivAboutApp.setImageResource(R.drawable.about);
+        rlAboutApp.addView(ivAboutApp, rlIvParams);
+		
+		RelativeLayout.LayoutParams rlTvAboutAppParams = new RelativeLayout.LayoutParams
+				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		rlTvAboutAppParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		rlTvAboutAppParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		rlTvAboutAppParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				0, 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
+		tvAboutApp.setText(mFragmentActivity.getResources().getString(R.string.aboutapp));
+		tvAboutApp.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
+		tvAboutApp.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
+		rlAboutApp.addView(tvAboutApp, rlTvAboutAppParams);		
+		
+		rlAboutApp.setBackgroundResource(R.drawable.about_us_item_background);		
+		rlAboutApp.setLayoutParams(Params);
+		rlAboutApp.setOnClickListener(new OnClickListener(){
+			@SuppressWarnings("deprecation")
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				AlertDialog dialog = new AlertDialog.Builder(mFragmentActivity).create();
+		        dialog.setTitle(mFragmentActivity.getResources().getString(R.string.aboutapp));
+		        dialog.setMessage(mFragmentActivity.getResources().getString(R.string.aboutapp_intro));
+		        dialog.setButton(mFragmentActivity.getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+		            public void onClick(DialogInterface dialog, int which) {
+		                // TODO Auto-generated method stub
+		            }
+		        });
+		        dialog.show();
+			}			
+		});
+		Schedule_row_first.addView(rlAboutApp);
+				
+		
+		
+		TextView tvFeed = new TextView(mFragmentActivity);
+		ImageView ivFeed = new ImageView(mFragmentActivity);
+		RelativeLayout rlFeed = new RelativeLayout(mFragmentActivity);		
+			
+		ivFeed.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivFeed.setImageResource(R.drawable.feedback);
         rlFeed.addView(ivFeed, rlIvParams);
 		
@@ -168,7 +205,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		RelativeLayout rlSubmit = new RelativeLayout(mFragmentActivity);		
 			
 		ivSubmit.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		ivSubmit.setImageResource(R.drawable.declare);
+		ivSubmit.setImageResource(R.drawable.submit);
 		rlSubmit.addView(ivSubmit, rlIvParams);
 		
         RelativeLayout.LayoutParams rlTvSubmitParams = new RelativeLayout.LayoutParams
@@ -234,16 +271,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 				// TODO Auto-generated method stub
 				AlertDialog dialog = new AlertDialog.Builder(mFragmentActivity).create();
 		        dialog.setTitle(mFragmentActivity.getResources().getString(R.string.liability_disclaimer));
-		        dialog.setMessage(Html.fromHtml("<b>電視連續劇為JumpLife所開發之第三方影音共享播放清單彙整軟體，作為影音內容" +
-		        							"的索引和影視庫的發現，影片來源取自於網路上之Youtube、DailyMotion、WatTV等網站" +
-					        				"網址。電視連續劇僅提供搜尋結果，不會上傳任何影片，也不提供任何影片下載，更不會" +
-					        				"鼓勵他人自行上傳影片，所有影片僅供網絡測試，個人影視製作的學習，交流之用。電視" +
-					        				"連續劇不製播、不下載、不發布、不更改、不存儲任何節目，所有內容均由網友自行發佈" +
-					        				"，電視連續劇不承擔網友託管在第三方網站的內容之責任，版權均為原電視台所有，請各" +
-					        				"位多多準時轉至各電視台收看。" +
-							        		"<br/><br/>本APP所有文章、影片、圖片之著作權皆為原創作人所擁有請勿複製使用，" +
-							        		"以免侵犯第三人權益，內容若有不妥，或是部分內容侵犯了您的合法權益，請洽上述節目" +
-							        		"來源網站或聯繫本站，Jumplife僅持有軟體本身著作權。"));
+		        dialog.setMessage(Html.fromHtml(mFragmentActivity.getResources().getString(R.string.aboutapp_declare)));
 		        dialog.setButton(mFragmentActivity.getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int which) {
 		                // TODO Auto-generated method stub
@@ -292,8 +320,9 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 
 
 		RelativeLayout rlempty2 = new RelativeLayout(mFragmentActivity);
+		rlempty2.setBackgroundResource(R.drawable.about_us_item_background_normal);
 		rlempty2.setLayoutParams(Params);
-		rlempty2.setVisibility(View.INVISIBLE);
+		//rlempty2.setVisibility(View.INVISIBLE);
 		Schedule_row_second.addView(rlempty2);
 		
 		Schedule_row_second.setLayoutParams(new LayoutParams

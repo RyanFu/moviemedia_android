@@ -74,7 +74,7 @@ public class NewsListAdapter extends BaseAdapter {
 		mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int Width = displayMetrics.widthPixels * 2 / 7;
         imageviewNewsPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageviewNewsPhoto.getLayoutParams().height = Width;
+        imageviewNewsPhoto.getLayoutParams().height = Width * 30 / 29;
         imageviewNewsPhoto.getLayoutParams().width = Width;
 		imageLoader.displayImage(news.get(position).getPosterUrl(), imageviewNewsPhoto, options);
 		

@@ -33,14 +33,12 @@
                 android:layout_marginRight="@dimen/about_us_aboutapp_margin"
                 android:layout_marginBottom="@dimen/about_us_aboutapp_margin"
 		        android:background="@drawable/about_us_item_background_tablet_normal" >
-		        <TextView android:id="@+id/ll_aboutapp" 
+		        <TextView android:id="@+id/tv_aboutapp_content" 
 		            android:layout_height="wrap_content"
 		            android:layout_width="match_parent"
-		            android:layout_margin="@dimen/about_us_aboutapp_margin"
-		            android:textIsSelectable="true"
+		            android:padding="@dimen/about_us_aboutapp_margin"
 		            android:textColor="@color/black"
 		            android:textSize="@dimen/about_us_intro"
-		            android:text="@string/aboutapp_intro"
 		            android:gravity="left" />
 		        </ScrollView>
 	        </RelativeLayout>

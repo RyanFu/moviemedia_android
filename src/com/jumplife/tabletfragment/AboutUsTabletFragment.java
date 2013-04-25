@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ public class AboutUsTabletFragment extends Fragment {
 	private TextView topbar_text;
 	private TextView tvOtherFunc;
 	private TextView tvOtherProductor;
+	private TextView tvAboutAPP;
 	private LinearLayout llAboutUsOther;
 	private LinearLayout llAboutUsOtherProductor;
 	private ProgressBar pbInit;
@@ -75,16 +77,23 @@ public class AboutUsTabletFragment extends Fragment {
 		topbar_text = (TextView)fragmentView.findViewById(R.id.topbar_text);
 		tvOtherFunc = (TextView)fragmentView.findViewById(R.id.tv_aboutus_other_func);
 		tvOtherProductor = (TextView)fragmentView.findViewById(R.id.tv_aboutus_other_productor);
+		tvAboutAPP = (TextView)fragmentView.findViewById(R.id.tv_aboutapp_content);
 		llAboutUsOther = (LinearLayout)fragmentView.findViewById(R.id.ll_aboutus_other);
 		llAboutUsOtherProductor = (LinearLayout)fragmentView.findViewById(R.id.ll_aboutus_other_productor);
 		
 		topbar_text.setText(mFragmentActivity.getResources().getString(R.string.about_us));
+		tvAboutAPP.setText(mFragmentActivity.getResources().getString(R.string.aboutapp_intro) +
+				"\n\n\n＊＊＊" + 
+				mFragmentActivity.getResources().getString(R.string.liability_disclaimer) + 
+				"＊＊＊\n\n" +
+				Html.fromHtml(mFragmentActivity.getResources().getString(R.string.aboutapp_declare)));
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		int width = (int) displayMetrics.widthPixels * 13 / 40;
 		tvOtherFunc.getLayoutParams().width = width;
-		tvOtherProductor.getLayoutParams().width = width;
+		tvOtherProductor.getLayoutParams().width = width;		
 		
+				
 		initBasicView();
 	}
 	
