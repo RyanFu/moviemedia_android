@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class LoginFragment extends DialogFragment {
 	
@@ -103,8 +104,15 @@ public class LoginFragment extends DialogFragment {
     private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
     	if (session != null && session.isOpened()) {
         	Log.d(getTag(), "session != null && session.isOpened()");
+        	Toast.makeText(getActivity(),
+        			getActivity().getResources().getString(R.string.fb_login_success),
+        			Toast.LENGTH_SHORT).show();
         	this.dismiss();
-        } else
+        } else {
         	Log.d(getTag(), "session == null || !session.isOpened()");
+    		Toast.makeText(getActivity().getApplicationContext(), 
+    				getActivity().getResources().getString(R.string.fb_login_failed), 
+    				Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -30,9 +30,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class LoginFragment extends DialogFragment {
 	
@@ -100,6 +102,17 @@ public class LoginFragment extends DialogFragment {
      * Notifies that the session token has been updated.
      */
     private void onSessionStateChange(final Session session, SessionState state, Exception exception) {
-
+    	if (session != null && session.isOpened()) {
+        	Log.d(getTag(), "session != null && session.isOpened()");
+        	Toast.makeText(getActivity(),
+        			getActivity().getResources().getString(R.string.fb_login_success),
+        			Toast.LENGTH_SHORT).show();
+        	this.dismiss();
+        } else {
+        	Log.d(getTag(), "session == null || !session.isOpened()");
+    		Toast.makeText(getActivity().getApplicationContext(), 
+    				getActivity().getResources().getString(R.string.fb_login_failed), 
+    				Toast.LENGTH_SHORT).show();
+        }
     }
 }

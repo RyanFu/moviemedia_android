@@ -23,6 +23,8 @@
     <!-- facebook -->
     <string name="fb_login_description">請登入Facebook分享內容</string>
     <string name="fb_login">Facebook 登入</string>
+    <string name="fb_login_success">Facebook 登入成功</string>
+    <string name="fb_login_failed">Facebook 登入失敗</string>
     <string name="fb_share">Facebook 分享</string>
     <string name="fb_share_success">Facebook分享成功</string>
     <string name="fb_share_cancel">Facebook分享取消</string>
