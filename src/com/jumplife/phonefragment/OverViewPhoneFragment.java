@@ -39,7 +39,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -209,9 +208,6 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
 	private void fetchCategoryData() {
 		NewsAPI api = new NewsAPI();
 		newsCategories = api.getCategoryList();
-		if (newsCategories == null) {
-			//error handling
-		}
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -348,16 +344,13 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
     }
 	
 	
-	private void fetchPictureData() {
+	private void fetchEditorChoiceData() {
 		NewsAPI api = new NewsAPI();
 		editorSelectedNewsList = api.getEditorSelectedList();
-		if (editorSelectedNewsList == null) {
-			//error handling
-		}
 	}
 	
 
-	private void setPictureView() {
+	private void setEditorChoiceView() {
 		mAdapter = new PosterViewPagerAdapter(mFragmentActivity, editorSelectedNewsList);
 
         mPager.setAdapter(mAdapter);
@@ -395,7 +388,7 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
         @Override  
         protected String doInBackground(Integer... params) {
         	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        	fetchPictureData();
+        	fetchEditorChoiceData();
             return "progress end";  
         }  
   
@@ -407,7 +400,7 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
         @Override  
         protected void onPostExecute(String result) {
         	if(editorSelectedNewsList != null && editorSelectedNewsList.size() > 0){
-        		setPictureView();                
+        		setEditorChoiceView();                
                 imageButtonRefreshLand.setVisibility(View.GONE);
         	} else {
         		setRefresh();                

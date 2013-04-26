@@ -28,8 +28,6 @@ import org.json.JSONObject;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.content.Context;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 public class NewsAPI {

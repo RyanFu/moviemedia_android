@@ -215,6 +215,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 			//TableRow Schedule_row = new TableRow(getActivity());
 			View converView = myInflater.inflate(R.layout.poster_viewpage_item, null);
 			TextView tv = (TextView)converView.findViewById(R.id.pager_context);
+	        TextView tvFeature = (TextView)converView.findViewById(R.id.pager_type);   
 			ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);
 				
 			DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -225,7 +226,26 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 	        iv.getLayoutParams().height = (int)(screenWidth / 2);
 	        iv.getLayoutParams().width = screenWidth;
 		        
-				
+	        tvFeature.setText(news.get(0).getCategory().getName());
+	        RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
+					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+	        rlFeatureParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+	        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+	        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+	        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin));
+	        rlFeatureParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+	        rlFeatureParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+	        tvFeature.setGravity(Gravity.CENTER);
+	        tvFeature.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+					mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding));
+	        tvFeature.setLayoutParams(rlFeatureParams);
+			if(news.get(0).getCategory().getName() == null || news.get(0).getCategory().getName().equalsIgnoreCase("null"))
+				tvFeature.setVisibility(View.INVISIBLE);
+			else
+				tvFeature.setVisibility(View.VISIBLE);
+	        
 			tv.setText(news.get(0).getName());
 			RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
 					(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -315,6 +335,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 				
 				TextView tv = (TextView)converView.findViewById(R.id.pager_context);
 				ImageView iv = (ImageView)converView.findViewById(R.id.pager_poster);
+		        TextView tvFeature = (TextView)converView.findViewById(R.id.pager_type);
 				
 				DisplayMetrics displayMetrics = new DisplayMetrics();
 				((Activity) mFragmentActivity).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -325,6 +346,27 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 		        
 
 				if(index < news.size()) {
+			        
+			        tvFeature.setText(news.get(0).getCategory().getName());
+			        RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
+							(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+			        rlFeatureParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+			        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+			        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
+			        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin));
+			        rlFeatureParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			        rlFeatureParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+			        tvFeature.setGravity(Gravity.CENTER);
+			        tvFeature.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
+							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding));
+			        tvFeature.setLayoutParams(rlFeatureParams);
+					if(news.get(0).getCategory().getName() == null || news.get(0).getCategory().getName().equalsIgnoreCase("null"))
+						tvFeature.setVisibility(View.INVISIBLE);
+					else
+						tvFeature.setVisibility(View.VISIBLE);
+					
 					tv.setText(news.get(index).getName());
 					tv.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_comment_small));
 

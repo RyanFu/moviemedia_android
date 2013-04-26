@@ -126,10 +126,10 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding));
 		textViewFeature.setLayoutParams(rlFeatureParams);
-		if(news.get(pos).getCategory().getName() == null || news.get(pos).getCategory().getName().contains(""))
+		if(news.get(pos).getCategory().getName() == null || news.get(pos).getCategory().getName().equalsIgnoreCase("null"))
 			textViewFeature.setVisibility(View.INVISIBLE);
 		else
-			textViewFeature.setVisibility(View.GONE);
+			textViewFeature.setVisibility(View.VISIBLE);
 		
         textViewContext.setText(news.get(pos).getName());
         RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams

@@ -24,7 +24,6 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.asynctask.NewsShareTask;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.jumplife.movienews.entity.TextNews;
-import com.jumplife.tabletfragment.PicturesTabletFragment.AdTask;
 import com.jumplife.titlebarwebview.TitleBarWebView;
 
 import android.annotation.SuppressLint;
@@ -231,10 +230,12 @@ public class NewsContentTabletFragment extends Fragment implements AdWhirlInterf
 		NewsCategory category = new NewsCategory(-1, getArguments().getString("categoryName"), "", "", -1);
 		
 		news = api.getTextNews(newsId);
-		news.setReleaseDate(releaseDate);
-		news.setCategory(category);
-		news.setOrigin(origin);
-		news.setName(name);
+		if(news != null) {
+			news.setReleaseDate(releaseDate);
+			news.setCategory(category);
+			news.setOrigin(origin);
+			news.setName(name);
+		}
 
 		return "progress end";
 	}

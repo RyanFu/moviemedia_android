@@ -239,10 +239,7 @@ public class NewsContentPhoneFragment extends Fragment implements AdWhirlInterfa
 		
 		news = api.getTextNews(newsId);
 		
-		if (news == null) {
-			//error handling
-		}
-		else {
+		if (news != null) {
 			news.setCategory(category);
 			news.setOrigin(origin);
 			news.setName(name);

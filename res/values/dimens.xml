@@ -34,7 +34,7 @@
     <dimen name="feature_comment">16dp</dimen>
     <dimen name="feature_name">12dp</dimen>
     <dimen name="feature_view">1dp</dimen>
-    <dimen name="feature_padding">2dp</dimen>
+    <dimen name="feature_padding">5dp</dimen>
     <dimen name="feature_margin">2dp</dimen>
     <dimen name="feature_board_rl">30dp</dimen>
     <dimen name="feature_board_tb">25dp</dimen>
