@@ -38,6 +38,7 @@ public class OverViewTabletFragment extends Fragment{
 	private ImageButton imageButtonRefresh;
 	private LinearLayout llFeature;
 	private ArrayList<NewsCategory> newsCategories;
+	private ArrayList<NewsCategory> serverNewsCategories;
 	private ArrayList<View> viewFeatures;
 	private LoadCategoryTask loadCategoryTask;
 	private ProgressBar pbInit;
@@ -90,12 +91,7 @@ public class OverViewTabletFragment extends Fragment{
 		newsCategories.add(editorCHoice);
 		
 		NewsAPI api = new NewsAPI();
-		ArrayList<NewsCategory> tmp = api.getCategoryList();
-		if(tmp != null)
-			newsCategories.addAll(tmp);
-		if (newsCategories == null) {
-			//error handling
-		}
+		serverNewsCategories = api.getCategoryList();
 	}
 	
 	private void setViewPress(int pos) {
@@ -242,7 +238,8 @@ public class OverViewTabletFragment extends Fragment{
         @Override  
         protected void onPostExecute(String result) {
         	pbInit.setVisibility(View.GONE);
-        	if(newsCategories != null && newsCategories.size() > 0){
+        	if(serverNewsCategories != null && serverNewsCategories.size() > 0){
+        		newsCategories.addAll(serverNewsCategories);
         		setCategory();
         		imageButtonRefresh.setVisibility(View.GONE);		
     		} else

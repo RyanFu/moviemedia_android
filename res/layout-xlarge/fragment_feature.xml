@@ -14,20 +14,20 @@
         
         <LinearLayout android:id="@+id/ll_feature"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/background"
             android:orientation="vertical" >
-            
-            <ImageButton android:id="@+id/refresh"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:background="@drawable/button_background"
-                android:src="@drawable/renew"/>
             </LinearLayout>     
-        </com.jumplife.adapter.CustomScrollView>
-    
+        </com.jumplife.adapter.CustomScrollView>    
+            
+	<ImageButton android:id="@+id/refresh"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:scaleType="fitCenter"
+	    android:visibility="gone"
+	    android:background="@drawable/button_background"
+	    android:src="@drawable/renew"/>
+            
     <LinearLayout 
         android:id="@+id/ad_list_layout"
         android:layout_alignParentBottom="true"

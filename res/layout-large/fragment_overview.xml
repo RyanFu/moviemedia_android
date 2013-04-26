@@ -48,5 +48,5 @@
 	    android:scaleType="fitCenter"
 	    android:visibility="gone"
 	    android:background="@drawable/button_background"
-	    android:src="@drawable/renew"/>
+	    android:src="@drawable/renew_tablet_overview"/>
     </RelativeLayout>

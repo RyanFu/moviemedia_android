@@ -38,7 +38,7 @@
     <color name="video_description">#959595</color>
     
     <!-- Share -->
-    <color name="share_text">#0275bd</color>
+    <color name="share_fb_text">#0275bd</color>
     <color name="share_ib_normal">#101018</color>
     <color name="share_ib_press">#ee4423</color>
     
