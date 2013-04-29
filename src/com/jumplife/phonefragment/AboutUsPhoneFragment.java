@@ -145,7 +145,8 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		rlAboutApp.setOnClickListener(new OnClickListener(){
 			@SuppressWarnings("deprecation")
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "關於電影窩", (long)0);
+				
 				AlertDialog dialog = new AlertDialog.Builder(mFragmentActivity).create();
 		        dialog.setTitle(mFragmentActivity.getResources().getString(R.string.aboutapp));
 		        dialog.setMessage(mFragmentActivity.getResources().getString(R.string.aboutapp_intro));
@@ -187,6 +188,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		rlFeed.setLayoutParams(Params);
 		rlFeed.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "建議回饋", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
 				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
 				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
@@ -225,6 +227,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
         rlSubmit.setLayoutParams(Params);
         rlSubmit.setOnClickListener(new OnClickListener(){
         	public void onClick(View arg0) {
+        		EasyTracker.getTracker().sendEvent("關於我們", "點擊", "作家投稿", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
 				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
 				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
@@ -268,7 +271,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		rlDeclare.setOnClickListener(new OnClickListener(){
 			@SuppressWarnings("deprecation")
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "免責稱明", (long)0);
 				AlertDialog dialog = new AlertDialog.Builder(mFragmentActivity).create();
 		        dialog.setTitle(mFragmentActivity.getResources().getString(R.string.liability_disclaimer));
 		        dialog.setMessage(Html.fromHtml(mFragmentActivity.getResources().getString(R.string.aboutapp_declare)));
@@ -310,6 +313,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		rlFacebook.setLayoutParams(Params);
 		rlFacebook.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "FB粉絲團", (long)0);
 				Uri uri = Uri.parse("http://www.facebook.com/movietalked");
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(it);
@@ -414,14 +418,18 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 			PackageManager pm = mFragmentActivity.getPackageManager();
 		    Intent appStartIntent = pm.getLaunchIntentForPackage(appProject.get(position).getPack());
 		    if(null != appStartIntent) {
+		    	EasyTracker.getTracker().sendEvent("關於我們", "開啟App", appProject.get(position).getName(), (long)0);
 		    	appStartIntent.addCategory("android.intent.category.LAUNCHER");
 		    	appStartIntent.setComponent(new ComponentName(appProject.get(position).getPack(),
 		    			appProject.get(position).getClas()));
 		    	appStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		    	mFragmentActivity.startActivity(appStartIntent);
-		    } else
+		    } 
+		    else {
+		    	EasyTracker.getTracker().sendEvent("關於我們", "下載App", appProject.get(position).getName(), (long)0);
 		    	startActivity(new Intent(Intent.ACTION_VIEW, 
 			    		Uri.parse("market://details?id=" + appProject.get(position).getPack())));
+		    }
 		}
 	}
 	

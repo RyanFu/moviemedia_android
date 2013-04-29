@@ -143,6 +143,7 @@ public class AboutUsTabletFragment extends Fragment {
 		rlFeed.setLayoutParams(FeedParams);
 		rlFeed.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "建議回饋", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
 				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
 				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
@@ -182,6 +183,7 @@ public class AboutUsTabletFragment extends Fragment {
         rlSubmit.setLayoutParams(SubmitParams);
         rlSubmit.setOnClickListener(new OnClickListener(){
         	public void onClick(View arg0) {
+        		EasyTracker.getTracker().sendEvent("關於我們", "點擊", "作家投稿", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
 				String[] ccs={"abooyaya@gmail.com, raywu07@gmail.com, supermfb@gmail.com, form.follow.fish@gmail.com"};
 				Intent it = new Intent(Intent.ACTION_SENDTO, uri);
@@ -221,6 +223,7 @@ public class AboutUsTabletFragment extends Fragment {
 		rlFacebook.setLayoutParams(FacebookParams);
 		rlFacebook.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
+				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "FB粉絲團", (long)0);
 				Uri uri = Uri.parse("http://www.facebook.com/movietalked");
                 Intent it = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(it);
@@ -389,14 +392,18 @@ public class AboutUsTabletFragment extends Fragment {
 			PackageManager pm = mFragmentActivity.getPackageManager();
 		    Intent appStartIntent = pm.getLaunchIntentForPackage(appProject.get(position).getPack());
 		    if(null != appStartIntent) {
+		    	EasyTracker.getTracker().sendEvent("關於我們", "開啟App", appProject.get(position).getName(), (long)0);
 		    	appStartIntent.addCategory("android.intent.category.LAUNCHER");
 		    	appStartIntent.setComponent(new ComponentName(appProject.get(position).getPack(),
 		    			appProject.get(position).getClas()));
 		    	appStartIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		    	mFragmentActivity.startActivity(appStartIntent);
-		    } else
+		    } 
+		    else {
+		    	EasyTracker.getTracker().sendEvent("關於我們", "下載App", appProject.get(position).getName(), (long)0);
 		    	startActivity(new Intent(Intent.ACTION_VIEW, 
 			    		Uri.parse("market://details?id=" + appProject.get(position).getPack())));
+		    }
 		}
 	}
 	
