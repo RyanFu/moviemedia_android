@@ -654,7 +654,8 @@ public class PicturesPhoneFragment extends Fragment implements AdWhirlInterface{
             }
         });
         Bundle params = request.getParameters();
-        if(newsList.get(position).getOrigin() != null && newsList.get(position).getOrigin().equalsIgnoreCase("null"))
+        if(newsList.get(position).getOrigin() != null && !newsList.get(position).getOrigin().equalsIgnoreCase("null")
+        		&& !newsList.get(position).getOrigin().replace(" ", "").equals(""))
             params.putString("message", newsList.get(position).getName() + "--《" + newsList.get(position).getOrigin() + "》");
         else
         	params.putString("message", newsList.get(position).getName());

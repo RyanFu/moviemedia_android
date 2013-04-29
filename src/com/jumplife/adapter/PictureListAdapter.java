@@ -281,7 +281,8 @@ public class PictureListAdapter extends BaseAdapter {
             }
         });
         Bundle params = request.getParameters();
-        if(news.get(position).getOrigin() != null && news.get(position).getOrigin().equalsIgnoreCase("null"))
+        if(news.get(position).getOrigin() != null && !news.get(position).getOrigin().equalsIgnoreCase("null")
+        		&& !news.get(position).getOrigin().replace(" ", "").equals(""))
             params.putString("message", news.get(position).getName() + "--《" + news.get(position).getOrigin() + "》");
         else
         	params.putString("message", news.get(position).getName());

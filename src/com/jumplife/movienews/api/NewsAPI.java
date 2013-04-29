@@ -152,6 +152,7 @@ public class NewsAPI {
 					int id = newsJson.getInt("id");
 					String name = newsJson.getString("title"); 
 					String posterUrl = newsJson.getString("smallposter_url");
+					String origin = newsJson.getString("origin");
 					int typeId = newsJson.getInt("type_id");
 					int categoryId = newsJson.getInt("category_id");
 					String categoryName = newsJson.getString("category_name");
@@ -159,7 +160,7 @@ public class NewsAPI {
 					NewsCategory category = new NewsCategory(categoryId, categoryName, typeId);
 					
 					//(int id, String name, int typeId)
-					newsList.add(new Picture(id, name, posterUrl, category, posterUrl, new Date(), ""));
+					newsList.add(new Picture(id, name, posterUrl, category, posterUrl, new Date(), origin));
 				}
 			} 
 			catch (JSONException e) {

@@ -29,7 +29,6 @@ import com.jumplife.adapter.PictureGridAdapter;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
-import com.jumplife.tabletfragment.NewsTabletFragment.AdTask;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
@@ -639,7 +638,8 @@ public class PicturesTabletFragment extends Fragment implements AdWhirlInterface
             }
         });
         Bundle params = request.getParameters();
-        if(newsList.get(position).getOrigin() != null && newsList.get(position).getOrigin().equalsIgnoreCase("null"))
+        if(newsList.get(position).getOrigin() != null && !newsList.get(position).getOrigin().equalsIgnoreCase("null")
+        		&& !newsList.get(position).getOrigin().replace(" ", "").equals(""))
             params.putString("message", newsList.get(position).getName() + "--《" + newsList.get(position).getOrigin() + "》");
         else
         	params.putString("message", newsList.get(position).getName());

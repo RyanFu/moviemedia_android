@@ -94,7 +94,6 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		return arg0 == (arg1);
 	}	
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	public Object instantiateItem(View pager, int pos) {
         
@@ -105,12 +104,13 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         
         DisplayMetrics displayMetrics = new DisplayMetrics();
         mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
+        int screenWidth = displayMetrics.widthPixels - 
+        		mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.layout_interval_width) * 2;
+        RelativeLayout.LayoutParams rlIvParams = new RelativeLayout.LayoutParams(screenWidth, (int)(screenWidth / 2));
         imageViewMoviePoster.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageViewMoviePoster.getLayoutParams().height = (int)(screenWidth / 2);
-        imageViewMoviePoster.getLayoutParams().width = screenWidth;
         imageViewMoviePoster.setBackgroundResource(R.drawable.overview_category_item_poster_background);
-        
+        imageViewMoviePoster.setLayoutParams(rlIvParams);
+		
         textViewFeature.setText(news.get(pos).getCategory().getName());
         RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -132,8 +132,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 			textViewFeature.setVisibility(View.VISIBLE);
 		
         textViewContext.setText(news.get(pos).getName());
-        RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams
-				(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(screenWidth, LayoutParams.WRAP_CONTENT);
 		rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		textViewContext.setGravity(Gravity.CENTER);
 		textViewContext.setPadding(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.text_board), 
@@ -388,7 +387,8 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
             }
         });
         Bundle params = request.getParameters();
-        if(news.get(position).getOrigin() != null && news.get(position).getOrigin().equalsIgnoreCase("null"))
+        if(news.get(position).getOrigin() != null && !news.get(position).getOrigin().equalsIgnoreCase("null")
+        		&& !news.get(position).getOrigin().replace(" ", "").equals(""))
             params.putString("message", news.get(position).getName() + "--《" + news.get(position).getOrigin() + "》");
         else
         	params.putString("message", news.get(position).getName());
