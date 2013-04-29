@@ -86,7 +86,7 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		imageViewMoviePoster.setLayoutParams(ivrlParams);
 		
 		RelativeLayout.LayoutParams ivrlPlayParams = new RelativeLayout.LayoutParams
-				(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT);
+				(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
 		ivrlPlayParams.addRule(RelativeLayout.ALIGN_BOTTOM, imageViewMoviePoster.getId());
 		ivrlPlayParams.addRule(RelativeLayout.ALIGN_TOP, imageViewMoviePoster.getId());
 		ivrlPlayParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
