@@ -154,4 +154,14 @@
     <dimen name="about_us_aboutapp_margin">20dp</dimen>
     <dimen name="about_us_corner_radius">8dp</dimen>
     
+    
+    <!-- promotion dialog -->
+    <dimen name="promote_title">22dp</dimen>
+    <dimen name="promote_content">20dp</dimen>
+    <dimen name="promote_seperate">1dp</dimen>
+    <dimen name="promote_padding">18dp</dimen>
+    <dimen name="promote_board">2dp</dimen>
+    <dimen name="promote_width">270dp</dimen>
+    <dimen name="promote_height">220dp</dimen>
+    
 </resources>

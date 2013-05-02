@@ -29,13 +29,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topbar"
+        android:layout_above="@+id/ad_layout"
         android:background="@color/background"
         android:layout_marginLeft="@dimen/pictures_lv_board"
         android:layout_marginRight="@dimen/pictures_lv_board"
         android:divider="@color/transparent100"
         android:dividerHeight="@dimen/pictures_lv_divider"
         ptr:ptrMode="both" 
-        android:layout_above="@+id/ad_layout"/>
+        ptr:ptrOverScroll="false"/>
     
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"

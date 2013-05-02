@@ -13,14 +13,15 @@
         android:id="@+id/gv_pictures"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/ad_list_layout"
         android:background="@color/background"
         android:numColumns="2"
         android:verticalSpacing="@dimen/pictures_lv_board"
         android:horizontalSpacing="@dimen/pictures_lv_board"
         android:divider="@color/transparent100"
-        android:dividerHeight="@dimen/news_lv_divider"
-        ptr:ptrMode="both" 
-        android:layout_above="@+id/ad_list_layout"/>
+        android:dividerHeight="@dimen/news_lv_divider" 
+        ptr:ptrOverScroll="false"
+        ptr:ptrMode="both" />
     
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"

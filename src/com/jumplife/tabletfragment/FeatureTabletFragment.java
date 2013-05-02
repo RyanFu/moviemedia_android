@@ -347,7 +347,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 
 				if(index < news.size()) {
 			        
-			        tvFeature.setText(news.get(0).getCategory().getName());
+			        tvFeature.setText(news.get(index).getCategory().getName());
 			        RelativeLayout.LayoutParams rlFeatureParams = new RelativeLayout.LayoutParams
 							(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			        rlFeatureParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_margin), 
@@ -362,7 +362,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.feature_padding));
 			        tvFeature.setLayoutParams(rlFeatureParams);
-					if(news.get(0).getCategory().getName() == null || news.get(0).getCategory().getName().equalsIgnoreCase("null"))
+					if(news.get(index).getCategory().getName() == null || news.get(index).getCategory().getName().equalsIgnoreCase("null"))
 						tvFeature.setVisibility(View.INVISIBLE);
 					else
 						tvFeature.setVisibility(View.VISIBLE);

@@ -43,7 +43,8 @@
         android:layout_marginRight="@dimen/news_lv_board"
         android:background="@color/background"
         android:divider="@color/transparent100"
-        android:dividerHeight="@dimen/news_lv_divider"
+        android:dividerHeight="@dimen/news_lv_divider" 
+        ptr:ptrOverScroll="false"
         ptr:ptrMode="both" />
     <ImageButton android:id="@+id/refresh"
         android:layout_width="fill_parent"

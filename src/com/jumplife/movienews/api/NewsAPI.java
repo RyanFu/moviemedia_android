@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.util.Log;
 
@@ -58,12 +59,12 @@ public class NewsAPI {
 	}
 	
 	public NewsAPI(Activity a) {
-		this(new String("http://106.187.53.220"));
+		this(new String("http://mmedia.jumplife.com.tw"));
 		this.mActivity = a;
 	}
 	
 	public NewsAPI() {
-		this(new String("http://106.187.53.220"));
+		this(new String("http://mmedia.jumplife.com.tw"));
 	}
 	
 	public int connect(String requestedMethod, String apiPath) {
@@ -431,12 +432,39 @@ public class NewsAPI {
 		}
 	}
 	
+	public String[] getPromotion() {
+				
+		String message = getMessageFromServer("GET", "api/promotion.json", null);
+		String[] tmp = new String[5];
+				
+		if(message == null) {
+			return null;
+		}
+		try{
+			JSONObject responseJson = new JSONObject(message);
+			
+			tmp[0] = (responseJson.getString("picture_link"));
+			tmp[1] = (responseJson.getString("link"));
+			tmp[2] = (responseJson.getString("tilte"));
+			tmp[3] = (responseJson.getString("description"));
+			tmp[4] = (responseJson.getString("version"));
+		} 
+		catch (JSONException e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		return tmp;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
 	public static String dateToString(Date date) {
 		DateFormat releaseFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		String dateStr = releaseFormatter.format(date);
 		return dateStr;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	public static Date stringToDate(String dateStr) {
 		DateFormat releaseFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date= null;

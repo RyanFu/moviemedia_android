@@ -28,6 +28,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.adwhirl.AdWhirlLayout;
@@ -56,6 +57,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 	private LoadDataTask loadtask;
 
 	private FragmentActivity mFragmentActivity;
+	private ImageLoader imageLoader = ImageLoader.getInstance();
 	
 	//for ad
 	RelativeLayout adLayout;
@@ -323,11 +325,40 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		
 
 
-		RelativeLayout rlempty2 = new RelativeLayout(mFragmentActivity);
-		rlempty2.setBackgroundResource(R.drawable.about_us_item_background_normal);
-		rlempty2.setLayoutParams(Params);
-		//rlempty2.setVisibility(View.INVISIBLE);
-		Schedule_row_second.addView(rlempty2);
+		TextView tvClear = new TextView(mFragmentActivity);
+		ImageView ivClear = new ImageView(mFragmentActivity);
+		RelativeLayout rlClear = new RelativeLayout(mFragmentActivity);		
+			
+		ivClear.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ivClear.setImageResource(R.drawable.delete);
+        rlClear.addView(ivClear, rlIvParams);
+		
+        RelativeLayout.LayoutParams rlTvClearParams = new RelativeLayout.LayoutParams
+				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        rlTvClearParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        rlTvClearParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        rlTvClearParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				0, 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
+		tvClear.setText(mFragmentActivity.getResources().getString(R.string.clear));
+		tvClear.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
+		tvClear.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
+		rlClear.addView(tvClear, rlTvClearParams);		
+		
+		rlClear.setBackgroundResource(R.drawable.about_us_item_background);
+		rlClear.setLayoutParams(Params);
+		rlClear.setOnClickListener(new OnClickListener(){
+			public void onClick(View arg0) {
+				imageLoader.clearMemoryCache();
+				imageLoader.clearDiscCache();
+				Toast toast = Toast.makeText(mFragmentActivity, 
+	            		mFragmentActivity.getResources().getString(R.string.clear_finish), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+			}			
+		});
+		Schedule_row_second.addView(rlClear);
 		
 		Schedule_row_second.setLayoutParams(new LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -341,7 +372,6 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 	}
 	
 	private void setView(){
-		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.cacheInMemory()
 		.cacheOnDisc()

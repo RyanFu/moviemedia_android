@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -45,6 +47,7 @@ public class AboutUsTabletFragment extends Fragment {
 	private LinearLayout llAboutUsOtherProductor;
 	private ProgressBar pbInit;
 	private ArrayList<AppProject> appProject;
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	
 	private final int columnNum = 4;
 	private LoadDataTask loadtask;
@@ -233,62 +236,43 @@ public class AboutUsTabletFragment extends Fragment {
 		
 
 		
-		RelativeLayout rlDeclare = new RelativeLayout(mFragmentActivity);		
-		/*TextView tvDeclare = new TextView(mFragmentActivity);
-		ImageView ivDeclare = new ImageView(mFragmentActivity);
-			
-		ivDeclare.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        ivDeclare.setImageResource(R.drawable.declare);
-        rlDeclare.addView(ivDeclare, rlIvParams);
 		
-		RelativeLayout.LayoutParams rlTvDeclareParams = new RelativeLayout.LayoutParams
+		TextView tvClear = new TextView(mFragmentActivity);
+		ImageView ivClear = new ImageView(mFragmentActivity);
+		RelativeLayout rlClear = new RelativeLayout(mFragmentActivity);		
+			
+		ivClear.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		ivClear.setImageResource(R.drawable.delete);
+		rlClear.addView(ivClear, rlIvParams);
+		
+        RelativeLayout.LayoutParams rlTvClearParams = new RelativeLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlTvDeclareParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		rlTvDeclareParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		rlTvDeclareParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+        rlTvClearParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        rlTvClearParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        rlTvClearParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
-		tvDeclare.setText(mFragmentActivity.getResources().getString(R.string.liability_disclaimer));
-		tvDeclare.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
-		tvDeclare.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlDeclare.addView(tvDeclare, rlTvDeclareParams);		
+		tvClear.setText(mFragmentActivity.getResources().getString(R.string.clear));
+		tvClear.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
+		tvClear.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
+		rlClear.addView(tvClear, rlTvClearParams);		
 		
-		rlDeclare.setBackgroundResource(R.drawable.about_us_item_background_tablet);		
-		TableRow.LayoutParams DeclareParams = new TableRow.LayoutParams
+		rlClear.setBackgroundResource(R.drawable.about_us_item_background_tablet);
+		TableRow.LayoutParams ClearParams = new TableRow.LayoutParams
 				(width + 2 * mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), height);
-		DeclareParams.setMargins(0,0, mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_aboutapp_margin), 0);
-        rlDeclare.setLayoutParams(DeclareParams);
-		rlDeclare.setOnClickListener(new OnClickListener(){
-			@SuppressWarnings("deprecation")
+		rlClear.setLayoutParams(ClearParams);
+		rlClear.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				AlertDialog dialog = new AlertDialog.Builder(mFragmentActivity).create();
-		        dialog.setTitle(mFragmentActivity.getResources().getString(R.string.liability_disclaimer));
-		        dialog.setMessage(Html.fromHtml("<b>電視連續劇為JumpLife所開發之第三方影音共享播放清單彙整軟體，作為影音內容" +
-		        							"的索引和影視庫的發現，影片來源取自於網路上之Youtube、DailyMotion、WatTV等網站" +
-					        				"網址。電視連續劇僅提供搜尋結果，不會上傳任何影片，也不提供任何影片下載，更不會" +
-					        				"鼓勵他人自行上傳影片，所有影片僅供網絡測試，個人影視製作的學習，交流之用。電視" +
-					        				"連續劇不製播、不下載、不發布、不更改、不存儲任何節目，所有內容均由網友自行發佈" +
-					        				"，電視連續劇不承擔網友託管在第三方網站的內容之責任，版權均為原電視台所有，請各" +
-					        				"位多多準時轉至各電視台收看。" +
-							        		"<br/><br/>本APP所有文章、影片、圖片之著作權皆為原創作人所擁有請勿複製使用，" +
-							        		"以免侵犯第三人權益，內容若有不妥，或是部分內容侵犯了您的合法權益，請洽上述節目" +
-							        		"來源網站或聯繫本站，Jumplife僅持有軟體本身著作權。"));
-		        dialog.setButton(mFragmentActivity.getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-		            public void onClick(DialogInterface dialog, int which) {
-		                // TODO Auto-generated method stub
-		            }
-		        });
-		        dialog.show();
+				imageLoader.clearMemoryCache();
+				imageLoader.clearDiscCache();
+				Toast toast = Toast.makeText(mFragmentActivity, 
+	            		mFragmentActivity.getResources().getString(R.string.clear_finish), Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
 			}			
-		});*/
-		rlDeclare.setVisibility(View.INVISIBLE);
-		TableRow.LayoutParams DeclareParams = new TableRow.LayoutParams
-				(width + 2 * mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), height);
-		DeclareParams.setMargins(0,0, mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_aboutapp_margin), 0);
-        rlDeclare.setLayoutParams(DeclareParams);
-		Schedule_row.addView(rlDeclare);
+		});
+		Schedule_row.addView(rlClear);
 		
 		
 		Schedule_row.setLayoutParams(new LayoutParams
@@ -303,7 +287,6 @@ public class AboutUsTabletFragment extends Fragment {
 	}
 	
 	private void setView(){
-		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)

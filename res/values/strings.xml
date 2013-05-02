@@ -39,12 +39,14 @@
     <string name="advice_and_feedback">建議回饋</string>
     <string name="facebook">FB粉絲團</string>
     <string name="liability_disclaimer">免責聲明</string>
+    <string name="clear">清除緩衝</string>
     <string name="confirm">確定</string>    
     <string name="aboutapp_declare">電影窩為JumpLife所開發之電影新聞軟體，目的在於彙整及分享電影相關資訊，
             豐富網路文化。而新聞及影片來源取自於網路上各新聞媒體，Jumplife僅持有軟體本身著作權。
       &lt;br /&gt; &lt;br /&gt; 本APP所有文章、影片、圖片之著作權皆為原創作人所擁有請勿複製使用，以免侵犯第三人權益，
             任何單位或個人認為本APP或本APP連結內容可能涉嫌侵犯其合法權益，應該及時向本網站APP回饋，並詳細侵權情況，
             本APP在收到上述文件後，將會儘快移除被控侵權的內容或連結。</string>
+    <string name="clear_finish">清除緩衝完成</string>
     
     <!-- tablet -->
     <string name="aboutapp">關於電影窩</string>
@@ -52,6 +54,11 @@
 有喜歡的電影新聞、圖片，透過"作家投稿"寄給我們，讓每個窩在電影窩的朋友可以獲得更多樂趣！</string>
     <string name="aboutus_other_func">建議回饋與爆料</string>
     <string name="aboutus_other_productor">其他產品</string>
+    
+    
+    <!-- promotion -->
+    <string name="go">前往</string>
+    
     
     <!-- adwhirl -->
 	<string name="app_picker_name">Applications</string>

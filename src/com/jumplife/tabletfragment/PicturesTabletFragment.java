@@ -348,7 +348,7 @@ public class PicturesTabletFragment extends Fragment implements AdWhirlInterface
         } 
 		protected void onPostExecute(String result) {
 			if(newsList != null && newsList.size() != 0){
-        		setListAdatper();
+				setListAdatper();
         		setListener();
             	page += 1;
             	picturesGridView.setVisibility(View.VISIBLE);

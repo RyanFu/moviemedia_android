@@ -137,15 +137,6 @@ public class NewsTabletFragment extends Fragment implements AdWhirlInterface{
 	}
 	
 	private void setListener() {
-		imageButtonRefresh.setOnClickListener(new OnClickListener() {
-            public void onClick(View arg0) {
-            	loadtask = new LoadDataTask();
-                if(Build.VERSION.SDK_INT < 11)
-                	loadtask.execute();
-                else
-                	loadtask.executeOnExecutor(LoadDataTask.THREAD_POOL_EXECUTOR, 0);
-            }
-        });
 		
 		Log.d(null, "set click item listener ");
 		newsGridView.setOnItemClickListener(new OnItemClickListener(){

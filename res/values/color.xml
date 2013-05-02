@@ -68,6 +68,10 @@
     <color name="about_us_board_tablet">#959595</color>
     <color name="about_us_board_bg_press">#d0d0d0</color>
     
+    <!-- promote -->
+    <color name="promote_description">#6f6f6f</color>
+    <color name="promote_bt_bg_press">#7b7b7b</color>
+    
     <!-- adwhirl -->
     <color name="contents_text">#ff000000</color>
 	<color name="encode_view">#ffffffff</color>

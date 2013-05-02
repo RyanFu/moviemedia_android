@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/promote_width"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/promote_board"
+    android:orientation="vertical" 
+    android:background="@drawable/promote_background"
+    >
+
+    <TextView
+        android:id="@+id/tv_promote_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/promote_padding"
+        android:background="@color/white"
+        android:textColor="@color/main_color_blue"
+        android:textSize="@dimen/promote_title"
+        android:gravity="center" />
+    <View 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/promote_seperate"
+        android:background="@color/topbar_seperate"
+        />
+    
+    <ImageView
+        android:id="@+id/iv_promote"
+        android:layout_width="@dimen/promote_width"
+        android:layout_height="@dimen/promote_height"
+        android:layout_gravity="center"
+        android:scaleType="fitCenter" />
+    <View 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/promote_seperate"
+        android:background="@color/topbar_seperate"
+        />
+    <TextView
+        android:id="@+id/tv_promote_description"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/promote_padding"
+        android:textColor="@color/promote_description"
+        android:textSize="@dimen/promote_content"
+        />
+    <View 
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/promote_seperate"
+        android:background="@color/topbar_seperate"
+        />
+    <LinearLayout
+	   android:layout_width="fill_parent"
+	   android:layout_height="wrap_content"
+	   android:orientation="horizontal" 
+	   android:background="@color/background"
+	   >
+	   <Button 
+            android:id="@+id/bt_promote"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/promote_padding"
+            android:padding="@dimen/promote_padding"
+            android:background="@drawable/button_promote_background"
+            android:textColor="@color/main_color_blue"
+            android:textSize="@dimen/promote_title"
+            android:text="@string/go"/>
+    </LinearLayout>
+    </LinearLayout>

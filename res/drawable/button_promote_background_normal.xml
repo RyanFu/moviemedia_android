@@ -1,0 +1,14 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/listview_item_bottomline_color" />
+        </shape>
+    </item>
+    <item
+        android:right="@dimen/promote_board"
+        android:bottom="@dimen/promote_board" >
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</layer-list>
