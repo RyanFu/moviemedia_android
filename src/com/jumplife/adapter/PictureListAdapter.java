@@ -20,7 +20,9 @@ import com.jumplife.movienews.entity.News;
 import com.jumplife.phonefragment.LoginFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -51,7 +53,7 @@ public class PictureListAdapter extends BaseAdapter {
 	private DisplayImageOptions options;
 	private PostRecordTask postRecordTask;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
-	private Session session = Session.getActiveSession();
+	private Session session;
 	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 
@@ -81,7 +83,7 @@ public class PictureListAdapter extends BaseAdapter {
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new RoundedBitmapDisplayer
 				((int)mActivity.getResources().getDimensionPixelSize(R.dimen.pictures_lv_item_radius)))
@@ -122,6 +124,7 @@ public class PictureListAdapter extends BaseAdapter {
 		private String picUrl;
 
 		ItemButtonClick(int pos, String url) {
+			session = Session.getActiveSession();
 			position = pos;
 			picUrl = url;
 		}
@@ -157,6 +160,7 @@ public class PictureListAdapter extends BaseAdapter {
         private ProgressDialog progressdialogInit;
         private final OnCancelListener cancelListener = new OnCancelListener() {
             public void onCancel(DialogInterface arg0) {
+            	closeProgressDilog();
             	PostRecordTask.this.cancel(true);
             }
         };
@@ -227,6 +231,7 @@ public class PictureListAdapter extends BaseAdapter {
         	NewPermissionCallBack callback = new NewPermissionCallBack(position, bitmap);
             Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(mActivity, PERMISSIONS)
         			.setDefaultAudience(SessionDefaultAudience.EVERYONE);
+            session = Session.openActiveSession(mActivity, false, null);      
             session.addCallback(callback);
         	session.requestNewPublishPermissions(newPermissionsRequest);
         	return;
@@ -257,7 +262,6 @@ public class PictureListAdapter extends BaseAdapter {
     }
 	
 	public void PublishPhotoToFB(Bitmap bitmap, final int position) {
-		Log.d(null, "enter publish fb");
 		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
             public void onCompleted(Response response) {
             	postRecordTask.closeProgressDilog();
@@ -267,7 +271,8 @@ public class PictureListAdapter extends BaseAdapter {
 	            			mActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
 	                toast.setGravity(Gravity.CENTER, 0, 0);
 	                toast.show();
-            	} else {
+	                return;
+            	} else if(hasPublishPermission()) {
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
             		
             		NewsShareTask newsShareTask = new NewsShareTask(news.get(position).getId());

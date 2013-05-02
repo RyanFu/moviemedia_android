@@ -25,6 +25,7 @@ import com.jumplife.movienews.entity.News;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
@@ -218,7 +219,7 @@ public class OverViewPhoneFragment extends Fragment implements AdWhirlInterface{
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new RoundedBitmapDisplayer
 				((int)this.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_radius)))

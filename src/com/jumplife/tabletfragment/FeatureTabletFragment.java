@@ -30,6 +30,7 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.annotation.SuppressLint;
@@ -93,7 +94,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 	private AdWhirlLayout adWhirlLayout2;
 	private AdWhirlLayout adWhirlLayout3;
 
-	private Session session = Session.getActiveSession();	
+	private Session session;	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private PostRecordTask postRecordTask;
 
@@ -206,7 +207,8 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
 		.build();
@@ -593,6 +595,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 		}
 
 		public void onClick(View v) {
+			session = Session.getActiveSession();
 			if (session != null && session.isOpened()) {
 	            postRecordTask = new PostRecordTask(position, picUrl);
 	            postRecordTask.execute();
@@ -623,6 +626,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
         private ProgressDialog progressdialogInit;
         private final OnCancelListener cancelListener = new OnCancelListener() {
             public void onCancel(DialogInterface arg0) {
+            	closeProgressDilog();
             	PostRecordTask.this.cancel(true);
             }
         };
@@ -693,6 +697,7 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
         	NewPermissionCallBack callback = new NewPermissionCallBack(position, bitmap);
             Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(mFragmentActivity, PERMISSIONS)
         			.setDefaultAudience(SessionDefaultAudience.EVERYONE);
+            session = Session.openActiveSession(mFragmentActivity, false, null);  
             session.addCallback(callback);
         	session.requestNewPublishPermissions(newPermissionsRequest);
         	return;
@@ -723,7 +728,6 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
     }
 	
 	public void PublishPhotoToFB(Bitmap bitmap, final int position) {
-		Log.d(null, "enter publish fb");
 		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
             public void onCompleted(Response response) {
             	postRecordTask.closeProgressDilog();
@@ -733,7 +737,8 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 	            			mFragmentActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
 	                toast.setGravity(Gravity.CENTER, 0, 0);
 	                toast.show();
-            	} else {
+	                return;
+            	} else if(hasPublishPermission()) {
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
             		Toast toast = Toast.makeText(mFragmentActivity, 
             				mFragmentActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);

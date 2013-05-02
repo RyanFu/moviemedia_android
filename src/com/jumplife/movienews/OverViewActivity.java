@@ -115,6 +115,7 @@ public class OverViewActivity extends FragmentActivity{
         
         private OnCancelListener cancelListener = new OnCancelListener(){
 		    public void onCancel(DialogInterface arg0){
+		    	closeProgressDilog();
 		    	LoadPromoteTask.this.cancel(true);
 		    }
     	};

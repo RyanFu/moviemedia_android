@@ -8,6 +8,7 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import android.app.Activity;
 import android.util.DisplayMetrics;
@@ -52,7 +53,7 @@ public class NewsGridAdapter extends BaseAdapter {
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new RoundedBitmapDisplayer
 				((int)mActivity.getResources().getDimensionPixelSize(R.dimen.news_lv_item_radius)))

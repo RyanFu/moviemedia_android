@@ -54,12 +54,13 @@ public class MovieNewsAppliccation extends Application {
 		//  ImageLoaderConfiguration.createDefault(this);
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-				.threadPriority(Thread.NORM_PRIORITY)
-				.memoryCache(memoryCache)
-				.denyCacheImageMultipleSizesInMemory()
-				.discCacheFileNameGenerator(new Md5FileNameGenerator())
-				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.build();
+	        .tasksProcessingOrder(QueueProcessingType.LIFO)
+			.threadPoolSize(2)
+			.threadPriority(Thread.NORM_PRIORITY)
+			.memoryCache(memoryCache)
+			.denyCacheImageMultipleSizesInMemory()
+			.discCacheFileNameGenerator(new Md5FileNameGenerator())
+			.build();
 		ImageLoader.getInstance().init(config);
 	}
 }

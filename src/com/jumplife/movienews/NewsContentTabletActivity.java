@@ -104,6 +104,7 @@ public class NewsContentTabletActivity extends FragmentActivity{
         
         private OnCancelListener cancelListener = new OnCancelListener(){
 		    public void onCancel(DialogInterface arg0){
+		    	closeProgressDilog();
 		    	LoadPromoteTask.this.cancel(true);
 		    }
     	};

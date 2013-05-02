@@ -9,9 +9,11 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.NewsCategory;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -117,7 +119,8 @@ public class OverViewTabletFragment extends Fragment{
 		
 		ImageLoader imageLoader = ImageLoader.getInstance();
 		DisplayImageOptions options = new DisplayImageOptions.Builder()
-		.cacheInMemory()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
 		.build();

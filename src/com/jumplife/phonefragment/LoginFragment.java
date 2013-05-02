@@ -108,11 +108,6 @@ public class LoginFragment extends DialogFragment {
         			getActivity().getResources().getString(R.string.fb_login_success),
         			Toast.LENGTH_SHORT).show();
         	this.dismiss();
-        } else {
-        	Log.d(getTag(), "session == null || !session.isOpened()");
-    		Toast.makeText(getActivity().getApplicationContext(), 
-    				getActivity().getResources().getString(R.string.fb_login_failed), 
-    				Toast.LENGTH_SHORT).show();
         }
     }
 }

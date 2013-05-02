@@ -7,11 +7,13 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.Video;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.viewpagerindicator.IconPagerAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
@@ -42,7 +44,8 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_loading)
 		.showImageOnFail(R.drawable.img_status_nopicture)
-		.cacheInMemory()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
 		.build();

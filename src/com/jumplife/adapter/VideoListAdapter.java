@@ -6,10 +6,12 @@ import com.jumplife.movienews.R;
 import com.jumplife.movienews.entity.Video;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.util.DisplayMetrics;
@@ -39,7 +41,8 @@ public class VideoListAdapter extends BaseAdapter {
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
 		.build();

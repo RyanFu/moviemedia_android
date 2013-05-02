@@ -21,6 +21,7 @@ import com.jumplife.movienews.entity.News;
 import com.jumplife.phonefragment.LoginFragment;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -60,7 +61,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	private DisplayImageOptions options;
 	private ImageLoader imageLoader = ImageLoader.getInstance();
 
-	private Session session = Session.getActiveSession();	
+	private Session session;	
     private static final List<String> PERMISSIONS = Arrays.asList("publish_actions");
 	private PostRecordTask postRecordTask;
 	
@@ -72,7 +73,8 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new SimpleBitmapDisplayer())
 		.build();
@@ -237,6 +239,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		}
 
 		public void onClick(View v) {
+			session = Session.getActiveSession();
 			if (session != null && session.isOpened()) {
 	            postRecordTask = new PostRecordTask(position, picUrl);
 	            postRecordTask.execute();
@@ -267,6 +270,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         private ProgressDialog progressdialogInit;
         private final OnCancelListener cancelListener = new OnCancelListener() {
             public void onCancel(DialogInterface arg0) {
+            	closeProgressDilog();
             	PostRecordTask.this.cancel(true);
             }
         };
@@ -337,6 +341,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         	NewPermissionCallBack callback = new NewPermissionCallBack(position, bitmap);
             Session.NewPermissionsRequest newPermissionsRequest = new Session.NewPermissionsRequest(mFragmentActivity, PERMISSIONS)
         			.setDefaultAudience(SessionDefaultAudience.EVERYONE);
+            session = Session.openActiveSession(mFragmentActivity, false, null);  
             session.addCallback(callback);
         	session.requestNewPublishPermissions(newPermissionsRequest);
         	return;
@@ -362,12 +367,11 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	};
 	
 	private boolean hasPublishPermission() {
-        Session session = Session.getActiveSession();
+        session = Session.getActiveSession();
         return session != null && session.getPermissions().contains("publish_actions");
     }
 	
 	public void PublishPhotoToFB(Bitmap bitmap, final int position) {
-		Log.d(null, "enter publish fb");
 		Request request = Request.newUploadPhotoRequest(Session.getActiveSession(), bitmap, new Request.Callback() {
             public void onCompleted(Response response) {
             	postRecordTask.closeProgressDilog();
@@ -377,7 +381,8 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	            			mFragmentActivity.getResources().getString(R.string.fb_share_failed_again), Toast.LENGTH_LONG);
 	                toast.setGravity(Gravity.CENTER, 0, 0);
 	                toast.show();
-            	} else {
+	                return;
+            	} else if(hasPublishPermission()) {
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
             		Toast toast = Toast.makeText(mFragmentActivity, 
             				mFragmentActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);

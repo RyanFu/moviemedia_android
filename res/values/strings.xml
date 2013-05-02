@@ -3,7 +3,7 @@
     <string name="app_name">電影窩</string>
     
     <string name="title">標題</string>
-    <string name="editor_choice">編輯精選</string>
+    <string name="editor_choice">每日編輯精選</string>
     <string name="topic">精選主題</string>
 
     <!-- listview news content -->
@@ -30,7 +30,7 @@
     <string name="fb_share_cancel">Facebook分享取消</string>
     <string name="fb_share_failed">Facebook分享失敗</string>
     <string name="fb_share_failed_again">Facebook分享失敗 請再分享一次</string>
-    <string name="sharing">分享中…</string>
+    <string name="sharing">等待中…</string>
     <string name="applicationId">144757872370903</string>
     
     <!-- about us -->

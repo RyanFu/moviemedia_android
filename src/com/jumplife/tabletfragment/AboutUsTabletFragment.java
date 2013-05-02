@@ -34,6 +34,7 @@ import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.AppProject;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class AboutUsTabletFragment extends Fragment {	
@@ -182,7 +183,7 @@ public class AboutUsTabletFragment extends Fragment {
         rlSubmit.setBackgroundResource(R.drawable.about_us_item_background_tablet);
         TableRow.LayoutParams SubmitParams = new TableRow.LayoutParams
 				(width + 2 * mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), height);
-        SubmitParams.setMargins(0,0, mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_aboutapp_margin), 0);
+        SubmitParams.setMargins(0, 0, mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_aboutapp_margin), 0);
         rlSubmit.setLayoutParams(SubmitParams);
         rlSubmit.setOnClickListener(new OnClickListener(){
         	public void onClick(View arg0) {
@@ -223,6 +224,7 @@ public class AboutUsTabletFragment extends Fragment {
 		rlFacebook.setBackgroundResource(R.drawable.about_us_item_background_tablet);
 		TableRow.LayoutParams FacebookParams = new TableRow.LayoutParams
 				(width + 2 * mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), height);
+		FacebookParams.setMargins(0, 0, mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_aboutapp_margin), 0);
 		rlFacebook.setLayoutParams(FacebookParams);
 		rlFacebook.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
@@ -291,7 +293,7 @@ public class AboutUsTabletFragment extends Fragment {
 		.showStubImage(R.drawable.img_status_loading)
 		.showImageForEmptyUri(R.drawable.img_status_nopicture)
 		.showImageOnFail(R.drawable.img_status_error)
-		.cacheInMemory()
+		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 		.cacheOnDisc()
 		.displayer(new RoundedBitmapDisplayer
 				((int)mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.overview_category_item_bg_radius)))
