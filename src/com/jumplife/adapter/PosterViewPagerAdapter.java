@@ -154,9 +154,7 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				
 				if (me.getAction() == MotionEvent.ACTION_DOWN) {
 					imageViewMoviePoster.setColorFilter(Color.argb(150, 0, 0, 0));
-	            } else if (me.getAction() == MotionEvent.ACTION_UP) {
-	            	imageViewMoviePoster.setColorFilter(Color.argb(0, 0, 0, 0)); 
-	            } else if (me.getAction() == MotionEvent.ACTION_CANCEL) {
+	            } else {
 	            	imageViewMoviePoster.setColorFilter(Color.argb(0, 0, 0, 0)); 
 	            }
 	            return false;

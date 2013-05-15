@@ -275,7 +275,7 @@ public class NewsAPI {
 		return news;
 	}
 	
-	public ArrayList<AppProject> getAppProjectList () {
+	public ArrayList<AppProject> getAppProjectList (Activity mActivity) {
 		ArrayList<AppProject> appList = new ArrayList<AppProject>(10);
 		String message = getMessageFromServer("GET", "api/v1/appprojects.json", null);
 		
@@ -294,8 +294,10 @@ public class NewsAPI {
 					String pack = appJson.getString("pack");
 					String clas = appJson.getString("clas");
 					
-					AppProject appProject = new AppProject(name, iconurl, pack, clas);
-					appList.add(appProject);
+					if(!mActivity.getApplicationContext().getPackageName().equals(pack)) {
+				    	AppProject appProject = new AppProject(name, iconurl, pack, clas);
+				    	appList.add(appProject);
+				    }
 				}
 			} 
 			catch (JSONException e) {

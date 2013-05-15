@@ -284,7 +284,7 @@ public class AboutUsTabletFragment extends Fragment {
 	
 	private String fetchData() {
 		NewsAPI api = new NewsAPI();
-		appProject = api.getAppProjectList();
+		appProject = api.getAppProjectList(mFragmentActivity);
 		return "progress end";
 	}
 	

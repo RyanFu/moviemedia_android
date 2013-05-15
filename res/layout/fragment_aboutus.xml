@@ -6,11 +6,6 @@
     <include android:id="@+id/topbar" layout="@layout/topbar"
         android:layout_alignParentTop="true" />
     
-    <ProgressBar android:id="@+id/pb_about_us"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
-    
     <ScrollView 
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
@@ -24,6 +19,11 @@
             android:orientation="vertical" >
             </LinearLayout>
         </ScrollView>
+    
+    <ProgressBar android:id="@+id/pb_about_us"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
         
 	<RelativeLayout
         android:id="@+id/ad_layout"

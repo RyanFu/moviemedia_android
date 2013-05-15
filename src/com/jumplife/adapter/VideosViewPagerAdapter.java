@@ -58,7 +58,8 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	
 	@Override
 	public void destroyItem(View pager, int position, Object view) {
-		((ViewPager) pager).removeView(((ViewPager)pager).getChildAt(position));
+		//((ViewPager) pager).removeView(((ViewPager)pager).getChildAt(position));
+		((ViewPager) pager).removeView(pager);
 	}
 
 	@Override
@@ -124,9 +125,7 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				
 				if (me.getAction() == MotionEvent.ACTION_DOWN) {
 					imageViewMoviePoster.setColorFilter(Color.argb(150, 0, 0, 0));
-	            } else if (me.getAction() == MotionEvent.ACTION_UP) {
-	            	imageViewMoviePoster.setColorFilter(Color.argb(0, 0, 0, 0)); 
-	            } else if (me.getAction() == MotionEvent.ACTION_CANCEL) {
+	            } else {
 	            	imageViewMoviePoster.setColorFilter(Color.argb(0, 0, 0, 0)); 
 	            }
 	            return false;

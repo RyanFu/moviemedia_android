@@ -108,13 +108,13 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenWidth = displayMetrics.widthPixels / 3;
 		TableRow.LayoutParams Params = new TableRow.LayoutParams
-				(screenWidth, screenWidth * 5 / 6, 0.33f);				
+				(screenWidth, LayoutParams.MATCH_PARENT, 0.33f);				
 		mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int width = displayMetrics.widthPixels / 6;
-        RelativeLayout.LayoutParams rlIvParams = new RelativeLayout.LayoutParams(width, width);
-        rlIvParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        rlIvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        rlIvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+        LinearLayout.LayoutParams llIvParams = new LinearLayout.LayoutParams(width, width);
+        //rlIvParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        //rlIvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        llIvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
@@ -123,28 +123,30 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
         
         TextView tvAboutApp = new TextView(mFragmentActivity);
 		ImageView ivAboutApp = new ImageView(mFragmentActivity);
-		RelativeLayout rlAboutApp = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llAboutApp = new LinearLayout(mFragmentActivity);		
 			
 		ivAboutApp.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivAboutApp.setImageResource(R.drawable.about);
-        rlAboutApp.addView(ivAboutApp, rlIvParams);
+        llAboutApp.addView(ivAboutApp, llIvParams);
 		
-		RelativeLayout.LayoutParams rlTvAboutAppParams = new RelativeLayout.LayoutParams
+        LinearLayout.LayoutParams llTvAboutAppParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlTvAboutAppParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		rlTvAboutAppParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		rlTvAboutAppParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+		//rlTvAboutAppParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		//rlTvAboutAppParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		llTvAboutAppParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvAboutApp.setText(mFragmentActivity.getResources().getString(R.string.aboutapp));
 		tvAboutApp.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvAboutApp.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlAboutApp.addView(tvAboutApp, rlTvAboutAppParams);		
+		llAboutApp.addView(tvAboutApp, llTvAboutAppParams);		
 		
-		rlAboutApp.setBackgroundResource(R.drawable.about_us_item_background);		
-		rlAboutApp.setLayoutParams(Params);
-		rlAboutApp.setOnClickListener(new OnClickListener(){
+		llAboutApp.setBackgroundResource(R.drawable.about_us_item_background);
+		llAboutApp.setOrientation(LinearLayout.VERTICAL);
+		llAboutApp.setGravity(Gravity.CENTER_HORIZONTAL);
+		llAboutApp.setLayoutParams(Params);
+		llAboutApp.setOnClickListener(new OnClickListener(){
 			@SuppressWarnings("deprecation")
 			public void onClick(View arg0) {
 				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "關於電影窩", (long)0);
@@ -160,35 +162,36 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		        dialog.show();
 			}			
 		});
-		Schedule_row_first.addView(rlAboutApp);
+		Schedule_row_first.addView(llAboutApp);
 				
 		
 		
 		TextView tvFeed = new TextView(mFragmentActivity);
 		ImageView ivFeed = new ImageView(mFragmentActivity);
-		RelativeLayout rlFeed = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llFeed = new LinearLayout(mFragmentActivity);		
 			
 		ivFeed.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivFeed.setImageResource(R.drawable.feedback);
-        rlFeed.addView(ivFeed, rlIvParams);
+        llFeed.addView(ivFeed, llIvParams);
 		
-		RelativeLayout.LayoutParams rlTvFeedParams = new RelativeLayout.LayoutParams
+        LinearLayout.LayoutParams llTvFeedParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlTvFeedParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		rlTvFeedParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		rlTvFeedParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+		//rlTvFeedParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		//rlTvFeedParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		llTvFeedParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvFeed.setText(mFragmentActivity.getResources().getString(R.string.advice_and_feedback));
 		tvFeed.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvFeed.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlFeed.addView(tvFeed, rlTvFeedParams);		
+		llFeed.addView(tvFeed, llTvFeedParams);		
 		
-		rlFeed.setBackgroundResource(R.drawable.about_us_item_background);
-		
-		rlFeed.setLayoutParams(Params);
-		rlFeed.setOnClickListener(new OnClickListener(){
+		llFeed.setBackgroundResource(R.drawable.about_us_item_background);
+		llFeed.setOrientation(LinearLayout.VERTICAL);
+		llFeed.setGravity(Gravity.CENTER_HORIZONTAL);
+		llFeed.setLayoutParams(Params);
+		llFeed.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
 				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "建議回饋", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
@@ -199,35 +202,37 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 				startActivity(it);  
 			}			
 		});
-		Schedule_row_first.addView(rlFeed);
+		Schedule_row_first.addView(llFeed);
 		
 		
 		
 		
 		TextView tvSubmit = new TextView(mFragmentActivity);
 		ImageView ivSubmit= new ImageView(mFragmentActivity);
-		RelativeLayout rlSubmit = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llSubmit = new LinearLayout(mFragmentActivity);		
 			
 		ivSubmit.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		ivSubmit.setImageResource(R.drawable.submit);
-		rlSubmit.addView(ivSubmit, rlIvParams);
+		llSubmit.addView(ivSubmit, llIvParams);
 		
-        RelativeLayout.LayoutParams rlTvSubmitParams = new RelativeLayout.LayoutParams
+		LinearLayout.LayoutParams llTvSubmitParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        rlTvSubmitParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rlTvSubmitParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        rlTvSubmitParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+        //rlTvSubmitParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //rlTvSubmitParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        llTvSubmitParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
         tvSubmit.setText(mFragmentActivity.getResources().getString(R.string.reader_submit));
         tvSubmit.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
         tvSubmit.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-        rlSubmit.addView(tvSubmit, rlTvSubmitParams);		
+        llSubmit.addView(tvSubmit, llTvSubmitParams);		
 		
-        rlSubmit.setBackgroundResource(R.drawable.about_us_item_background);
-        rlSubmit.setLayoutParams(Params);
-        rlSubmit.setOnClickListener(new OnClickListener(){
+        llSubmit.setBackgroundResource(R.drawable.about_us_item_background);
+        llSubmit.setOrientation(LinearLayout.VERTICAL);
+        llSubmit.setGravity(Gravity.CENTER_HORIZONTAL);
+        llSubmit.setLayoutParams(Params);
+        llSubmit.setOnClickListener(new OnClickListener(){
         	public void onClick(View arg0) {
         		EasyTracker.getTracker().sendEvent("關於我們", "點擊", "作家投稿", (long)0);
 				Uri uri = Uri.parse("mailto:jumplives@gmail.com");  
@@ -238,7 +243,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 				startActivity(it);  
 			}				
 		});
-        Schedule_row_first.addView(rlSubmit);
+        Schedule_row_first.addView(llSubmit);
 
 		Schedule_row_first.setLayoutParams(new LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -249,28 +254,30 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		
 		TextView tvDeclare = new TextView(mFragmentActivity);
 		ImageView ivDeclare = new ImageView(mFragmentActivity);
-		RelativeLayout rlDeclare = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llDeclare = new LinearLayout(mFragmentActivity);		
 			
 		ivDeclare.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivDeclare.setImageResource(R.drawable.declare);
-        rlDeclare.addView(ivDeclare, rlIvParams);
+        llDeclare.addView(ivDeclare, llIvParams);
 		
-		RelativeLayout.LayoutParams rlTvDeclareParams = new RelativeLayout.LayoutParams
+        LinearLayout.LayoutParams llTvDeclareParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		rlTvDeclareParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-		rlTvDeclareParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		rlTvDeclareParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+		//rlTvDeclareParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		//rlTvDeclareParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		llTvDeclareParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvDeclare.setText(mFragmentActivity.getResources().getString(R.string.liability_disclaimer));
 		tvDeclare.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvDeclare.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlDeclare.addView(tvDeclare, rlTvDeclareParams);		
+		llDeclare.addView(tvDeclare, llTvDeclareParams);		
 		
-		rlDeclare.setBackgroundResource(R.drawable.about_us_item_background);		
-		rlDeclare.setLayoutParams(Params);
-		rlDeclare.setOnClickListener(new OnClickListener(){
+		llDeclare.setBackgroundResource(R.drawable.about_us_item_background);
+		llDeclare.setOrientation(LinearLayout.VERTICAL);
+		llDeclare.setGravity(Gravity.CENTER_HORIZONTAL);
+		llDeclare.setLayoutParams(Params);
+		llDeclare.setOnClickListener(new OnClickListener(){
 			@SuppressWarnings("deprecation")
 			public void onClick(View arg0) {
 				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "免責稱明", (long)0);
@@ -285,35 +292,37 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 		        dialog.show();
 			}			
 		});
-		Schedule_row_second.addView(rlDeclare);
+		Schedule_row_second.addView(llDeclare);
 		
 		
 		
 		
 		TextView tvFacebook = new TextView(mFragmentActivity);
 		ImageView ivFacebook = new ImageView(mFragmentActivity);
-		RelativeLayout rlFacebook = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llFacebook = new LinearLayout(mFragmentActivity);		
 			
 		ivFacebook.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivFacebook.setImageResource(R.drawable.facebook);
-        rlFacebook.addView(ivFacebook, rlIvParams);
+        llFacebook.addView(ivFacebook, llIvParams);
 		
-        RelativeLayout.LayoutParams rlTvFacebookParams = new RelativeLayout.LayoutParams
+        LinearLayout.LayoutParams llTvFacebookParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        rlTvFacebookParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rlTvFacebookParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        rlTvFacebookParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+        //rlTvFacebookParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //rlTvFacebookParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        llTvFacebookParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvFacebook.setText(mFragmentActivity.getResources().getString(R.string.facebook));
 		tvFacebook.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvFacebook.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlFacebook.addView(tvFacebook, rlTvFacebookParams);		
+		llFacebook.addView(tvFacebook, llTvFacebookParams);		
 		
-		rlFacebook.setBackgroundResource(R.drawable.about_us_item_background);
-		rlFacebook.setLayoutParams(Params);
-		rlFacebook.setOnClickListener(new OnClickListener(){
+		llFacebook.setBackgroundResource(R.drawable.about_us_item_background);
+		llFacebook.setOrientation(LinearLayout.VERTICAL);
+		llFacebook.setGravity(Gravity.CENTER_HORIZONTAL);
+		llFacebook.setLayoutParams(Params);
+		llFacebook.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
 				EasyTracker.getTracker().sendEvent("關於我們", "點擊", "FB粉絲團", (long)0);
 				Uri uri = Uri.parse("http://www.facebook.com/movietalked");
@@ -321,34 +330,36 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
                 startActivity(it);
 			}			
 		});
-		Schedule_row_second.addView(rlFacebook);
+		Schedule_row_second.addView(llFacebook);
 		
 
 
 		TextView tvClear = new TextView(mFragmentActivity);
 		ImageView ivClear = new ImageView(mFragmentActivity);
-		RelativeLayout rlClear = new RelativeLayout(mFragmentActivity);		
+		LinearLayout llClear = new LinearLayout(mFragmentActivity);		
 			
 		ivClear.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ivClear.setImageResource(R.drawable.delete);
-        rlClear.addView(ivClear, rlIvParams);
+        llClear.addView(ivClear, llIvParams);
 		
-        RelativeLayout.LayoutParams rlTvClearParams = new RelativeLayout.LayoutParams
+        LinearLayout.LayoutParams llTvClearParams = new LinearLayout.LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        rlTvClearParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rlTvClearParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        rlTvClearParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+        //rlTvClearParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        //rlTvClearParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        llTvClearParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				0, 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 				mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 		tvClear.setText(mFragmentActivity.getResources().getString(R.string.clear));
 		tvClear.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 		tvClear.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-		rlClear.addView(tvClear, rlTvClearParams);		
+		llClear.addView(tvClear, llTvClearParams);		
 		
-		rlClear.setBackgroundResource(R.drawable.about_us_item_background);
-		rlClear.setLayoutParams(Params);
-		rlClear.setOnClickListener(new OnClickListener(){
+		llClear.setBackgroundResource(R.drawable.about_us_item_background);
+		llClear.setOrientation(LinearLayout.VERTICAL);
+		llClear.setGravity(Gravity.CENTER_HORIZONTAL);
+		llClear.setLayoutParams(Params);
+		llClear.setOnClickListener(new OnClickListener(){
 			public void onClick(View arg0) {
 				imageLoader.clearMemoryCache();
 				imageLoader.clearDiscCache();
@@ -358,7 +369,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
                 toast.show();
 			}			
 		});
-		Schedule_row_second.addView(rlClear);
+		Schedule_row_second.addView(llClear);
 		
 		Schedule_row_second.setLayoutParams(new LayoutParams
 				(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
@@ -367,7 +378,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 	
 	private String fetchData() {
 		NewsAPI api = new NewsAPI();
-		appProject = api.getAppProjectList();
+		appProject = api.getAppProjectList(mFragmentActivity);
 		return "progress end";
 	}
 	
@@ -385,7 +396,7 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 				
 				TextView tv = new TextView(mFragmentActivity);
 				ImageView iv = new ImageView(mFragmentActivity);
-				RelativeLayout rl = new RelativeLayout(mFragmentActivity);
+				LinearLayout ll = new LinearLayout(mFragmentActivity);
 				
 				if(index < appProject.size()) {
 					
@@ -393,43 +404,44 @@ public class AboutUsPhoneFragment extends Fragment implements AdWhirlInterface {
 					mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 			        int width = displayMetrics.widthPixels / 6;
 			        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			        RelativeLayout.LayoutParams rlIvParams = new RelativeLayout.LayoutParams(width, width);
-			        rlIvParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			        rlIvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			        rlIvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+			        LinearLayout.LayoutParams llIvParams = new LinearLayout.LayoutParams(width, width);
+			        //rlIvParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+			        //rlIvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			        llIvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
-					rl.addView(iv, rlIvParams);
+					ll.addView(iv, llIvParams);
 			        iv.getLayoutParams().width = width;
 			        iv.getLayoutParams().height = width;
 			        imageLoader.displayImage(appProject.get(index).getIconUrl(), iv, options);
 					
-					RelativeLayout.LayoutParams rlTvParams = new RelativeLayout.LayoutParams
+			        LinearLayout.LayoutParams llTvParams = new LinearLayout.LayoutParams
 							(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					rlTvParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-					rlTvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-					rlTvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
+					//llTvParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+					//llTvParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+					llTvParams.setMargins(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							0, 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin), 
 							mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_margin));
 					tv.setText(appProject.get(index).getName());
 					tv.setTextSize(mFragmentActivity.getResources().getDimensionPixelSize(R.dimen.about_us_title));
 					tv.setTextColor(mFragmentActivity.getResources().getColor(R.color.about_us_tv));
-					rl.addView(tv, rlTvParams);
+					ll.addView(tv, llTvParams);
 				} else
-					rl.setVisibility(View.INVISIBLE);
+					ll.setVisibility(View.INVISIBLE);
 				
-				rl.setBackgroundResource(R.drawable.about_us_item_background);
-				
+				ll.setBackgroundResource(R.drawable.about_us_item_background);
+				ll.setOrientation(LinearLayout.VERTICAL);
+				ll.setGravity(Gravity.CENTER_HORIZONTAL);
 				DisplayMetrics displayMetrics = new DisplayMetrics();
 				mFragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 		        int screenWidth = displayMetrics.widthPixels / 3;
 				TableRow.LayoutParams Params = new TableRow.LayoutParams
-						(screenWidth, screenWidth * 5 / 6, 0.33f);				
-				rl.setLayoutParams(Params);
-				rl.setOnClickListener(new ItemButtonClick(index));
-				Schedule_row.addView(rl);
+						(screenWidth, LayoutParams.MATCH_PARENT, 0.33f);				
+				ll.setLayoutParams(Params);
+				ll.setOnClickListener(new ItemButtonClick(index));
+				Schedule_row.addView(ll);
 			}
 			Schedule_row.setLayoutParams(new LayoutParams
 					(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
