@@ -1,6 +1,7 @@
 package com.jumplife.tabletfragment;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -254,6 +255,9 @@ public class PicturesTabletFragment extends Fragment implements AdWhirlInterface
 				llShare.setOnClickListener(new ItemButtonClick(arg2, newsList.get(arg2).getShareLink()));
 				
 				EasyTracker.getTracker().sendEvent("圖片新聞", "點擊", "news id: " + newsList.get(arg2).getId(), (long)newsList.get(arg2).getId());
+				
+				Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(arg2));
+				updteDeviceInfoThread.start();
 				
 				dialog.show();
 			}			
@@ -636,6 +640,10 @@ public class PicturesTabletFragment extends Fragment implements AdWhirlInterface
             	} else if (hasPublishPermission())  {
             		Log.d(null, "publish success");
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + newsList.get(position).getId(), (long)newsList.get(position).getId());
+            		
+            		Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(position));
+    				updteDeviceInfoThread.start();
+            		
             		Toast toast = Toast.makeText(mFragmentActivity, 
             				mFragmentActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -650,6 +658,20 @@ public class PicturesTabletFragment extends Fragment implements AdWhirlInterface
         else
         	params.putString("message", newsList.get(position).getName());
 		request.executeAsync();
+	}
+	
+	class UpdateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		UpdateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(newsList.get(position).getId());
+		}		
 	}
 
 	@Override

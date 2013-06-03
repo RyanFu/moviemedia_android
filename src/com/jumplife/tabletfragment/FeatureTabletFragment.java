@@ -28,6 +28,7 @@ import com.jumplife.movienews.NewsContentTabletActivity;
 import com.jumplife.movienews.R;
 import com.jumplife.movienews.api.NewsAPI;
 import com.jumplife.movienews.entity.News;
+import com.jumplife.tabletfragment.PicturesTabletFragment.UpdateNewsWatcheThread;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -310,6 +311,11 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 						imageLoader.displayImage(news.get(index).show(), ivPicture, options);
 						
 						llShare.setOnClickListener(new ItemButtonClick(index, news.get(index).getShareLink()));
+						
+						EasyTracker.getTracker().sendEvent("圖片新聞", "點擊", "news id: " + news.get(index).getId(), (long)news.get(index).getId());
+						
+						Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(index));
+						updteDeviceInfoThread.start();
 						
 						dialog.show();
 					} 
@@ -740,6 +746,10 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
 	                return;
             	} else if(hasPublishPermission()) {
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
+            		
+            		Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(position));
+    				updteDeviceInfoThread.start();
+            		
             		Toast toast = Toast.makeText(mFragmentActivity, 
             				mFragmentActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -754,5 +764,19 @@ public class FeatureTabletFragment extends Fragment implements AdWhirlInterface{
         else
         	params.putString("message", news.get(position).getName());
 		request.executeAsync();
+	}
+	
+	class UpdateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		UpdateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(news.get(position).getId());
+		}		
 	}
 }

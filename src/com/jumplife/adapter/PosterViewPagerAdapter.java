@@ -1,6 +1,7 @@
 package com.jumplife.adapter;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -34,6 +35,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -222,6 +224,11 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 				
 				llShare.setOnClickListener(new ButtonClick(position, news.get(position).getShareLink()));
 				
+				EasyTracker.getTracker().sendEvent("圖片新聞", "點擊", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
+				
+				Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(position));
+				updteDeviceInfoThread.start();
+				
 				dialog.show();
 			}            
 		}
@@ -381,7 +388,27 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
 	                toast.show();
 	                return;
             	} else if(hasPublishPermission()) {
+            		
+            		Intent intent = mFragmentActivity.getIntent();
+            	    Uri uri = intent.getData();
+            	    
+            	    if (uri != null) {
+            	    	if(uri.getQueryParameter("utm_source") != null) {    // Use campaign parameters if avaialble.
+            	        	EasyTracker.getTracker().setCampaign(uri.getPath()); 
+            	        } 
+            	    	else if (uri.getQueryParameter("referrer") != null) {    // Otherwise, try to find a referrer parameter.
+            	    		EasyTracker.getTracker().setReferrer(uri.getQueryParameter("referrer"));
+            	        }
+            	    	else {
+            	    		EasyTracker.getTracker().setCampaign("native");
+            	    	}
+            	    }
+            		
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
+            		
+            		Thread updteDeviceInfoThread = new Thread(new UpdateNewsWatcheThread(position));
+    				updteDeviceInfoThread.start();
+            		
             		Toast toast = Toast.makeText(mFragmentActivity, 
             				mFragmentActivity.getResources().getString(R.string.fb_share_success), Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
@@ -396,6 +423,20 @@ public class PosterViewPagerAdapter extends PagerAdapter implements IconPagerAda
         else
         	params.putString("message", news.get(position).getName());
 		request.executeAsync();
+	}
+	
+	class UpdateNewsWatcheThread implements Runnable {
+		private int position;
+		
+		UpdateNewsWatcheThread(int position) {
+			this.position = position;
+		}
+		
+		@Override
+		public void run() {
+			NewsAPI api = new NewsAPI(mFragmentActivity);
+			api.updateNewsWatchedWithAccount(news.get(position).getId());
+		}		
 	}
 	
 	public int getIconResId(int index) {

@@ -44,6 +44,17 @@ public class OverViewActivity extends FragmentActivity{
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Get the intent that started this Activity.
+	    Intent intent = this.getIntent();
+	    Uri uri = intent.getData();
+		
+	    if (intent.getData() != null) {
+	    	EasyTracker.getTracker().setCampaign(uri.getPath());
+	    	
+	    	SharePreferenceIO sharePreferenceIO = new SharePreferenceIO(this);
+	    	sharePreferenceIO.SharePreferenceI("utm_source", uri.getPath());
+	    }
+		
         setContentView(R.layout.activity_overview);
         
         if(getResources().getBoolean(R.bool.tablet)){

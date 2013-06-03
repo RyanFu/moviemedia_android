@@ -26,8 +26,10 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -285,6 +287,22 @@ public class PictureGridAdapter extends BaseAdapter {
 	                toast.show();
 	                return;
             	} else if (hasPublishPermission()) {
+            		
+            		Intent intent = mActivity.getIntent();
+            	    Uri uri = intent.getData();
+            	    
+            	    if (uri != null) {
+            	    	if(uri.getQueryParameter("utm_source") != null) {    // Use campaign parameters if avaialble.
+            	        	EasyTracker.getTracker().setCampaign(uri.getPath()); 
+            	        } 
+            	    	else if (uri.getQueryParameter("referrer") != null) {    // Otherwise, try to find a referrer parameter.
+            	    		EasyTracker.getTracker().setReferrer(uri.getQueryParameter("referrer"));
+            	        }
+            	    	else {
+            	    		EasyTracker.getTracker().setCampaign("native");
+            	    	}
+            	    }
+            		
             		EasyTracker.getTracker().sendEvent("圖片新聞", "分享", "news id: " + news.get(position).getId(), (long)news.get(position).getId());
             		
             		NewsShareTask newsShareTask = new NewsShareTask(news.get(position).getId());
