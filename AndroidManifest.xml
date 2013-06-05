@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jumplife.movienews"
-    android:versionCode="6"
-    android:versionName="1.0.5" >
+    android:versionCode="8"
+    android:versionName="1.0.7" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -92,6 +92,16 @@
         
         <meta-data android:name="com.facebook.sdk.ApplicationId" 
             android:value="@string/applicationId"/>
+        
+    	<!-- Used for install referral measurement-->
+    	<!-- for google analytics campaign tracking -->
+		<service android:name="com.google.analytics.tracking.android.CampaignTrackingService"/>
+		<receiver android:name="com.google.analytics.tracking.android.CampaignTrackingReceiver" android:exported="true">
+  			<intent-filter>
+    			<action android:name="com.android.vending.INSTALL_REFERRER" />
+  			</intent-filter>
+		</receiver>    
+        
     </application>
 
 </manifest>

@@ -7,7 +7,10 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+
+import com.google.analytics.tracking.android.EasyTracker;
 import com.jumplife.movienews.entity.*;
+import com.jumplife.sharedpreferenceio.SharePreferenceIO;
 
 import java.net.URL;
 import java.text.DateFormat;
@@ -29,6 +32,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 public class NewsAPI {
@@ -313,7 +318,7 @@ public class NewsAPI {
 
 		try{
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			String url = "http://106.187.53.220//api/v1/news/" + newsId + ".json";						
+			String url = "http://mmedia.jumplife.com.tw/api/v1/news/" + newsId + ".json";						
 			if(DEBUG)
 				Log.d(TAG, "URL : " + url);
 			
@@ -343,6 +348,26 @@ public class NewsAPI {
 	public boolean updateNewsWatchedWithAccount(int newsId) {
 		boolean result = false;
 		String account = "";
+		String utmSource = "";
+		/*
+		Intent intent = mActivity.getIntent();
+	    Uri uri = intent.getData();
+	    
+	    if (uri != null) {
+	    	if((uri.getQueryParameter("utm_source") != null) && (uri.getQueryParameter("utm_source").length() > 0)) {    // Use campaign parameters if avaialble.
+	    		utmSource = uri.getPath();
+	        }
+	    	else {
+	    		utmSource = "native";
+	    	}
+	    }
+	    else {
+	    	utmSource = "native";
+	    }
+		*/		
+		SharePreferenceIO sharePreferenceIO = new SharePreferenceIO(mActivity);
+		utmSource = sharePreferenceIO.SharePreferenceO("utm_source", "native");
+		
 		AccountManager accountManager = AccountManager.get(mActivity);
 		Account[] accounts = accountManager.getAccountsByType("com.google");
 		if(accounts.length > 0) {
@@ -350,9 +375,10 @@ public class NewsAPI {
 	
 			try{
 				DefaultHttpClient httpClient = new DefaultHttpClient();
-				String url = "http://106.187.53.220/api/v1/news/update_device_watch.json?" +
-						"user_email=" + account + 
-						"&news_id=" + newsId;						
+				String url = "http://mmedia.jumplife.com.tw/api/v1/news/update_device_watch.json?" +
+						"user_email=" + account +
+						"&news_id=" + newsId +
+						"&utm_source=" + utmSource;						
 				if(DEBUG)
 					Log.d(TAG, "URL : " + url);
 				

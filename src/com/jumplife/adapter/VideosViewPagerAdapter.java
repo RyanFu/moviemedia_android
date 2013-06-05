@@ -146,9 +146,25 @@ public class VideosViewPagerAdapter extends PagerAdapter implements IconPagerAda
 		}
 
 		public void onClick(View v) {
+			Intent intent = mActivty.getIntent();
+    	    Uri uri = intent.getData();
+    	    
+    	    if (uri != null) {
+    	    	if(uri.getQueryParameter("utm_source") != null) {    // Use campaign parameters if avaialble.
+    	        	EasyTracker.getTracker().setCampaign(uri.getPath()); 
+    	        } 
+    	    	else if (uri.getQueryParameter("referrer") != null) {    // Otherwise, try to find a referrer parameter.
+    	    		EasyTracker.getTracker().setReferrer(uri.getQueryParameter("referrer"));
+    	        }
+    	    	else {
+    	    		EasyTracker.getTracker().setCampaign("native");
+    	    	}
+    	    }
+			
+			
 			EasyTracker.getTracker().sendEvent("影片", "點擊", "video id: " + videos.get(position).getId(),
 				(long)(videos.get(position).getId()));
-			Uri uri = Uri.parse(videos.get(position).getVideoUrl());
+			uri = Uri.parse(videos.get(position).getVideoUrl());
     		Intent it = new Intent(Intent.ACTION_VIEW, uri);
     		mActivty.startActivity(it);
 		}

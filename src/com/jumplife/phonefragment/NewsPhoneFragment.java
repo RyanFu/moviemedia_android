@@ -168,12 +168,12 @@ public class NewsPhoneFragment extends Fragment implements AdWhirlInterface{
 	            bundle.putString("origin", news.get(position - 1).getOrigin());
 	            bundle.putString("name", news.get(position - 1).getName());
 	            
-	            EasyTracker.getTracker().sendEvent(getArguments().getString("categoryName") + "_新聞列表", "點擊", "new id: " +
+	            EasyTracker.getTracker().sendEvent(getArguments().getString("categoryName") + "新聞列表", "點擊", "new id: " +
 	            	news.get(position - 1).getId(), (long)(news.get(position - 1).getId()));
 	            
 	            newAct.putExtras(bundle);
 	            startActivity(newAct);
-	            
+
 	            Thread mThread = new Thread(new updateNewsWatcheThread(position - 1));
 	            mThread.start();
 			}
