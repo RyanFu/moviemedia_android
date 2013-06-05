@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="libs/HODoAD_1.1.0.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.1.2.jar"/>
 	<classpathentry kind="lib" path="libs/GoogleAdMobAdsSdk-6.4.1.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
